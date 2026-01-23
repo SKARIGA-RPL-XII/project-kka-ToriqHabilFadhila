@@ -116,10 +116,10 @@
                     <div class="relative">
                         <button onclick="toggleDropdown()" class="flex items-center gap-1 sm:gap-2 focus:outline-none text-xs sm:text-sm">
                             <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-semibold">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                {{ strtoupper(substr(auth()->user()->nama, 0, 1)) }}
                             </div>
                             <span class="hidden sm:inline text-gray-600">
-                                {{ auth()->user()->name }}
+                                {{ auth()->user()->nama }}
                             </span>
                             <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />

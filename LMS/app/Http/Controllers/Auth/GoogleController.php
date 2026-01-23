@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\GoogleProvider;
 
 class GoogleController extends Controller
 {
@@ -16,10 +17,11 @@ class GoogleController extends Controller
      */
     public function redirect()
     {
-        return Socialite::driver('google')
-            ->with([
-                'prompt' => 'select_account'
-            ])
+        /** @var GoogleProvider $driver */
+        $driver = Socialite::driver('google');
+
+        return $driver
+            ->with(['prompt' => 'select_account'])
             ->redirect();
     }
 
@@ -28,10 +30,10 @@ class GoogleController extends Controller
      */
     public function callback()
     {
-        $googleUser = Socialite::driver('google')->user();
-
+        /** @var GoogleProvider $driver */
+        $driver = Socialite::driver('google');
+        $googleUser = $driver->stateless()->user();
         $user = User::where('email', $googleUser->getEmail())->first();
-
         if (! $user) {
             $user = User::create([
                 'nama'        => $googleUser->getName(),
@@ -47,9 +49,7 @@ class GoogleController extends Controller
                 'last_login' => now(),
             ]);
         }
-
         Auth::login($user);
-
         return redirect()->route('dashboard');
     }
 }
