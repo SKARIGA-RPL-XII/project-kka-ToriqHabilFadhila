@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\AbstractProvider;
 
-class LoginController extends Controller
+class AuthServices extends Controller
 {
     public function login(Request $request)
     {
@@ -49,46 +50,26 @@ class LoginController extends Controller
         return redirect()->route('dashboard');
     }
 
-    // =====================
-    // CALLBACK GOOGLE
-    // =====================
-
-    public function redirectGoogle()
+    public function register(Request $request)
     {
-        // redirect manual ke Google OAuth
-        $googleAuthUrl = 'https://accounts.google.com/o/oauth2/auth?' . http_build_query([
-            'client_id'     => config('services.google.client_id'),
-            'redirect_uri'  => route('login.google.callback'), // pastikan sama persis dengan yang terdaftar di Google Cloud
-            'response_type' => 'code',
-            'scope'         => 'openid email profile',
-            'prompt'        => 'select_account', // selalu pilih akun
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
-        return redirect($googleAuthUrl);
-    }
+        User::create([
+            'nama'        => $validated['name'],
+            'email'       => $validated['email'],
+            'password'    => Hash::make($validated['password']),
+            'role'        => 'siswa',
+            'is_active'   => true,
+            'is_verified' => true,
+            'last_login'  => now(),
+        ]);
 
-
-    public function callbackGoogle()
-    {
-        $googleUser = Socialite::driver('google')->user();
-        $user = User::where('email', $googleUser->getEmail())->first();
-        // jika belum terdaftar → auto register
-        if (! $user) {
-            $user = User::create([
-                'nama'        => $googleUser->getName(),
-                'email'       => $googleUser->getEmail(),
-                'password'    => Hash::make(Str::random(32)), // dummy
-                'role'        => 'siswa',
-                'is_active'   => true,
-                'is_verified' => true,
-                'last_login'  => now(),
-            ]);
-        } else {
-            $user->last_login = now();
-            $user->save();
-        }
-        Auth::login($user);
-        return redirect()->route('dashboard');
+        // arahkan ke login dengan flash message
+        return redirect()->route('login')->with('success', 'Berhasil membuat akun, silakan login!');
     }
 
     public function logout(Request $request)

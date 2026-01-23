@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\AuthServices;
+use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Auth;
 
 // PAGES CONTROLLER
@@ -13,17 +13,15 @@ Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::get('/forgot-password', [PageController::class, 'forgot'])->name('forgot-password');
 
 
-// AUTH CONTROLLER LOGIN
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
-// Register via Google
-Route::get('/auth/google/register', [RegisterController::class, 'redirectGoogle'])->name('register.google');
-Route::get('/auth/google/register/callback', [RegisterController::class, 'callbackGoogle'])->name('register.google.callback');
-// Login via Google
-Route::get('/auth/google/login', [LoginController::class, 'redirectGoogle'])->name('login.google');
-Route::get('/auth/google/login/callback', [LoginController::class, 'callbackGoogle'])->name('login.google.callback');
-Route::post('/login-guest', [LoginController::class, 'loginAsGuest'])->name('login.guest');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+// AUTH CONTROLLER LOGIN & REGISTER
+Route::post('/login', [AuthServices::class, 'login'])->name('login.submit');
+Route::post('/register', [AuthServices::class, 'register'])->name('register');
+Route::post('/logout', [AuthServices::class, 'logout'])->name('logout');
+Route::post('/login-guest', [AuthServices::class, 'loginAsGuest'])->name('login.guest');
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.auth');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
+
+
 
 // DASHBOARD ROLE LOGIN
 Route::get('/dashboard', function () {
