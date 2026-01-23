@@ -15,7 +15,9 @@ cd nama-repo
 
 3. Install dependency
 composer install
+composer require laravel/socialite
 npm install
+
 
 4. Copy file environment
 cp .env.example .env

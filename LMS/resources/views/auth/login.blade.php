@@ -7,9 +7,47 @@
     <link rel="icon" href="{{ asset('images/LMS.png') }}" type="image/png">
     <title>Learning Management System Berbasis AI</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        .clip-left {
+            clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+        }
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+        .animate-draw {
+            animation: draw 0.5s ease forwards;
+        }
+    </style>
 </head>
 
 <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen flex items-center justify-center p-4">
+    @if ($errors->any())
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2" class="fixed top-5 right-5 bg-red-50 border border-red-400 text-red-700 px-6 py-4 rounded-xl shadow-lg flex items-start gap-3 z-50">
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            <div>
+                <h4 class="font-semibold text-red-800 mb-1">Registrasi Gagal</h4>
+                <ul class="text-red-700 text-sm space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
+    <!-- Success Popup -->
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show=false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-100 border border-green-400 px-6 py-4 rounded-lg shadow-lg">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 13l4 4L19 7" stroke-dasharray="22" stroke-dashoffset="22" class="animate-draw"/>
+            </svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
     <!-- Background Decoration -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
@@ -20,7 +58,7 @@
     <!-- Login Container -->
     <div class="w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 bg-white">
         <!-- Left Side - Illustration & Info -->
-        <div class="hidden md:flex flex-col justify-center items-center p-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white">
+        <div class="hidden md:flex flex-col justify-center items-center p-12 text-white bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 relative clip-left">
             <div class="mb-8">
                 <img src="/images/LMS.png" alt="LMS Logo" class="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-white/20 mb-6">
                 <h1 class="text-4xl font-extrabold mb-4">
@@ -32,7 +70,7 @@
             </div>
 
             <!-- Features List -->
-            <div class="space-y-4 w-full">
+            <div class="space-y-4 w-full max-w-md pr-8">
                 <div class="flex items-center gap-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
                     <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,7 +109,7 @@
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-3 gap-4 w-full mt-8 pt-8 border-t border-white/20">
+            <div class="grid grid-cols-3 gap-4 w-full max-w-md mt-8 pt-8 pr-8 border-t border-white/20">
                 <div class="text-center">
                     <div class="text-3xl font-bold mb-1">1K+</div>
                     <div class="text-sm text-white/80">Pengguna</div>
@@ -104,24 +142,6 @@
                         Silakan masuk ke akun Anda untuk melanjutkan pembelajaran.
                     </p>
                 </div>
-                <!-- Alert Error (if any) -->
-                @if ($errors->any())
-                    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd">
-                            </svg>
-                            <div>
-                                <h4 class="text-sm font-semibold text-red-800 mb-1">Login Gagal</h4>
-                                <ul class="text-sm text-red-600 space-y-1">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                @endif
 
                 <!-- Login Form -->
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
@@ -186,37 +206,42 @@
                     <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-[1.02] transition-all duration-300">
                         Login Sekarang
                     </button>
-
-                    <!-- Divider -->
-                    <div class="relative my-6">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200"></div>
-                        </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-4 bg-white text-gray-500">atau login dengan</span>
-                        </div>
-                    </div>
-
-                    <!-- Social Login -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <button type="button" class="flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z">
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z">
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z">
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z">
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">Google</span>
-                        </button>
-
-                        <button type="button" class="flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-                            <svg class="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z">
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">Facebook</span>
-                        </button>
-                    </div>
                 </form>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-500">atau login dengan</span>
+                    </div>
+                </div>
+
+                <!-- Social Login -->
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="{{ route('login.google') }}" class="flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 w-full">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">Google</span>
+                    </a>
+
+                    <form method="POST" action="{{ route('login.guest') }}">
+                        @csrf
+                        <button type="submit" class="flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 w-full">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" fill="#E5E7EB"/>
+                                <circle cx="12" cy="9" r="3" fill="#6B7280"/>
+                                <path d="M6.5 18c0-3 2.7-4.5 5.5-4.5s5.5 1.5 5.5 4.5" fill="#9CA3AF"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">Tamu</span>
+                        </button>
+                    </form>
+                </div>
 
                 <!-- Register Link -->
                 <div class="mt-8 text-center">

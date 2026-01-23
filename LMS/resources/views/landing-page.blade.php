@@ -30,6 +30,23 @@
             transform: scale(1.1);
         }
 
+        .step-detail {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(40px);
+            transition: opacity 400ms ease, transform 400ms ease;
+        }
+
+        .step-detail.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        .step-detail.from-left {
+            transform: translateX(-40px);
+        }
+
         #step2.active {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             border-color: #6366f1;
@@ -45,6 +62,33 @@
         .step:hover:not(.active) {
             border-color: #9ca3af;
             transform: scale(1.05);
+        }
+        @keyframes floatSlow {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-float-slow {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out both;
         }
     </style>
 </head>
@@ -113,6 +157,26 @@
     </section>
 
     <main class="relative bg-gradient-to-b from-white via-blue-50/30 to-white pb-32">
+        <!-- Decorative Background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <!-- Blob kiri atas -->
+            <div class=" absolute top-10 -left-24 w-60 h-60 sm:top-20 sm:-left-20 sm:w-96 sm:h-96 bg-gradient-to-br from-blue-400/30 to-indigo-400/30 rounded-full shape-blob animate-float"></div>
+            <!-- Blob kanan atas (sembunyikan di mobile) -->
+            <div class="hidden sm:block absolute top-40 -right-32 w-80 h-80 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-full shape-blob animate-float-slow"></div>
+            <!-- Blob bawah (perkecil di mobile) -->
+            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-48 sm:bottom-40 sm:left-1/4 sm:translate-x-0 sm:w-72 sm:h-72 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full shape-blob animate-float"></div>
+            <!-- Circle SVG (sembunyikan di mobile) -->
+            <svg class="hidden md:block absolute top-32 right-10 w-24 h-24 text-blue-200 opacity-20 animate-float" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <!-- Triangle SVG -->
+            <svg class="absolute bottom-16 left-4 w-20 h-20 sm:bottom-1/4 sm:left-10 sm:w-32 sm:h-32 text-indigo-200 opacity-20 animate-float-slow" viewBox="0 0 100 100">
+                <polygon points="50,10 90,90 10,90" fill="none" stroke="currentColor" stroke-width="2"/>
+                <polygon points="50,25 75,75 25,75" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
             <!-- HERO SECTION -->
             <section class="text-center mb-16 sm:mb-20">
@@ -376,8 +440,8 @@
                     <!-- Detail 1 -->
                     <div id="detail1" class="step-detail absolute inset-0 grid md:grid-cols-2 gap-6 sm:gap-12 items-center opacity-100 pointer-events-auto transition-opacity duration-300">
                         <div class="order-2 md:order-1 w-full max-w-sm sm:max-w-md mx-auto">
-                            <div class="relative p-4 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
-                                <img src="/SVG/Login.svg" alt="Daftar Login" class="w-full h-40 sm:h-64 object-contain drop-shadow-lg">
+                            <div class="relative p-4 sm:p-8 rounded-2xl bg-white/5 backdrop-blur-sm">
+                                <img src="/SVG/Login.svg" alt="Daftar Login" class="w-full h-40 sm:h-64 object-contain drop-shadow-md transition-transform duration-500 ease-out md:hover:scale-105">
                             </div>
                         </div>
                         <div class="order-1 md:order-2">
@@ -429,10 +493,10 @@
                     </div>
 
                     <!-- Detail 2 -->
-                    <div id="detail2" class="step-detail absolute inset-0 grid md:grid-cols-2 gap-6 sm:gap-12 items-center opacity-100 pointer-events-auto transition-opacity duration-300">
+                    <div id="detail2" class="step-detail absolute inset-0 grid md:grid-cols-2 gap-6 sm:gap-12 items-center transition-opacity duration-300">
                         <div class="order-2 md:order-1 w-full max-w-sm sm:max-w-md mx-auto">
-                            <div class="relative p-4 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
-                                <img src="/SVG/Materi.svg" alt="Daftar Login" class="w-full h-40 sm:h-64 object-contain drop-shadow-lg">
+                            <div class="relative p-4 sm:p-8 rounded-2xl bg-white/5 backdrop-blur-sm">
+                                <img src="/SVG/Materi.svg" alt="Daftar Login" class="w-full h-40 sm:h-64 object-contain drop-shadow-md transition-transform duration-500 ease-out md:hover:scale-105">
                             </div>
                         </div>
                         <div class="order-1 md:order-2">
@@ -484,10 +548,10 @@
                     </div>
 
                     <!-- Detail 3 -->
-                    <div id="detail3" class="step-detail absolute inset-0 grid md:grid-cols-2 gap-6 sm:gap-12 items-center opacity-100 pointer-events-auto transition-opacity duration-300">
+                    <div id="detail3" class="step-detail absolute inset-0 grid md:grid-cols-2 gap-6 sm:gap-12 items-center transition-opacity duration-300">
                         <div class="order-2 md:order-1 w-full max-w-sm sm:max-w-md mx-auto">
-                            <div class="relative p-4 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
-                                <img src="/SVG/Evaluasi.svg" alt="Daftar Login" class="w-full h-40 sm:h-64 object-contain drop-shadow-lg">
+                            <div class="relative p-4 sm:p-8 rounded-2xl bg-white/5 backdrop-blur-sm">
+                                <img src="/SVG/Evaluasi.svg" alt="Daftar Login" class="w-full h-40 sm:h-64 object-contain drop-shadow-md transition-transform duration-500 ease-out md:hover:scale-105">
                             </div>
                         </div>
                         <div class="order-1 md:order-2">
@@ -536,6 +600,19 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Bottom visual anchor -->
+                <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+                    <div class="h-24 bg-gradient-to-t from-blue-50/70 to-transparent"></div>
+                    <!-- step dots -->
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 hidden sm:flex items-center gap-2 opacity-60">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                        <span class="w-6 h-0.5 bg-blue-300"></span>
+                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                        <span class="w-6 h-0.5 bg-blue-300"></span>
+                        <span class="w-2 h-2 rounded-full bg-blue-300"></span>
                     </div>
                 </div>
             </section>
@@ -623,28 +700,36 @@
     </footer>
 
     <script>
-        function setStep(stepNum) {
-            for (let i = 1; i <= 3; i++) {
-                const step = document.getElementById('step' + i);
-                const detail = document.getElementById('detail' + i);
+        let currentStep = 1;
 
-                if (i === stepNum) {
-                    step.classList.add('active');
-                    detail.classList.remove('opacity-0', 'pointer-events-none');
-                    detail.classList.add('opacity-100', 'pointer-events-auto');
-                } else {
-                    step.classList.remove('active');
-                    detail.classList.add('opacity-0', 'pointer-events-none');
-                    detail.classList.remove('opacity-100', 'pointer-events-auto');
-                }
+        function setStep(step) {
+            if (step === currentStep) return;
+
+            // update step icon
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById('step' + i).classList.remove('active');
+            }
+            document.getElementById('step' + step).classList.add('active');
+
+            // update detail
+            const currentDetail = document.getElementById('detail' + currentStep);
+            const nextDetail = document.getElementById('detail' + step);
+
+            currentDetail.classList.remove('active');
+
+            nextDetail.classList.remove('from-left');
+            if (step < currentStep) {
+                nextDetail.classList.add('from-left');
             }
 
-            const progressBar = document.getElementById('progressBar');
-            const widthMap = {1: '33%', 2: '66%', 3: '100%'};
-            progressBar.style.width = widthMap[stepNum];
-        }
+            nextDetail.classList.add('active');
 
-        setStep(1);
+            // progress bar
+            const progress = step === 1 ? '33%' : step === 2 ? '66%' : '100%';
+            document.getElementById('progressBar').style.width = progress;
+
+            currentStep = step;
+        }
     </script>
 </body>
 </html>
