@@ -84,6 +84,34 @@
     </style>
 </head>
 <body class="bg-gray-100">
+    @if ($errors->any())
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-start gap-3 bg-red-50 border border-red-400 text-red-700 px-6 py-4 rounded-xl shadow-lg" style="display: none;">
+            <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8" class="animate-draw"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <div>
+                <h4 class="font-semibold text-red-800 mb-1">Terjadi Kesalahan</h4>
+                <ul class="text-red-700 text-sm space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
+    <!-- Success Popup -->
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-50 border border-green-400 text-green-700 px-6 py-4 rounded-xl shadow-lg" style="display: none;">
+            <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 13l4 4L19 7" stroke-dasharray="22" stroke-dashoffset="22" class="animate-draw"/>
+            </svg>
+            <span class="font-medium">{{ session('success') }}</span>
+        </div>
+    @endif
+
     <nav class="w-full bg-white shadow-sm relative z-10">
         <div class="w-full px-4 sm:px-6 md:px-12 py-2 sm:py-3 flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3">
@@ -91,18 +119,6 @@
             </div>
 
             <div class="flex items-center gap-4 sm:gap-6 text-sm">
-                {{-- MENU KANAN --}}
-                @guest
-                    <div class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-red-500">
-                            Login
-                        </a>
-                        <a href="{{ route('register') }}" class="px-2 py-1 sm:px-4 sm:py-2 bg-white text-blue-600 rounded-full hover:bg-blue-50">
-                            Register
-                        </a>
-                    </div>
-                @endguest
-
                 @auth
                     <div class="relative">
                         <button onclick="toggleDropdown()" class="flex items-center gap-1 sm:gap-2 focus:outline-none text-xs sm:text-sm">
@@ -185,7 +201,6 @@
         </div>
     </div>
 
-
     <!-- Hero -->
     <section class="bg-indigo-600 text-white">
         <div class="max-w-7xl mx-auto px-6 py-16 text-center">
@@ -245,6 +260,7 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
         function toggleDropdown() {
             const dropdown = document.getElementById('userDropdown');

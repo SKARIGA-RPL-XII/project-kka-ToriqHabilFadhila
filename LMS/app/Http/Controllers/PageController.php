@@ -18,6 +18,7 @@ class PageController extends Controller
 
     public function forgot()
     {
-        return view('auth.forgot-password');
+        // default mode = request link reset
+        return view('auth.forgot-password', ['mode' => 'request']);
     }
 }

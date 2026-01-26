@@ -21,7 +21,11 @@ Route::post('/login-guest', [AuthServices::class, 'loginAsGuest'])->name('login.
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.auth');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 
-
+// AUTH CONTROLLER PASSWORD RESET
+Route::get('/forgot-password', [PageController::class, 'forgot'])->name('password.request');
+Route::post('/forgot-password', [AuthServices::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthServices::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthServices::class, 'resetPassword'])->name('password.update');
 
 // DASHBOARD ROLE LOGIN
 Route::get('/dashboard', function () {
