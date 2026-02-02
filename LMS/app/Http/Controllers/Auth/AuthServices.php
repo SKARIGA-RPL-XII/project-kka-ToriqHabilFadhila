@@ -39,23 +39,6 @@ class AuthServices extends Controller
             ->with('success', 'Login berhasil. Selamat datang');
     }
 
-    public function loginAsGuest()
-    {
-        $user = User::create([
-            'nama'        => 'Tamu ' . Str::random(5),
-            'email'       => 'guest_' . Str::uuid() . '@guest.local',
-            'password'    => Hash::make(Str::random(16)),
-            'role'        => 'siswa',
-            'is_active'   => true,
-            'is_verified' => false,
-            'last_login'  => now(),
-        ]);
-        Auth::login($user);
-        return redirect()
-            ->route('dashboard')
-            ->with('success', 'Masuk sebagai tamu');
-    }
-
     public function register(Request $request)
     {
         $validated = $request->validate([

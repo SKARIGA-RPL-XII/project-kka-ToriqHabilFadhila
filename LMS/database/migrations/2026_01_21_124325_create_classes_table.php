@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id('id_class');
             $table->string('nama_kelas', 100);
             $table->text('deskripsi')->nullable();
-            $table->string('token_kelas', 50)->unique();
             $table->foreignId('created_by')
                 ->constrained('users', 'id_user')
                 ->cascadeOnDelete();
@@ -25,7 +24,6 @@ return new class extends Migration
             $table->timestamps();
 
             // Index biar query guru & token ngebut
-            $table->index('token_kelas');
             $table->index('created_by');
             $table->index('status');
         });

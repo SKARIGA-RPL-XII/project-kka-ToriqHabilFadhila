@@ -205,7 +205,7 @@
                 </div>
 
                 <!-- Social Login -->
-                <div class="grid grid-cols-2 gap-4">
+                <div class="w-full">
                     <a href="{{ route('google.auth') }}" onclick="handleGoogleLogin(this)" class="flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl transition-all duration-200 w-full">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -215,18 +215,6 @@
                         </svg>
                         <span class="text-sm font-medium text-gray-700">Masuk dengan Google</span>
                     </a>
-
-                    <form method="POST" action="{{ route('login.guest') }}" onsubmit="handleGuestLogin(this)">
-                        @csrf
-                        <button type="submit" class="flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl transition-all duration-200 w-full">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" fill="#E5E7EB"/>
-                                <circle cx="12" cy="9" r="3" fill="#6B7280"/>
-                                <path d="M6.5 18c0-3 2.7-4.5 5.5-4.5s5.5 1.5 5.5 4.5" fill="#9CA3AF"/>
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">Masuk Sebagai Tamu</span>
-                        </button>
-                    </form>
                 </div>
 
                 <!-- Register Link -->

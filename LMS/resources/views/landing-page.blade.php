@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,75 +7,11 @@
     <title>Learning Management System Berbasis AI</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        .step {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border: 3px solid #e5e7eb;
-            color: #9ca3af;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 10;
-        }
-
-        .step.active {
-            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%) !important;
-            border-color: #3b82f6 !important;
-            color: white !important;
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-            transform: scale(1.1);
-        }
-
-        .step-detail {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(40px);
-            transition: opacity 400ms ease, transform 400ms ease;
-        }
-
-        .step-detail.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(0);
-        }
-
-        .step-detail.from-left {
-            transform: translateX(-40px);
-        }
-
-        #step2.active {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            border-color: #6366f1;
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
-        }
-
-        #step3.active {
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
-            border-color: #8b5cf6;
-            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
-        }
-
-        .step:hover:not(.active) {
-            border-color: #9ca3af;
-            transform: scale(1.05);
-        }
-        @keyframes floatSlow {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
+        /* Custom animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(16px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -83,682 +19,551 @@
             }
         }
 
-        .animate-float-slow {
-            animation: floatSlow 6s ease-in-out infinite;
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
         }
 
-        .animate-fade-in-up {
-            animation: fadeInUp 0.8s ease-out both;
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Gradient backgrounds */
+        .gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .gradient-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .gradient-accent {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* Glass morphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <nav class="w-full bg-white shadow-sm relative z-10">
-        <div class="w-full px-4 sm:px-6 md:px-12 py-2 sm:py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2 sm:gap-3">
-                <img src="/images/LMS.png" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-cover">
-            </div>
-            <div class="flex items-center gap-4 sm:gap-6 text-sm">
-                {{-- MENU KANAN --}}
-                @guest
-                    <div class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-red-500">
+<body class="bg-gray-50 antialiased">
+    {{-- NAVIGATION --}}
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300">
+        <div class="w-full px-4 sm:px-6 md:px-16 py-2 sm:py-3">
+            <div class="flex justify-between items-center">
+                {{-- Logo --}}
+                <div class="flex items-center space-x-2">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                        <img src="{{ asset('images/LMS.png') }}" alt="LMS Logo" class="w-12 h-12">
+                    </div>
+                </div>
+
+                {{-- Navigation Links --}}
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#beranda" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Beranda</a>
+                    <a href="#fitur" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Fitur</a>
+                    <a href="#cara-kerja" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Cara Kerja</a>
+                    <a href="#tentang" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Tentang</a>
+                </div>
+
+                {{-- Auth Buttons --}}
+                <div class="flex items-center space-x-4">
+                    @guest
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
                             Login
                         </a>
-                        <a href="{{ route('register') }}" class="px-2 py-1 sm:px-4 sm:py-2 bg-white text-blue-600 rounded-full hover:bg-blue-50">
-                            Register
+                        <a href="{{ route('register') }}" class="px-6 py-2.5 gradient-primary text-white rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                            Daftar Gratis
                         </a>
-                    </div>
-                @endguest
+                    @else
+                        <a href="{{ route('dashboard') }}" class="px-6 py-2.5 gradient-primary text-white rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                            Dashboard
+                        </a>
+                    @endguest
+
+                    {{-- Mobile Menu Button --}}
+                    <button class="md:hidden text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Banner Section -->
-    <section class="relative bg-cover bg-center h-[300px] sm:h-[400px] md:h-[500px] -mt-16" style="background-image: url('/images/LMS Banner.png');">
-        <!-- Overlay gradasi -->
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/40 via-orange-500/30 to-green-500/30 flex flex-col justify-center items-start text-left text-white px-4 sm:px-8 md:px-16 pt-12 sm:pt-16 md:pt-24">
-            <h1 class="text-2xl sm:text-3xl md:text-6xl font-bold mb-2 sm:mb-4">
-                Selamat Datang di LMS Kami
-            </h1>
-            <p class="text-sm sm:text-lg md:text-2xl mb-4 sm:mb-6 max-w-xs sm:max-w-lg md:max-w-xl">
-                Belajar jadi lebih mudah, kapan saja dan di mana saja, dengan platform digital yang terstruktur dan adaptif.
-            </p>
+    {{-- HERO SECTION --}}
+    <section id="beranda" class="relative pt-32 pb-20 overflow-hidden">
+        {{-- Background Elements --}}
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
+            <div class="absolute top-40 right-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: 2s"></div>
+            <div class="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: 4s"></div>
+        </div>
+
+        <div class="w-full px-4 sm:px-6 md:px-16 py-16 sm:py-20 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                {{-- Hero Content --}}
+                <div class="text-center lg:text-left">
+                    <div class="inline-block mb-4">
+                        <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                            <i class="fa-solid fa-book"></i> Platform Pembelajaran Terdepan
+                        </span>
+                    </div>
+
+                    <h1 class="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                        Belajar Lebih
+                        <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                            Efektif & Adaptif
+                        </span>
+                        dengan AI
+                    </h1>
+
+                    <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                        Platform LMS berbasis AI yang membantu proses belajar menjadi lebih terarah, personal, dan mudah diakses kapan saja, di mana saja.
+                    </p>
+
+                    {{-- CTA Buttons --}}
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="{{ route('register') }}" class="px-8 py-4 gradient-primary text-white rounded-lg font-semibold text-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+                            Mulai Belajar Gratis
+                        </a>
+                        <a href="#cara-kerja" class="px-8 py-4 bg-white text-purple-600 border-2 border-purple-600 rounded-lg font-semibold text-lg hover:bg-purple-50 transition-all duration-200">
+                            Pelajari Lebih Lanjut
+                        </a>
+                    </div>
+
+                    {{-- Features Pills --}}
+                    <div class="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
+                        <div class="flex items-center gap-2 text-gray-700">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">Gratis untuk Siswa</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-700">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">Sertifikat Digital</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-700">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">AI-Powered</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Hero Image --}}
+                <div class="relative">
+                    <div class="relative z-10">
+                        <img src="/SVG/Landing Page.svg" alt="LMS Illustration" class="w-full animate-float">
+                    </div>
+                    {{-- Decorative elements --}}
+                    <div class="absolute -top-4 -right-4 w-24 h-24 gradient-secondary rounded-lg opacity-50 blur-2xl"></div>
+                    <div class="absolute -bottom-4 -left-4 w-32 h-32 gradient-accent rounded-lg opacity-50 blur-2xl"></div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <main class="relative bg-gradient-to-b from-white via-blue-50/30 to-white pb-32">
-        <!-- Decorative Background -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            <!-- Blob kiri atas -->
-            <div class=" absolute top-10 -left-24 w-60 h-60 sm:top-20 sm:-left-20 sm:w-96 sm:h-96 bg-gradient-to-br from-blue-400/30 to-indigo-400/30 rounded-full shape-blob animate-float"></div>
-            <!-- Blob kanan atas (sembunyikan di mobile) -->
-            <div class="hidden sm:block absolute top-40 -right-32 w-80 h-80 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-full shape-blob animate-float-slow"></div>
-            <!-- Blob bawah (perkecil di mobile) -->
-            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-48 sm:bottom-40 sm:left-1/4 sm:translate-x-0 sm:w-72 sm:h-72 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full shape-blob animate-float"></div>
-            <!-- Circle SVG (sembunyikan di mobile) -->
-            <svg class="hidden md:block absolute top-32 right-10 w-24 h-24 text-blue-200 opacity-20 animate-float" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="2"/>
-                <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="2"/>
-                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <!-- Triangle SVG -->
-            <svg class="absolute bottom-16 left-4 w-20 h-20 sm:bottom-1/4 sm:left-10 sm:w-32 sm:h-32 text-indigo-200 opacity-20 animate-float-slow" viewBox="0 0 100 100">
-                <polygon points="50,10 90,90 10,90" fill="none" stroke="currentColor" stroke-width="2"/>
-                <polygon points="50,25 75,75 25,75" fill="none" stroke="currentColor" stroke-width="2"/>
-            </svg>
+    {{-- STATS SECTION --}}
+    <section class="py-16 bg-white">
+        <div class="w-full px-4 sm:px-6 md:px-16">
+            <div class="grid md:grid-cols-3 gap-8">
+                {{-- Stat 1 --}}
+                <div class="text-center p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                        1.000+
+                    </div>
+                    <div class="text-gray-600 font-semibold text-lg">Pengguna Aktif</div>
+                    <div class="text-gray-500 text-sm mt-1">Siswa & pengajar terdaftar</div>
+                </div>
+
+                {{-- Stat 2 --}}
+                <div class="text-center p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+                        120+
+                    </div>
+                    <div class="text-gray-600 font-semibold text-lg">Materi Pembelajaran</div>
+                    <div class="text-gray-500 text-sm mt-1">Modul, video, dan kuis</div>
+                </div>
+
+                {{-- Stat 3 --}}
+                <div class="text-center p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-5xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+                        95%
+                    </div>
+                    <div class="text-gray-600 font-semibold text-lg">Tingkat Kepuasan</div>
+                    <div class="text-gray-500 text-sm mt-1">Berdasarkan feedback pengguna</div>
+                </div>
+            </div>
         </div>
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
-            <!-- HERO SECTION -->
-            <section class="text-center mb-16 sm:mb-20">
-                <!-- Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs sm:text-sm font-semibold mb-6 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    Learning Management System Terdepan
-                </div>
+    </section>
 
-                <!-- Main Heading -->
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                    Platform Pembelajaran <br>
-                    <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                        Berbasis AI
+    {{-- FEATURES SECTION --}}
+    <section id="fitur" class="py-20 bg-gray-50">
+        <div class="w-full px-4 sm:px-6 md:px-16">
+            {{-- Section Header --}}
+            <div class="text-center mb-16">
+                <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                    <i class="fa-solid fa-star text-purple-600"></i> Fitur Unggulan
+                </span>
+                <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 mt-4 mb-4">
+                    Kenapa Memilih
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        LMS AI?
                     </span>
-                </h1>
-
-                <!-- Subheading -->
-                <p class="text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
-                    LMS berbasis AI yang membantu proses belajar menjadi lebih <span class="font-semibold text-gray-900">terarah</span>,
-                    <span class="font-semibold text-gray-900">adaptif</span>, dan mudah diakses oleh siapa saja, kapan saja.
-                </p>
-
-                <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
-                    <a href="#fitur" class="group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300">
-                        Coba Sekarang
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 inline-block ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <!-- Trust Indicators -->
-                <div class="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-gray-500">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                        <span>Gratis untuk Siswa</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                        <span>AI-Powered Learning</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                        <span>Sertifikat Digital</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FEATURES SECTION -->
-            <section id="fitur" class="mb-16 sm:mb-24 px-4 sm:px-8 md:px-12">
-                <div class="text-center mb-12 sm:mb-16">
-                    <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs sm:text-sm font-semibold mb-2 sm:mb-4">
-                        Fitur Unggulan
-                    </span>
-                    <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
-                        Kenapa Memilih LMS Kami?
-                    </h2>
-                    <p class="text-sm sm:text-lg text-gray-600 max-w-xs sm:max-w-xl md:max-w-2xl mx-auto">
-                        Dilengkapi dengan teknologi AI dan fitur-fitur modern untuk pengalaman belajar yang optimal.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-                    <!-- Feature 1 -->
-                    <div class="group p-6 sm:p-8 rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-300">
-                            <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
-                            </svg>
-                        </div>
-                        <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900">Materi Terstruktur</h3>
-                        <p class="text-sm sm:text-gray-600 leading-relaxed">
-                            Kelola modul, video, dan dokumen pembelajaran dalam satu sistem terpusat dengan organisasi yang rapi dan mudah diakses.
-                        </p>
-                    </div>
-
-                    <!-- Feature 2 -->
-                    <div class="group p-6 sm:p-8 rounded-2xl bg-white border border-gray-200 hover:border-indigo-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-300">
-                            <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                            </svg>
-                        </div>
-                        <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900">Evaluasi Otomatis</h3>
-                        <p class="text-sm sm:text-gray-600 leading-relaxed">
-                            Kuis dan tugas dinilai otomatis dengan bantuan AI untuk feedback instan dan akurat kepada setiap siswa.
-                        </p>
-                    </div>
-
-                    <!-- Feature 3 -->
-                    <div class="group p-6 sm:p-8 rounded-2xl bg-white border border-gray-200 hover:border-purple-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-105 sm:group-hover:scale-110 transition-transform duration-300">
-                            <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                            </svg>
-                        </div>
-                        <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900">Progress Real-time</h3>
-                        <p class="text-sm sm:text-gray-600 leading-relaxed">
-                            Pantau perkembangan belajar siswa secara akurat dan transparan dengan dashboard analytics yang komprehensif.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- STATS SECTION -->
-            <section class="py-16 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 border-y border-gray-200 bg-gradient-to-br from-blue-50/50 via-indigo-50/30 to-purple-50/50 mb-24">
-                <div class="max-w-7xl mx-auto">
-                    <div class="text-center mb-12 sm:mb-16">
-                        <span class="inline-block px-3 py-1 rounded-full bg-white/80 backdrop-blur-sm text-gray-700 text-xs sm:text-sm font-semibold mb-3 shadow-sm">
-                            Dipercaya Ribuan Pengguna
-                        </span>
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-                            Platform dalam Angka
-                        </h2>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                        <!-- STAT 1 -->
-                        <div class="group relative">
-                            <div class="flex flex-col items-center gap-4 p-6 sm:p-8 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 hover:-translate-y-1">
-                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-blue-500/30">
-                                    <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                    </svg>
-                                </div>
-
-                                <div class="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent tracking-tight">
-                                    1.000<span class="text-blue-600">+</span>
-                                </div>
-
-                                <div class="text-center">
-                                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-1">
-                                        Pengguna Aktif
-                                    </h3>
-                                    <p class="text-xs sm:text-sm text-gray-500">
-                                        Siswa & pengajar terdaftar
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- STAT 2 -->
-                        <div class="group relative">
-                            <div class="flex flex-col items-center gap-4 p-6 sm:p-8 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-indigo-200 hover:-translate-y-1">
-                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
-                                    <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                    </svg>
-                                </div>
-
-                                <div class="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-indigo-600 to-indigo-500 bg-clip-text text-transparent tracking-tight">
-                                    120<span class="text-indigo-600">+</span>
-                                </div>
-
-                                <div class="text-center">
-                                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-1">
-                                        Materi Pembelajaran
-                                    </h3>
-                                    <p class="text-xs sm:text-sm text-gray-500">
-                                        Modul, video, dan kuis
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- STAT 3 -->
-                        <div class="group relative">
-                            <div class="flex flex-col items-center gap-4 p-6 sm:p-8 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-green-200 hover:-translate-y-1">
-                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-green-500/30">
-                                    <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
-                                    </svg>
-                                </div>
-
-                                <div class="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent tracking-tight">
-                                    95<span class="text-green-600">%</span>
-                                </div>
-
-                                <div class="text-center">
-                                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-1">
-                                        Tingkat Kepuasan
-                                    </h3>
-                                    <p class="text-xs sm:text-sm text-gray-500">
-                                        Berdasarkan feedback pengguna
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- HOW IT WORKS SECTION - FIXED VERSION -->
-            <section id="cara-kerja" class="py-12 sm:py-16 md:py-20 px-4">
-                <div class="max-w-6xl mx-auto">
-                    <!-- Header -->
-                    <div class="text-center mb-12 sm:mb-16">
-                        <span class="inline-block px-4 py-2 rounded-full bg-purple-100 text-purple-600 text-sm font-semibold mb-4">
-                            Cara Kerja
-                        </span>
-                        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                            Mulai Belajar dalam 3 Langkah
-                        </h2>
-                        <p class="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-                            Proses sederhana untuk mengelola pembelajaran secara digital dan terstruktur.
-                        </p>
-                    </div>
-
-                    <!-- Steps Progress (Desktop Only) -->
-                    <div class="relative max-w-4xl mx-auto mb-16 hidden md:block">
-                        <div class="absolute top-8 left-0 right-0 h-1 bg-gray-200 rounded-full">
-                            <div id="progressBar" class="h-1 rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 transition-all duration-500" style="width: 33%;"></div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-8 relative">
-                            <!-- Step 1 -->
-                            <button onclick="setStep(1)" class="group text-center focus:outline-none">
-                                <div id="step1" class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg transition-all duration-300 hover:scale-110">
-                                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                </div>
-                                <h3 class="font-bold text-gray-900 mb-2">Daftar & Login</h3>
-                                <p class="text-sm text-gray-500">Buat akun dengan mudah</p>
-                            </button>
-
-                            <!-- Step 2 -->
-                            <button onclick="setStep(2)" class="group text-center focus:outline-none">
-                                <div id="step2" class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-white border-3 border-gray-300 text-gray-400 transition-all duration-300 hover:scale-105 hover:border-gray-400">
-                                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                    </svg>
-                                </div>
-                                <h3 class="font-bold text-gray-900 mb-2">Ikuti Materi</h3>
-                                <p class="text-sm text-gray-500">Akses konten belajar</p>
-                            </button>
-
-                            <!-- Step 3 -->
-                            <button onclick="setStep(3)" class="group text-center focus:outline-none">
-                                <div id="step3" class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-white border-3 border-gray-300 text-gray-400 transition-all duration-300 hover:scale-105 hover:border-gray-400">
-                                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                                <h3 class="font-bold text-gray-900 mb-2">Evaluasi & Progress</h3>
-                                <p class="text-sm text-gray-500">Pantau perkembangan</p>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Mobile Steps Indicator -->
-                    <div class="flex justify-center gap-2 mb-8 md:hidden">
-                        <div id="mobile-step1" class="w-2 h-2 rounded-full bg-blue-500"></div>
-                        <div id="mobile-step2" class="w-2 h-2 rounded-full bg-gray-300"></div>
-                        <div id="mobile-step3" class="w-2 h-2 rounded-full bg-gray-300"></div>
-                    </div>
-
-                    <!-- Step Details Container -->
-                    <div class="relative overflow-hidden">
-                        <!-- Detail 1 -->
-                        <div id="detail1" class="transition-all duration-500 opacity-100">
-                            <div class="grid md:grid-cols-2 gap-8 items-center">
-                                <div class="order-2 md:order-1 flex items-center justify-center p-8">
-                                    <img src="/SVG/Login.svg" alt="Daftar Login" class="w-full max-w-sm h-64 object-contain">
-                                </div>
-                                <div class="order-1 md:order-2">
-                                    <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-semibold mb-3">
-                                        LANGKAH 1
-                                    </span>
-                                    <h3 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-900">
-                                        Daftar & Login Mudah
-                                    </h3>
-                                    <p class="text-gray-600 mb-6 leading-relaxed">
-                                        Pengguna membuat akun dan masuk ke sistem LMS secara aman dengan proses yang cepat dan intuitif.
-                                    </p>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-blue-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Email terverifikasi</span>
-                                        </div>
-
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Akses aman</span>
-                                        </div>
-
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-green-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Profil personal</span>
-                                        </div>
-
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-purple-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Notifikasi real-time</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Detail 2 -->
-                        <div id="detail2" class="hidden transition-all duration-500">
-                            <div class="grid md:grid-cols-2 gap-8 items-center">
-                                <div class="order-2 md:order-1 flex items-center justify-center p-8">
-                                    <img src="/SVG/Materi.svg" alt="Ikuti Materi" class="w-full max-w-sm h-64 object-contain">
-                                </div>
-                                <div class="order-1 md:order-2">
-                                    <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-600 text-xs font-semibold mb-3">
-                                        LANGKAH 2
-                                    </span>
-                                    <h3 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-900">
-                                        Ikuti Materi Interaktif
-                                    </h3>
-                                    <p class="text-gray-600 mb-6 leading-relaxed">
-                                        Akses modul, video, latihan, dan kuis secara terstruktur untuk memperdalam pemahaman dengan cara yang menyenangkan.
-                                    </p>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-blue-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Video pembelajaran</span>
-                                        </div>
-
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Modul interaktif</span>
-                                        </div>
-
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-green-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Latihan & kuis</span>
-                                        </div>
-
-                                        <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-purple-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium text-gray-900 text-sm">Feedback AI</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Detail 3 -->
-                        <div id="detail3" class="hidden transition-all duration-500">
-                            <div class="grid md:grid-cols-2 gap-8 items-center">
-                                <div class="order-2 md:order-1 flex items-center justify-center p-8">
-                                    <img src="/SVG/Evaluasi.svg" alt="Evaluasi" class="w-full max-w-sm h-64 object-contain">
-                                </div>
-                                <div class="order-1 md:order-2">
-                                    <span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-600 text-xs font-semibold mb-3">
-                                        LANGKAH 3
-                                    </span>
-                                    <h3 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-900">
-                                        Evaluasi & Lacak Progress
-                                    </h3>
-                                    <p class="text-gray-600 mb-6 leading-relaxed">
-                                        Sistem memberikan nilai, feedback, dan menampilkan progres belajar secara real-time dengan analytics yang detail.
-                                    </p>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <div class="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-blue-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900 text-base mb-1">Nilai Otomatis</h4>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900 text-base mb-1">Progress Real-time</h4>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-green-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900 text-base mb-1">Sertifikat Digital</h4>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-purple-300 transition-all">
-                                            <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900 text-base mb-1">Laporan Detail</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Navigation Buttons (Mobile) -->
-                    <div class="flex justify-center gap-4 mt-8 md:hidden">
-                        <button onclick="prevStep()" id="prevBtn" class="px-6 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                            ← Sebelumnya
-                        </button>
-                        <button onclick="nextStep()" id="nextBtn" class="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-all">
-                            Selanjutnya →
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- CTA SECTION -->
-    <section class="relative overflow-hidden">
-        <img src="/images/LMS CTA.png" alt="" class="absolute inset-0 w-full h-full object-cover">
-        <!-- Overlay biar teks kebaca -->
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/40 via-orange-500/30 to-green-500/30"></div>
-        <div class="relative z-10 w-full px-4 sm:px-8 md:px-12 py-6 sm:py-8 md:py-10 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 sm:gap-6 text-center sm:text-left">
-            <div class="text-white mb-4 sm:mb-0">
-                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">
-                    Tingkatkan Cara Belajar Kamu
                 </h2>
-                <p class="text-white/90 text-sm sm:text-base md:text-lg">
-                    Akses materi, latihan, dan evaluasi berbasis AI kapan saja dan di mana saja.
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Dilengkapi dengan teknologi AI dan fitur-fitur modern untuk pengalaman belajar yang optimal dan hasil maksimal
                 </p>
             </div>
-            <a href="/dashboard" class="bg-white text-red-600 font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-2xl hover:bg-red-50 transition text-sm sm:text-base">
-                Mulai Belajar
-            </a>
+
+            {{-- Features Grid --}}
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {{-- Feature 1 --}}
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 gradient-primary rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Materi Terstruktur</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Kelola modul, video, dan dokumen pembelajaran dalam satu sistem terpusat dengan organisasi yang rapi dan mudah diakses.
+                    </p>
+                </div>
+
+                {{-- Feature 2 --}}
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 gradient-secondary rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Evaluasi Otomatis</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Kuis dan tugas dinilai otomatis dengan bantuan AI untuk feedback instan dan akurat kepada setiap siswa.
+                    </p>
+                </div>
+
+                {{-- Feature 3 --}}
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 gradient-accent rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Progress Real-time</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Pantau perkembangan belajar siswa secara akurat dan transparan dengan dashboard analytics yang komprehensif.
+                    </p>
+                </div>
+
+                {{-- Feature 4 --}}
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Pembelajaran Adaptif</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        AI menyesuaikan materi dan tingkat kesulitan berdasarkan kemampuan dan progres belajar setiap siswa.
+                    </p>
+                </div>
+
+                {{-- Feature 5 --}}
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Video Interaktif</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Pembelajaran melalui video berkualitas tinggi dengan fitur interaktif dan subtitle otomatis berbasis AI.
+                    </p>
+                </div>
+
+                {{-- Feature 6 --}}
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-teal-500 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Sertifikat Digital</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Dapatkan sertifikat digital yang terverifikasi setelah menyelesaikan kursus untuk meningkatkan kredibilitas.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-gray-100">
-        <div class="w-full px-4 sm:px-8 md:px-12 py-10 sm:py-12 md:py-14">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
-                <!-- Brand -->
-                <div>
-                    <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                        <img src="/images/LMS.png" alt="LMS Logo" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover">
-                        <span class="text-base sm:text-lg font-semibold text-gray-800">
-                            LMS AI
-                        </span>
+    {{-- HOW IT WORKS SECTION --}}
+    <section id="cara-kerja" class="py-20 bg-white">
+        <div class="w-full px-4 sm:px-6 md:px-16">
+            {{-- Section Header --}}
+            <div class="text-center mb-16">
+                <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+                    <i class="fa-solid fa-bullseye text-purple-600"></i> Cara Kerja
+                </span>
+                <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 mt-4 mb-4">
+                    Mulai Belajar dalam
+                    <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                        3 Langkah Mudah
+                    </span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Proses sederhana dan intuitif untuk memulai perjalanan pembelajaran digital Anda
+                </p>
+            </div>
+
+            {{-- Steps --}}
+            <div class="grid md:grid-cols-3 gap-8 relative">
+                {{-- Connecting lines (hidden on mobile) --}}
+                <div class="hidden md:block absolute top-20 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-200 via-blue-200 to-green-200 z-0"></div>
+                {{-- Step 1 --}}
+                <div class="relative z-10">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-purple-100 hover:border-purple-300 transition-all duration-300">
+                        <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
+                            1
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3 text-center">Daftar & Login</h3>
+                        <p class="text-gray-600 text-center mb-6">
+                            Buat akun dengan mudah menggunakan email atau akun sosial media Anda
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Email terverifikasi</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Akses aman & terlindungi</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Profil personal disesuaikan</span>
+                            </li>
+                        </ul>
                     </div>
-                    <p class="text-xs sm:text-sm text-gray-500 leading-relaxed">
-                        Learning Management System berbasis AI untuk membantu belajar lebih efektif, fleksibel, dan relevan dengan kebutuhan masa kini.
+                </div>
+
+                {{-- Step 2 --}}
+                <div class="relative z-10">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-blue-100 hover:border-blue-300 transition-all duration-300">
+                        <div class="w-16 h-16 gradient-accent rounded-full flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
+                            2
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3 text-center">Ikuti Materi</h3>
+                        <p class="text-gray-600 text-center mb-6">
+                            Akses konten pembelajaran interaktif yang disesuaikan dengan kebutuhan Anda
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Video pembelajaran HD</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Modul interaktif</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Latihan & kuis AI</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- Step 3 --}}
+                <div class="relative z-10">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-green-100 hover:border-green-300 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
+                            3
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3 text-center">Evaluasi & Progress</h3>
+                        <p class="text-gray-600 text-center mb-6">
+                            Pantau perkembangan dan raih sertifikat untuk setiap pencapaian Anda
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Penilaian otomatis</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Dashboard analitik</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600">Sertifikat digital</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- CTA SECTION --}}
+    <section class="py-24 relative overflow-hidden bg-cover bg-center" style="background-image: url('{{ asset('images/LMS CTA.png') }}');">
+        <div class="absolute inset-0 gradient-primary opacity-60"></div>
+        {{-- Background decoration --}}
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="w-full px-4 sm:px-6 md:px-16 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6">
+                    Siap Meningkatkan Cara Belajar Anda?
+                </h2>
+                <p class="text-xl text-purple-100 mb-8 leading-relaxed">
+                    Bergabunglah dengan ribuan pelajar yang sudah merasakan pengalaman belajar yang lebih efektif dengan LMS AI
+                </p>
+            </div>
+        </div>
+    </section>
+
+    {{-- FOOTER --}}
+    <footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
+        <div class="w-full px-4 sm:px-6 md:px-16">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                {{-- Brand --}}
+                <div class="md:col-span-1">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center">
+                            <img src="{{ asset('images/LMS.png') }}" alt="LMS Logo" class="w-12 h-12">
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-4">
+                        Learning Management System berbasis AI untuk pembelajaran yang lebih efektif dan personal.
                     </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-                <!-- Menu -->
+
+                {{-- Menu Links --}}
                 <div>
-                    <h4 class="text-sm font-semibold text-gray-800 mb-3">Menu</h4>
-                    <ul class="space-y-2 sm:space-y-3 text-xs sm:text-sm text-gray-500">
-                        <li><a href="/" class="hover:text-blue-600 transition">Beranda</a></li>
-                        <li><a href="/courses" class="hover:text-blue-600 transition">Kelas</a></li>
-                        <li><a href="/about" class="hover:text-blue-600 transition">Tentang Kami</a></li>
-                        <li><a href="/contact" class="hover:text-blue-600 transition">Kontak</a></li>
+                    <h3 class="text-white font-bold mb-4">Menu</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#beranda" class="hover:text-purple-400 transition-colors">Beranda</a></li>
+                        <li><a href="#fitur" class="hover:text-purple-400 transition-colors">Fitur</a></li>
+                        <li><a href="#cara-kerja" class="hover:text-purple-400 transition-colors">Cara Kerja</a></li>
+                        <li><a href="{{ route('login') }}" class="hover:text-purple-400 transition-colors">Login</a></li>
                     </ul>
                 </div>
-                <!-- Bantuan -->
+
+                {{-- Support Links --}}
                 <div>
-                    <h4 class="text-sm font-semibold text-gray-800 mb-3">Bantuan</h4>
-                    <ul class="space-y-2 sm:space-y-3 text-xs sm:text-sm text-gray-500">
-                        <li><a href="/faq" class="hover:text-blue-600 transition">FAQ</a></li>
-                        <li><a href="/privacy" class="hover:text-blue-600 transition">Kebijakan Privasi</a></li>
-                        <li><a href="/terms" class="hover:text-blue-600 transition">Syarat & Ketentuan</a></li>
+                    <h3 class="text-white font-bold mb-4">Bantuan</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">Panduan Pengguna</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">Syarat & Ketentuan</a></li>
                     </ul>
                 </div>
-                <!-- Kontak -->
+
+                {{-- Contact --}}
                 <div>
-                    <h4 class="text-sm font-semibold text-gray-800 mb-3">Kontak</h4>
-                    <ul class="space-y-2 sm:space-y-3 text-xs sm:text-sm text-gray-500">
-                        <li>Email: support@lms-ai.id</li>
-                        <li>WhatsApp: +62 8xxx xxxx xxx</li>
-                        <li>Indonesia 🇮🇩</li>
+                    <h3 class="text-white font-bold mb-4">Kontak Kami</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start gap-2">
+                            <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>support@lms-ai.id</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                            <span>+62 8xxx xxxx xxx</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>Indonesia 🇮🇩</span>
+                        </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Divider -->
-            <div class="border-t border-gray-100 mt-8 sm:mt-12 pt-4 sm:pt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-4">
-                <p class="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-                    © {{ date('Y') }} LMS Berbasis AI. All rights reserved.
-                </p>
-                <div class="flex items-center gap-3 text-gray-400">
-                    <a href="#" class="hover:text-blue-600 transition">Instagram</a>
-                    <a href="#" class="hover:text-blue-600 transition">LinkedIn</a>
-                    <a href="#" class="hover:text-blue-600 transition">GitHub</a>
-                </div>
+            {{-- Copyright --}}
+            <div class="pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
+                <p>© {{ date('Y') }} LMS AI. All rights reserved. Made with ❤️ in Indonesia</p>
             </div>
         </div>
     </footer>
 
+    {{-- Smooth scroll script --}}
     <script>
-        let currentStep = 1;
-        function setStep(step) {
-            if (step === currentStep) return;
-            // Hide all details
-            document.getElementById('detail1').classList.add('hidden');
-            document.getElementById('detail2').classList.add('hidden');
-            document.getElementById('detail3').classList.add('hidden');
-            // Show selected detail
-            document.getElementById('detail' + step).classList.remove('hidden');
-            // Update desktop step icons
-            for (let i = 1; i <= 3; i++) {
-                const stepEl = document.getElementById('step' + i);
-                if (stepEl) {
-                    if (i === step) {
-                        stepEl.classList.remove('bg-white', 'border-3', 'border-gray-300', 'text-gray-400');
-                        stepEl.classList.add('bg-gradient-to-br', 'from-blue-500', 'to-blue-600', 'text-white');
-                    } else {
-                        stepEl.classList.remove('bg-gradient-to-br', 'from-blue-500', 'to-blue-600', 'text-white');
-                        stepEl.classList.add('bg-white', 'border-3', 'border-gray-300', 'text-gray-400');
-                    }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
-            }
-
-            // Update mobile indicators
-            for (let i = 1; i <= 3; i++) {
-                const mobileStep = document.getElementById('mobile-step' + i);
-                if (mobileStep) {
-                    if (i === step) {
-                        mobileStep.classList.remove('bg-gray-300');
-                        mobileStep.classList.add('bg-blue-500');
-                    } else {
-                        mobileStep.classList.remove('bg-blue-500');
-                        mobileStep.classList.add('bg-gray-300');
-                    }
-                }
-            }
-
-            // Update progress bar
-            const progressBar = document.getElementById('progressBar');
-            if (progressBar) {
-                const progress = step === 1 ? '33%' : step === 2 ? '66%' : '100%';
-                progressBar.style.width = progress;
-            }
-
-            // Update mobile navigation buttons
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            if (prevBtn) prevBtn.disabled = step === 1;
-            if (nextBtn) nextBtn.disabled = step === 3;
-            currentStep = step;
-        }
-
-        function nextStep() {
-            if (currentStep < 3) setStep(currentStep + 1);
-        }
-
-        function prevStep() {
-            if (currentStep > 1) setStep(currentStep - 1);
-        }
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', function() {
-            setStep(1);
+            });
         });
     </script>
 </body>
