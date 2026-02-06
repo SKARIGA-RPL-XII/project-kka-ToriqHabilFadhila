@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Classes;
 use App\Models\TokenKelas;
+use App\Models\Material;
+use App\Models\Assignment;
+use App\Models\Question;
+use App\Models\QuestionOption;
 
 class GuruController extends Controller
 {
@@ -19,8 +24,7 @@ class GuruController extends Controller
             'max_students' => 'required|integer|min:1',
         ]);
         $token = null;
-        DB::transaction(function () use ($request, &$token) { // <-- & penting
-            // Buat kelas
+        DB::transaction(function () use ($request, &$token) {
             $kelas = Classes::create([
                 'nama_kelas'  => $request->nama_kelas,
                 'deskripsi'   => $request->deskripsi,
@@ -28,18 +32,156 @@ class GuruController extends Controller
                 'max_students'=> $request->max_students,
                 'status'      => 'active',
             ]);
-            // Generate token join
             $generatedToken = TokenKelas::create([
                 'id_class'   => $kelas->id_class,
                 'token_code' => Str::upper(Str::random(8)),
                 'created_by' => Auth::user()->id_user,
-                'max_uses'   => 0, // unlimited
+                'max_uses'   => 0,
                 'times_used' => 0,
             ]);
-            $token = $generatedToken->token_code; // <-- simpan ke variabel reference
+            $token = $generatedToken->token_code;
         });
         return redirect()->back()
-            ->with('success', 'Kelas berhasil dibuat')
-            ->with('token', $token); // sekarang ini akan berisi token yang benar
+            ->with('success', 'Kelas berhasil dibuat! Token: ' . $token)
+            ->with('token', $token)
+            ->with('redirect_delay', false);
     }
+
+    public function storeMaterial(Request $request)
+    {
+        $request->validate([
+            'id_class' => 'required|exists:classes,id_class',
+            'judul' => 'required|string|max:200',
+            'konten' => 'nullable|string',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,zip|max:10240',
+        ]);
+
+        $filePath = null;
+        $fileType = null;
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('materials', $fileName, 'public');
+            $fileType = $file->getClientOriginalExtension();
+        }
+
+        Material::create([
+            'id_class' => $request->id_class,
+            'judul' => $request->judul,
+            'konten' => $request->konten,
+            'file_path' => $filePath,
+            'file_type' => $fileType,
+            'uploaded_by' => Auth::user()->id_user,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Materi berhasil diupload!')
+            ->with('redirect_delay', false);
+    }
+
+    public function storeAssignment(Request $request)
+    {
+        $request->validate([
+            'id_class' => 'required|exists:classes,id_class',
+            'judul' => 'required|string|max:200',
+            'deskripsi' => 'nullable|string',
+            'tipe' => 'required|in:pilihan_ganda,essay,praktik',
+            'deadline' => 'required|date|after:now',
+            'max_score' => 'required|integer|min:1|max:100',
+        ]);
+
+        $assignment = Assignment::create([
+            'id_class' => $request->id_class,
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tipe' => $request->tipe,
+            'deadline' => $request->deadline,
+            'max_score' => $request->max_score,
+            'created_by' => Auth::user()->id_user,
+        ]);
+
+        return redirect()->route('guru.assignments.questions', $assignment->id_assignment)
+            ->with('success', 'Tugas berhasil dibuat! Sekarang tambahkan soal.');
+    }
+
+    public function showClass($id)
+    {
+        $kelas = Classes::with(['enrollments.user', 'creator', 'activeToken', 'assignments'])->findOrFail($id);
+        return view('guru.class-detail', compact('kelas'));
+    }
+
+    public function showQuestions($id)
+    {
+        $assignment = Assignment::with('questions.options')->findOrFail($id);
+        return view('guru.questions', compact('assignment'));
+    }
+
+    public function storeQuestion(Request $request, $id)
+    {
+        $assignment = Assignment::findOrFail($id);
+
+        $request->validate([
+            'soal' => 'required|string',
+            'poin' => 'required|integer|min:1',
+            'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
+            'pilihan.*' => 'required|string',
+            'jawaban_benar' => $assignment->tipe === 'pilihan_ganda' ? 'required|integer' : 'nullable',
+        ]);
+
+        DB::transaction(function () use ($request, $assignment) {
+            $question = $assignment->questions()->create([
+                'soal' => $request->soal,
+                'poin' => $request->poin,
+                'urutan' => $assignment->questions()->count() + 1,
+            ]);
+
+            if ($assignment->tipe === 'pilihan_ganda' && $request->pilihan) {
+                foreach ($request->pilihan as $index => $pilihan) {
+                    $question->options()->create([
+                        'pilihan' => $pilihan,
+                        'is_correct' => $index == $request->jawaban_benar,
+                    ]);
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', 'Soal berhasil ditambahkan!');
+    }
+
+    public function updateQuestion(Request $request, $id)
+    {
+        $question = Question::with('assignment', 'options')->findOrFail($id);
+        $assignment = $question->assignment;
+
+        $request->validate([
+            'soal' => 'required|string',
+            'poin' => 'required|integer|min:1',
+            'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
+            'pilihan.*' => 'required|string',
+            'jawaban_benar' => $assignment->tipe === 'pilihan_ganda' ? 'required|integer' : 'nullable',
+        ]);
+
+        DB::transaction(function () use ($request, $question, $assignment) {
+
+            // update soal utama
+            $question->update([
+                'soal' => $request->soal,
+                'poin' => $request->poin,
+            ]);
+
+            // kalau pilihan ganda, update opsinya
+            if ($assignment->tipe === 'pilihan_ganda') {
+                foreach ($question->options as $index => $option) {
+                    $option->update([
+                        'pilihan' => $request->pilihan[$index],
+                        'is_correct' => $index == $request->jawaban_benar,
+                    ]);
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', 'Soal berhasil diperbarui!');
+    }
+
 }

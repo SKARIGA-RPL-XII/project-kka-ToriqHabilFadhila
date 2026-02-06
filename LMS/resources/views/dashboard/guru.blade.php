@@ -7,11 +7,6 @@
     <title>Learning Management System Berbasis AI</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
         /* Desktop Modal Animation - Scale from center */
         @keyframes modalDesktop {
             0% {
@@ -127,102 +122,8 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    @if ($errors->any())
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-start gap-3 bg-red-50 border border-red-400 text-red-700 px-6 py-4 rounded-xl shadow-lg" style="display: none;">
-            <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8" class="animate-draw"/>
-                <line x1="15" y1="9" x2="9" y2="15"/>
-                <line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-            <div>
-                <h4 class="font-semibold text-red-800 mb-1">Terjadi Kesalahan</h4>
-                <ul class="text-red-700 text-sm space-y-1">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
-
-    <!-- Success Popup -->
-    @if(session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-50 border border-green-400 text-green-700 px-6 py-4 rounded-xl shadow-lg" style="display: none;">
-            <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 13l4 4L19 7" stroke-dasharray="22" stroke-dashoffset="22" class="animate-draw"/>
-            </svg>
-            <span class="font-medium">{{ session('success') }}</span>
-        </div>
-    @endif
-
-    <!-- Navbar -->
-    <nav class="w-full bg-white shadow-sm relative z-10">
-        <div class="w-full px-4 sm:px-6 md:px-16 py-2 sm:py-3">
-            <div class="flex items-center justify-between">
-                <!-- LOGO -->
-                <div class="flex items-center gap-2 sm:gap-3">
-                    <img src="/images/LMS.png" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-cover">
-                    <span class="hidden sm:inline text-lg font-bold text-gray-900">Dashboard Guru</span>
-                </div>
-
-                <!-- RIGHT MENU -->
-                <div class="flex items-center gap-2 sm:gap-3 text-sm">
-                    <!-- USER DROPDOWN -->
-                    <div class="relative">
-                        <button onclick="toggleDropdown()" class="flex items-center gap-2 focus:outline-none hover:bg-gray-50 rounded-lg px-2 py-1.5 transition">
-                            <!-- Avatar -->
-                            <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
-                                {{ strtoupper(substr(auth()->user()->nama, 0, 1)) }}
-                            </div>
-                            <!-- Nama User - Hidden di Mobile -->
-                            <span class="hidden sm:inline text-gray-700 font-medium">
-                                {{ auth()->user()->nama }}
-                            </span>
-                            <!-- Chevron - Hidden di Mobile -->
-                            <svg class="hidden sm:block w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <!-- DROPDOWN MENU -->
-                        <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 hidden overflow-hidden z-50">
-                            <a href="/profile" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                Profile
-                            </a>
-                            <a href="/settings" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                Settings
-                            </a>
-                            <div class="h-px bg-gray-200 my-1"></div>
-                            <form method="POST" action="{{ route('logout') }}" id="logoutForm">
-                                @csrf
-                                <button type="submit" onclick="openLogoutModal()" class="w-full flex items-center gap-3 text-left px-4 py-3 text-red-600 hover:bg-red-50 transition">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                    Logout
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- CREATE CLASS BUTTON -->
-                    <button onclick="openCreateClassModal()" class="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition shadow-md" title="Buat Kelas Baru">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                        </svg>
-                        <span class="hidden sm:inline">Buat Kelas</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    @include('components.notifications')
+    @include('components.navbar')
 
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
@@ -356,14 +257,15 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                                     </svg>
                                     {{ $kelas->enrollments->count() }} /
-                                    {{ $kelas->max_students }} siswa
+                                    {{ $kelas->max_students }} Siswa
                                 </div>
-                                <button class="text-indigo-600 hover:text-indigo-700 font-semibold text-sm flex items-center gap-1">
+                                <a href="{{ route('guru.classes.show', $kelas->id_class) }}" class="text-indigo-600 hover:text-indigo-700 font-semibold text-sm flex items-center gap-1">
                                     Buka
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"/>
                                     </svg>
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -389,22 +291,32 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-                <!-- Assignment 1 -->
-                <div class="p-6 border-b border-gray-100 hover:bg-gray-50 transition">
+                @forelse($assignments as $assignment)
+                <div class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Matematika 8A</span>
-                                <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full">📝 Tugas</span>
+                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }} - {{ $assignment->class->deskripsi }}</span>
+                                <span class="px-3 py-1.5
+                                    @if($assignment->tipe === 'essay') bg-green-100 text-green-700
+                                    @elseif($assignment->tipe === 'pilihan_ganda') bg-orange-100 text-orange-700
+                                    @else bg-purple-100 text-purple-700
+                                    @endif
+                                    text-xs font-bold rounded-full">
+                                    @if($assignment->tipe === 'essay') 📝 Essay
+                                    @elseif($assignment->tipe === 'pilihan_ganda') 🎯 Pilihan Ganda
+                                    @else 💻 Praktik
+                                    @endif
+                                </span>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Latihan Persamaan Linear</h3>
-                            <p class="text-sm text-gray-600 mb-4">15 soal • Deadline: 28 Jan 2025</p>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $assignment->judul }}</h3>
+                            <p class="text-sm text-gray-600 mb-4">{{ $assignment->deskripsi }} • Deadline: {{ $assignment->deadline->format('d M Y, H:i') }}</p>
                             <div class="flex flex-wrap items-center gap-4 text-sm">
                                 <div class="flex items-center gap-1.5 text-blue-600 font-semibold">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    18/32 siswa mengumpulkan
+                                    0/{{ $assignment->class->enrollments->count() }} siswa mengumpulkan
                                 </div>
                             </div>
                         </div>
@@ -413,56 +325,15 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Assignment 2 -->
-                <div class="p-6 border-b border-gray-100 hover:bg-gray-50 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">Matematika 8B</span>
-                                <span class="px-3 py-1.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">🎯 Quiz</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Quiz Trigonometri Dasar</h3>
-                            <p class="text-sm text-gray-600 mb-4">10 soal pilihan ganda • Deadline: 30 Jan 2025</p>
-                            <div class="flex flex-wrap items-center gap-4 text-sm">
-                                <div class="flex items-center gap-1.5 text-orange-600 font-semibold">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    5/28 siswa mengerjakan
-                                </div>
-                            </div>
-                        </div>
-                        <button onclick="openJawabanSiswaModal()" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
-                            Lihat Jawaban
-                        </button>
-                    </div>
+                @empty
+                <div class="p-8 text-center text-gray-500">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p class="font-semibold mb-1">Belum ada tugas aktif</p>
+                    <p class="text-sm">Buat tugas baru untuk siswa Anda</p>
                 </div>
-
-                <!-- Assignment 3 -->
-                <div class="p-6 hover:bg-gray-50 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full">Matematika 9A</span>
-                                <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full">📝 Tugas</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Soal Cerita Matematika</h3>
-                            <p class="text-sm text-gray-600 mb-4">8 soal cerita • Deadline: 2 Feb 2025</p>
-                            <div class="flex flex-wrap items-center gap-4 text-sm">
-                                <div class="flex items-center gap-1.5 text-green-600 font-semibold">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    30/30 siswa mengumpulkan
-                                </div>
-                            </div>
-                        </div>
-                        <button onclick="openJawabanSiswaModal()" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
-                            Lihat Jawaban
-                        </button>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -494,7 +365,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi</label>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi Matapelajaran</label>
                     <input type="text" name="deskripsi" placeholder="Contoh: Matematika, IPA, Bahasa Inggris, dsb" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" required>
                 </div>
 
@@ -516,7 +387,7 @@
     </div>
 
     <!-- Token Modal -->
-    <div id="tokenModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+    <div id="tokenModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-50 hidden z-50">
         <div class="bg-white rounded-xl w-96 p-6 shadow-lg">
             <h2 class="text-lg font-semibold mb-4 text-center">Token Kelas</h2>
             <div class="text-center text-2xl font-mono mb-6 p-4 bg-gray-100 rounded-lg" id="tokenValue">TOKEN123</div>
@@ -547,29 +418,58 @@
                 <p class="text-gray-600">Upload file materi pembelajaran untuk siswa</p>
             </div>
 
-            <form class="px-6 pt-6 pb-6 space-y-4">
+            <form method="POST" action="{{ route('guru.materials.store') }}" enctype="multipart/form-data" class="px-6 pt-6 pb-6 space-y-4">
+                @csrf
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Pilih Kelas</label>
-                    <select class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
-                        <option>Matematika 8A</option>
-                        <option>Matematika 8B</option>
-                        <option>Matematika 9A</option>
+                    <select name="id_class" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                        @foreach($classes as $kelas)
+                            <option value="{{ $kelas->id_class }}">{{ $kelas->nama_kelas }} - {{ $kelas->deskripsi }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Judul Materi</label>
-                    <input type="text" placeholder="Contoh: Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                    <input type="text" name="judul" placeholder="Contoh: Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-900 mb-2">Upload File</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-500 transition cursor-pointer">
-                        <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Konten (Opsional)</label>
+                    <textarea name="konten" rows="3" placeholder="Deskripsi materi..." class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">
+                        Upload File
+                    </label>
+
+                    <div id="dropzone" class="relative flex flex-col items-center justify-center w-full h-40 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                        <input
+                            id="fileInput"
+                            type="file"
+                            name="file"
+                            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                        <svg
+                            class="w-10 h-10 text-gray-400 mb-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v6m0 0l-3-3m3 3l3-3"/>
                         </svg>
-                        <p class="text-sm text-gray-600 mb-1">Klik untuk upload file</p>
-                        <p class="text-xs text-gray-500">PDF, DOC, PPT (Max 10MB)</p>
-                        <input type="file" class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                        <p class="text-sm text-gray-600 font-medium">
+                            Drag & drop file di sini
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            atau klik untuk memilih file
+                        </p>
                     </div>
+                    <p id="fileName" class="mt-2 text-sm text-gray-700 hidden"></p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        PDF, DOC, PPT, XLS, ZIP (Max 10MB)
+                    </p>
                 </div>
 
                 <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
@@ -603,33 +503,39 @@
                 <p class="text-gray-600">Tambahkan tugas atau quiz baru untuk siswa</p>
             </div>
 
-            <form class="px-6 pt-6 pb-6 space-y-4">
+            <form method="POST" action="{{ route('guru.assignments.store') }}" class="px-6 pt-6 pb-6 space-y-4">
+                @csrf
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Tipe</label>
-                    <select class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
-                        <option>📝 Tugas</option>
-                        <option>🎯 Quiz</option>
+                    <select name="tipe" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                        <option value="essay">📝 Essay</option>
+                        <option value="pilihan_ganda">🎯 Pilihan Ganda</option>
+                        <option value="praktik">💻 Praktik</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Pilih Kelas</label>
-                    <select class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
-                        <option>Matematika 8A</option>
-                        <option>Matematika 8B</option>
-                        <option>Matematika 9A</option>
+                    <select name="id_class" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                        @foreach($classes as $kelas)
+                            <option value="{{ $kelas->id_class }}">{{ $kelas->nama_kelas }} - {{ $kelas->deskripsi }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Judul</label>
-                    <input type="text" placeholder="Contoh: Latihan Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                    <input type="text" name="judul" placeholder="Contoh: Latihan Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi</label>
-                    <textarea rows="3" placeholder="Jelaskan tugas/quiz ini..." class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required></textarea>
+                    <textarea name="deskripsi" rows="3" placeholder="Jelaskan tugas/quiz ini..." class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Deadline</label>
-                    <input type="date" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                    <input type="datetime-local" name="deadline" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Nilai Maksimal</label>
+                    <input type="number" name="max_score" value="100" min="1" max="100" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
                 </div>
 
                 <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
@@ -755,127 +661,33 @@
                 <button onclick="closeLogoutModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                     Batal
                 </button>
-                <button class="flex-1 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-3 font-semibold text-white hover:from-red-700 hover:to-red-800 transition shadow-md">
-                    Ya, Logout
-                </button>
+                <form action="{{ route('logout') }}" method="POST" class="flex-1">
+                    @csrf
+                    <button
+                        type="submit"
+                        class="w-full rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-3 font-semibold text-white hover:from-red-700 hover:to-red-800 transition shadow-md">
+                        Ya, Logout
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+
+    @if(session('token'))
     <script>
-        // Dropdown Toggle
-        function toggleDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const dropdown = document.getElementById('userDropdown');
-            if (!event.target.closest('.relative')) {
-                dropdown.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', function() {
+            const tokenModal = document.getElementById('tokenModal');
+            const tokenValue = document.getElementById('tokenValue');
+            if (tokenModal && tokenValue) {
+                tokenValue.textContent = '{{ session('token') }}';
+                tokenModal.classList.remove('hidden');
+                tokenModal.classList.add('flex');
             }
-        });
-
-        // Modal Functions
-        function openCreateClassModal() {
-            document.getElementById('createClassModal').classList.remove('hidden');
-            document.getElementById('createClassModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeCreateClassModal() {
-            document.getElementById('createClassModal').classList.add('hidden');
-            document.getElementById('createClassModal').classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        function openUploadMateriModal() {
-            document.getElementById('uploadMateriModal').classList.remove('hidden');
-            document.getElementById('uploadMateriModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeUploadMateriModal() {
-            document.getElementById('uploadMateriModal').classList.add('hidden');
-            document.getElementById('uploadMateriModal').classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        function openCreateTugasModal() {
-            document.getElementById('createTugasModal').classList.remove('hidden');
-            document.getElementById('createTugasModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeCreateTugasModal() {
-            document.getElementById('createTugasModal').classList.add('hidden');
-            document.getElementById('createTugasModal').classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        function openJawabanSiswaModal() {
-            document.getElementById('jawabanSiswaModal').classList.remove('hidden');
-            document.getElementById('jawabanSiswaModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeJawabanSiswaModal() {
-            document.getElementById('jawabanSiswaModal').classList.add('hidden');
-            document.getElementById('jawabanSiswaModal').classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        function openLogoutModal() {
-            document.getElementById('logoutModal').classList.remove('hidden');
-            document.getElementById('logoutModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').classList.add('hidden');
-            document.getElementById('logoutModal').classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        function openTokenModal(token) {
-            document.getElementById('tokenValue').innerText = token;
-            document.getElementById('tokenModal').classList.remove('hidden');
-        }
-
-        function closeTokenModal() {
-            document.getElementById('tokenModal').classList.add('hidden');
-        }
-
-        // Jika ada session token dari backend, buka modal otomatis
-        @if(session('token'))
-            window.addEventListener('DOMContentLoaded', () => {
-                openTokenModal("{{ session('token') }}");
-            });
-        @endif
-
-        // Close modal on Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeCreateClassModal();
-                closeUploadMateriModal();
-                closeCreateTugasModal();
-                closeJawabanSiswaModal();
-                closeLogoutModal();
-            }
-        });
-
-        // Close modal when clicking backdrop
-        ['createClassModal', 'uploadMateriModal', 'createTugasModal', 'jawabanSiswaModal', 'logoutModal'].forEach(modalId => {
-            document.getElementById(modalId)?.addEventListener('click', function(event) {
-                if (event.target === this) {
-                    this.classList.add('hidden');
-                    this.classList.remove('flex');
-                    document.body.style.overflow = '';
-                }
-            });
         });
     </script>
+    @endif
 </body>
 </html>

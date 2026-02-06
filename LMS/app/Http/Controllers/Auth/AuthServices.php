@@ -25,7 +25,7 @@ class AuthServices extends Controller
 
         if (!Auth::attempt($credentials)) {
             return back()->withErrors([
-                'email' => 'Email atau password salah'
+                'email' => 'Email atau password yang Anda masukkan salah. Silakan periksa kembali dan coba lagi.'
             ]);
         }
 
@@ -36,7 +36,8 @@ class AuthServices extends Controller
         $user->save();
         return redirect()
             ->route('dashboard')
-            ->with('success', 'Login berhasil. Selamat datang');
+            ->with('success', 'Selamat datang, ' . $user->nama . '! Login berhasil.')
+            ->with('redirect_delay', true);
     }
 
     public function register(Request $request)
@@ -58,7 +59,9 @@ class AuthServices extends Controller
         ]);
 
         // arahkan ke login dengan flash message
-        return redirect()->route('login')->with('success', 'Berhasil membuat akun, silakan login!');
+        return redirect()->route('login')
+            ->with('success', 'Akun berhasil dibuat! Selamat datang ' . $validated['nama'] . ', silakan login dengan akun baru Anda.')
+            ->with('redirect_delay', true);
     }
 
     /**
@@ -76,8 +79,8 @@ class AuthServices extends Controller
 
             if (!$user) {
                 return back()->withErrors([
-                    'email' => 'Email tidak ditemukan.'
-                ]);
+                    'email' => 'Email "' . $request->email . '" tidak ditemukan dalam sistem kami. Pastikan email yang Anda masukkan benar.'
+                ])->with('warning', 'Email tidak terdaftar.');
             }
 
             // Generate token menggunakan Laravel Password Broker
@@ -92,7 +95,8 @@ class AuthServices extends Controller
                 'token' => $token,
             ]);
 
-            return back()->with('success', 'Email reset password telah dikirim, periksa inbox Anda.');
+            return back()->with('success', 'Email reset password telah dikirim ke ' . $request->email . '. Silakan periksa inbox atau folder spam Anda.')
+                ->with('redirect_delay', false);
 
         } catch (\Exception $e) {
             // Log error
@@ -103,8 +107,8 @@ class AuthServices extends Controller
             ]);
 
             return back()->withErrors([
-                'email' => 'Gagal mengirim email. Silakan coba lagi nanti.'
-            ]);
+                'email' => 'Gagal mengirim email reset password. Silakan periksa koneksi internet Anda dan coba lagi nanti.'
+            ])->with('warning', 'Terjadi gangguan sistem.');
         }
     }
 
@@ -137,14 +141,13 @@ class AuthServices extends Controller
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ])->save();
-
-                $user->setRememberToken(Str::random(60));
             }
         );
 
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('success', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+            ? redirect()->route('login')->with('success', 'Password berhasil direset! Silakan login dengan password baru Anda.')
+                ->with('redirect_delay', true)
+            : back()->withErrors(['email' => 'Reset password gagal. ' . __($status)])->with('warning', 'Terjadi kesalahan saat reset password.');
     }
 
     public function logout(Request $request)
@@ -170,6 +173,7 @@ class AuthServices extends Controller
 
         return redirect()
             ->route('login')
-            ->with('success', 'Berhasil logout');
+            ->with('success', 'Logout berhasil. Terima kasih telah menggunakan platform kami!')
+            ->with('redirect_delay', true);
     }
 }

@@ -34,7 +34,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -48,5 +47,21 @@ class User extends Authenticatable
             'is_active'   => 'boolean',
             'is_verified' => 'boolean',
         ];
+    }
+
+    /**
+     * Relasi ke kelas yang diikuti user (untuk siswa)
+     */
+    public function enrollments()
+    {
+        return $this->hasMany(\App\Models\ClassEnrollment::class, 'id_user', 'id_user');
+    }
+
+    /**
+     * Relasi ke kelas yang dibuat user (untuk guru)
+     */
+    public function createdClasses()
+    {
+        return $this->hasMany(\App\Models\Classes::class, 'created_by', 'id_user');
     }
 }

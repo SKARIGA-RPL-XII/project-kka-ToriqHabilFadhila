@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Classes;
 
 class PageController extends Controller
 {
@@ -18,7 +19,12 @@ class PageController extends Controller
 
     public function forgot()
     {
-        // default mode = request link reset
         return view('auth.forgot-password', ['mode' => 'request']);
+    }
+
+    public function bukaKelas($id)
+    {
+        $kelas = Classes::findOrFail($id);
+        return view('guru.kelas', compact('kelas'));
     }
 }

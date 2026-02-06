@@ -6,40 +6,25 @@
     <link rel="icon" href="{{ asset('images/LMS.png') }}" type="image/png">
     <title>Learning Management System Berbasis AI</title>
     @vite(['resources/css/app.css'])
+    <style>
+        .clip-left {
+            clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+        }
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+        .animate-draw {
+            animation: draw 0.5s ease forwards;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen flex items-center justify-center p-4">
-    @if ($errors->any())
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-start gap-3 bg-red-50 border border-red-400 text-red-700 px-6 py-4 rounded-xl shadow-lg" style="display: none;">
-            <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8" class="animate-draw"/>
-                <line x1="15" y1="9" x2="9" y2="15"/>
-                <line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-            <div>
-                <h4 class="font-semibold text-red-800 mb-1">Terjadi Kesalahan</h4>
-                <ul class="text-red-700 text-sm space-y-1">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
-
-    <!-- Success Popup -->
-    @if(session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-50 border border-green-400 text-green-700 px-6 py-4 rounded-xl shadow-lg" style="display: none;">
-            <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 13l4 4L19 7" stroke-dasharray="22" stroke-dashoffset="22" class="animate-draw"/>
-            </svg>
-            <span class="font-medium">{{ session('success') }}</span>
-        </div>
-    @endif
+    @include('components.notifications')
 
     <!-- Login Container -->
     <div class="relative z-10 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 bg-white">
         <!-- Left Side - Illustration & Info -->
-        <div class="hidden md:flex flex-col justify-center items-center p-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white">
+        <div class="hidden md:flex flex-col justify-center items-center p-12 pr-24 text-white bg-gradient-to-br from-purple-600 to-pink-600 relative clip-left">
             <div class="mb-8">
                 <img src="/images/LMS.png" alt="LMS Logo" class="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-white/20 mb-6">
                 <h1 class="text-4xl font-extrabold mb-4">
@@ -211,7 +196,7 @@
                         </div>
 
                         <!-- Submit -->
-                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all">
+                        <button type="submit" class="w-full py-3.5 px-6 gradient-primary text-white font-semibold shadow-lg hover:scale-[1.02] transition-all">
                             Reset Password
                         </button>
                     </form>

@@ -6,51 +6,54 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Classes;
 use App\Models\ClassEnrollment;
-use App\Models\TokenKelas;
 
 class SiswaController extends Controller
 {
-    // Menampilkan kelas yang diikuti siswa
     public function index()
     {
-        $classes = Classes::whereHas('enrollments', function ($q) {
-            $q->where('id_user', Auth::id());
-        })->get();
-        return redirect()->back();
+        return view('siswa.kelas');
     }
 
-    // Join kelas menggunakan token
     public function join(Request $request)
     {
         $request->validate([
-            'token' => 'required|string'
+            'token_code' => 'required|string|exists:token_kelas,token_code',
         ]);
-        // Cari token
-        $token = TokenKelas::where('token_code', $request->token)->first();
+
+        $token = \App\Models\TokenKelas::where('token_code', $request->token_code)->first();
+
         if (!$token) {
-            return back()->with('error', 'Token tidak valid');
+            return redirect()->back()->with('error', 'Token tidak valid!');
         }
-        // Ambil kelas
-        $kelas = Classes::where('id_class', $token->id_class)->first();
-        if (!$kelas) {
-            return back()->with('error', 'Kelas tidak ditemukan');
+
+        $kelas = Classes::find($token->id_class);
+
+        if ($kelas->enrollments()->count() >= $kelas->max_students) {
+            return redirect()->back()->with('error', 'Kelas sudah penuh!');
         }
-        // Cegah join ganda
-        $already = ClassEnrollment::where('id_class', $kelas->id_class)
-            ->where('id_user', Auth::id())
+
+        $exists = ClassEnrollment::where('id_class', $kelas->id_class)
+            ->where('id_user', Auth::user()->id_user)
             ->exists();
-        if ($already) {
-                return back()->with('error', 'Anda sudah join kelas ini');
-            }
-        // Simpan enrollment
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Kamu sudah join kelas ini!');
+        }
+
         ClassEnrollment::create([
             'id_class' => $kelas->id_class,
-            'id_user'  => Auth::id(),
-            'status'   => 'active',
+            'id_user' => Auth::user()->id_user,
+            'status' => 'active',
         ]);
-        // Update penggunaan token (opsional tapi rapi)
+
         $token->increment('times_used');
-        return redirect()->route('siswa.kelas')
-            ->with('success', 'Berhasil join kelas');
+
+        return redirect()->back()->with('success', 'Berhasil join kelas!');
+    }
+
+    public function showClass($id)
+    {
+        $kelas = Classes::with(['enrollments.user', 'creator', 'assignments'])->findOrFail($id);
+        return view('siswa.class-detail', compact('kelas'));
     }
 }

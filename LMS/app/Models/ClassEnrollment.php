@@ -8,13 +8,18 @@ class ClassEnrollment extends Model
 {
     protected $table = 'class_enrollments';
     protected $primaryKey = 'id_enrollment';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'id_class',
         'id_user',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 
     public function class()
     {
