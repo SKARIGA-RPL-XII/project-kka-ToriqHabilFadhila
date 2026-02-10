@@ -37,4 +37,9 @@ class Assignment extends Model
     {
         return $this->hasMany(Question::class, 'id_assignment', 'id_assignment')->orderBy('urutan');
     }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'id_assignment', 'id_assignment');
+    }
 }

@@ -27,4 +27,9 @@ class Material extends Model
     {
         return $this->belongsTo(User::class, 'uploaded_by', 'id_user');
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'uploaded_by', 'id_user');
+    }
 }

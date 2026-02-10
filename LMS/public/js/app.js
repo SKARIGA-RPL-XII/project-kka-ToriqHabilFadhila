@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
         'monitoring',
         'joinClass',
         'logout',
-        'token'
+        'token',
+        'editDeadline'
     ].forEach(name => {
         window[`open${capitalize(name)}Modal`] = () => openModal(`${name}Modal`);
         window[`close${capitalize(name)}Modal`] = () => closeModal(`${name}Modal`);
@@ -140,6 +141,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const token = document.getElementById('classToken')?.value;
         if (!token) return;
         e.target.submit();
+    };
+
+    /* =====================
+        EDIT DEADLINE
+    ====================== */
+    window.openEditDeadlineModal = function (assignmentId, currentDeadline) {
+        const form = document.getElementById('editDeadlineForm');
+        const input = document.getElementById('deadlineInput');
+        if (form && input) {
+            form.action = `/guru/assignments/${assignmentId}/deadline`;
+            input.value = currentDeadline;
+            openModal('editDeadlineModal');
+        }
     };
 
     /* =====================

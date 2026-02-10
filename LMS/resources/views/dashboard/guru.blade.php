@@ -279,7 +279,7 @@
         </div>
 
         <!-- Tugas & Quiz Aktif -->
-        <div>
+        <div class="mb-12">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Tugas & Quiz Aktif</h2>
                 <a href="#" class="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-1">
@@ -296,7 +296,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }} - {{ $assignment->class->deskripsi }}</span>
+                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }}</span>
                                 <span class="px-3 py-1.5
                                     @if($assignment->tipe === 'essay') bg-green-100 text-green-700
                                     @elseif($assignment->tipe === 'pilihan_ganda') bg-orange-100 text-orange-700
@@ -312,16 +312,23 @@
                             <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $assignment->judul }}</h3>
                             <p class="text-sm text-gray-600 mb-4">{{ $assignment->deskripsi }} • Deadline: {{ $assignment->deadline->format('d M Y, H:i') }}</p>
                             <div class="flex flex-wrap items-center gap-4 text-sm">
+                                @php
+                                    $submissionCount = \App\Models\Submission::where('id_assignment', $assignment->id_assignment)->count();
+                                    $totalStudents = $assignment->class->enrollments->count();
+                                @endphp
                                 <div class="flex items-center gap-1.5 text-blue-600 font-semibold">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    0/{{ $assignment->class->enrollments->count() }} siswa mengumpulkan
+                                    {{ $submissionCount }}/{{ $totalStudents }} siswa mengumpulkan
                                 </div>
                             </div>
                         </div>
-                        <button onclick="openJawabanSiswaModal()" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                        <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
                             Lihat Jawaban
+                        </a>
+                        <button onclick="openEditDeadlineModal({{ $assignment->id_assignment }}, '{{ $assignment->deadline->format('Y-m-d\TH:i') }}')" class="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                            Edit Deadline
                         </button>
                     </div>
                 </div>
@@ -332,6 +339,55 @@
                     </svg>
                     <p class="font-semibold mb-1">Belum ada tugas aktif</p>
                     <p class="text-sm">Buat tugas baru untuk siswa Anda</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Materi yang Diupload -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Materi yang Diupload</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+                @forelse($materials as $material)
+                <div class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $material->class->nama_kelas }}</span>
+                                <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">📚 Materi</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $material->judul }}</h3>
+                            <p class="text-sm text-gray-600 mb-4">{{ Str::limit($material->konten, 100) }} • Diupload: {{ $material->created_at->format('d M Y, H:i') }}</p>
+                            <div class="flex flex-wrap items-center gap-4 text-sm">
+                                @if($material->file_path)
+                                <div class="flex items-center gap-1.5 text-gray-600">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ pathinfo($material->file_path, PATHINFO_EXTENSION) }} File
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            @if($material->file_path)
+                            <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                                Download
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="p-8 text-center text-gray-500">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <p class="font-semibold mb-1">Belum ada materi</p>
+                    <p class="text-sm">Upload materi pembelajaran untuk siswa Anda</p>
                 </div>
                 @endforelse
             </div>
@@ -550,6 +606,45 @@
         </div>
     </div>
 
+    <!-- Modal: Edit Deadline -->
+    <div id="editDeadlineModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeEditDeadlineModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Edit Deadline</h3>
+                <p class="text-gray-600">Ubah deadline tugas untuk mengaktifkan kembali</p>
+            </div>
+
+            <form id="editDeadlineForm" method="POST" class="px-6 pt-6 pb-6 space-y-4">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deadline Baru</label>
+                    <input type="datetime-local" id="deadlineInput" name="deadline" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition" required>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+                    <button type="button" onclick="closeEditDeadlineModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3 font-semibold text-white hover:from-orange-600 hover:to-orange-700 transition shadow-md">
+                        Update Deadline
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal: Lihat Jawaban Siswa -->
     <div id="jawabanSiswaModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
         <div class="modal-desktop modal-mobile w-full sm:max-w-2xl bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
@@ -674,7 +769,16 @@
     </div>
 
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('js/notifications.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+
+    @if(session('newNotification'))
+    <script>
+        if ('Notification' in window && Notification.permission === 'granted') {
+            showNotification('{{ session('newNotification.title') }}', '{{ session('newNotification.message') }}');
+        }
+    </script>
+    @endif
 
     @if(session('token'))
     <script>

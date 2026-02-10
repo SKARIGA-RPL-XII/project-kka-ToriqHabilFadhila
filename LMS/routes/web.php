@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::get('/settings', [App\Http\Controllers\ProfileController::class, 'settings'])->name('settings');
     Route::put('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/browser', [NotificationController::class, 'sendBrowserNotification'])->name('notifications.browser');
 });
 
 /*
@@ -90,12 +94,24 @@ Route::middleware('auth')->group(function () {
             ->name('guru.assignments.questions');
         Route::post('/guru/assignments/{id}/questions', [GuruController::class, 'storeQuestion'])
             ->name('guru.questions.store');
+        Route::put('/guru/assignments/{id}/deadline', [GuruController::class, 'updateAssignmentDeadline'])
+            ->name('guru.assignments.deadline');
+        Route::get('/guru/assignments/{id}/submissions', [GuruController::class, 'showSubmissions'])
+            ->name('guru.assignments.submissions');
+        Route::put('/guru/submissions/{id}/grade', [GuruController::class, 'gradeSubmission'])
+            ->name('guru.submissions.grade');
         Route::get('/guru/classes/{id}', [GuruController::class, 'showClass'])
             ->name('guru.classes.show');
         Route::prefix('guru')->middleware('auth')->group(function () {
             Route::put('/guru/questions/{id}', [GuruController::class, 'updateQuestion'])
                 ->name('guru.questions.update');
         });
+        // AI: Analisis progres siswa
+        Route::get('/guru/ai/analyze/{userId}/{classId}', [AIController::class, 'analyzeProgress'])
+            ->name('guru.ai.analyze');
+        // AI: Koreksi otomatis jawaban
+        Route::post('/guru/ai/grade', [AIController::class, 'autoGrade'])
+            ->name('guru.ai.grade');
     });
 
     /*
@@ -110,5 +126,20 @@ Route::middleware('auth')->group(function () {
             ->name('siswa.join');
         Route::get('/siswa/classes/{id}', [SiswaController::class, 'showClass'])
             ->name('siswa.classes.show');
+        Route::get('/siswa/assignments/{id}', [SiswaController::class, 'showAssignment'])
+            ->name('siswa.assignments.show');
+        Route::post('/siswa/assignments/{id}/submit', [SiswaController::class, 'submitAssignment'])
+            ->name('siswa.assignments.submit');
+        Route::get('/siswa/submissions/{id}', [SiswaController::class, 'showSubmission'])
+            ->name('siswa.submissions.show');
+        Route::get('/siswa/materials', [SiswaController::class, 'materials'])
+            ->name('siswa.materials');
+        Route::get('/siswa/recommendations', fn() => view('siswa.recommendations'))
+            ->name('siswa.recommendations');
+        // AI: Feedback & Rekomendasi
+        Route::post('/siswa/ai/feedback', [AIController::class, 'getFeedback'])
+            ->name('siswa.ai.feedback');
+        Route::get('/siswa/ai/recommendations', [AIController::class, 'getRecommendations'])
+            ->name('ai.recommendations');
     });
 });

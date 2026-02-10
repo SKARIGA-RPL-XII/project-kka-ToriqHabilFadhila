@@ -40,17 +40,12 @@
     @include('components.navbar')
     <div class="w-full px-4 sm:px-6 md:px-16 py-12">
         <!-- Header Section -->
-        <div class="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
+        <div class="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
             <!-- Decorative Elements -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
             <div class="relative z-10">
                 <div class="flex items-start gap-4">
-                    <a href="{{ route('dashboard') }}" class="p-2.5 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-110 flex-shrink-0 mt-1" title="Kembali ke Dashboard">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </a>
                     <div class="flex-1">
                         <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
                             {{ $assignment->judul }}
@@ -120,10 +115,37 @@
                             <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
                             </svg>
-                            Pertanyaan Soal
+                            @if($assignment->tipe === 'essay')
+                                Pertanyaan Essay
+                            @elseif($assignment->tipe === 'praktik')
+                                Instruksi Tugas Praktik
+                            @else
+                                Pertanyaan Soal
+                            @endif
                         </label>
-                        <textarea name="soal" rows="4" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none" placeholder="Tuliskan pertanyaan soal di sini..."></textarea>
+                        <textarea name="soal" rows="4" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                            placeholder="@if($assignment->tipe === 'essay')Contoh: Jelaskan pengertian fotosintesis dan sebutkan faktor-faktor yang mempengaruhinya!@elseif($assignment->tipe === 'praktik')Contoh: Buatlah program sederhana menggunakan Python untuk menghitung luas lingkaran. Upload file .py hasil pekerjaan Anda.@elseTuliskan pertanyaan soal di sini...@endif"></textarea>
+                        @if($assignment->tipe === 'essay')
+                            <p class="mt-2 text-xs text-gray-500">💡 Tips: Buat pertanyaan yang mendorong siswa untuk menjelaskan, menganalisis, atau memberikan pendapat.</p>
+                        @elseif($assignment->tipe === 'praktik')
+                            <p class="mt-2 text-xs text-gray-500">💡 Tips: Berikan instruksi yang jelas tentang apa yang harus dikerjakan dan format file yang harus diupload.</p>
+                        @endif
                     </div>
+
+                    <!-- Kunci Jawaban (untuk Essay/Praktik) -->
+                    @if($assignment->tipe === 'essay' || $assignment->tipe === 'praktik')
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
+                            </svg>
+                            Kunci Jawaban (untuk AI Grading)
+                        </label>
+                        <textarea name="kunci_jawaban" rows="3" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                            placeholder="@if($assignment->tipe === 'essay')Tuliskan jawaban ideal/kunci jawaban yang diharapkan. AI akan menggunakan ini untuk mengoreksi jawaban siswa.@elseTuliskan kriteria penilaian atau poin-poin penting yang harus ada dalam tugas praktik.@endif"></textarea>
+                        <p class="mt-2 text-xs text-purple-600">🤖 Kunci jawaban ini akan digunakan oleh AI untuk mengoreksi jawaban siswa secara otomatis</p>
+                    </div>
+                    @endif
 
                     <!-- Poin Input -->
                     <div>
@@ -199,6 +221,16 @@
 
             <!-- Questions List -->
             <div class="p-6 space-y-4">
+                @if($assignment->questions->count() > 0)
+                    <div class="mb-6 flex justify-end">
+                        <a href="{{ route('guru.classes.show', $assignment->id_class) }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition font-semibold shadow-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Simpan & Selesai
+                        </a>
+                    </div>
+                @endif
                 @forelse($assignment->questions as $question)
                     <div class="question-card border-2 border-gray-200 rounded-2xl p-6 hover:border-purple-300" x-data="{ edit: false }">
                         <!-- VIEW MODE -->
@@ -264,6 +296,14 @@
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Soal</label>
                                 <textarea name="soal" rows="3" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" required>{{ $question->soal }}</textarea>
                             </div>
+
+                            @if($assignment->tipe === 'essay' || $assignment->tipe === 'praktik')
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Kunci Jawaban</label>
+                                <textarea name="kunci_jawaban" rows="2" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none">{{ $question->kunci_jawaban }}</textarea>
+                            </div>
+                            @endif
+
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Poin</label>
                                 <input type="number" name="poin" value="{{ $question->poin }}" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">

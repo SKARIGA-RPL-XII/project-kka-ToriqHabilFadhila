@@ -12,6 +12,7 @@ class Question extends Model
     protected $fillable = [
         'id_assignment',
         'soal',
+        'kunci_jawaban',
         'poin',
         'urutan',
     ];

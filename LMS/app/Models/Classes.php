@@ -54,4 +54,9 @@ class Classes extends Model
     {
         return $this->hasMany(Assignment::class, 'id_class', 'id_class');
     }
+
+    public function materials()
+    {
+        return $this->hasMany(Material::class, 'id_class', 'id_class');
+    }
 }

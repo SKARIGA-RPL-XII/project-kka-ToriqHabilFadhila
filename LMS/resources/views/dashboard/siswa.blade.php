@@ -174,11 +174,9 @@
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Aktivitas Pembelajaran</h2>
             </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Lihat Tugas Card -->
-                <button class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-indigo-500 hover:shadow-2xl transition-all duration-300 overflow-hidden">
-                    <!-- Decorative background gradient -->
+                <a href="#tugas-terbaru" onclick="event.preventDefault(); document.getElementById('tugas-terbaru').scrollIntoView({behavior: 'smooth'});" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-indigo-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative">
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
@@ -188,73 +186,62 @@
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">Lihat Tugas</h3>
                         <p class="text-sm text-gray-500 mb-3">Tugas yang perlu diselesaikan</p>
-                        <!-- Badge/Indicator -->
                         <div class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-semibold">
                             <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2 animate-pulse"></span>
-                            5 Pending
+                            {{ $assignments->where('is_completed', false)->count() }} Pending
                         </div>
                     </div>
-
-                    <!-- Arrow Icon -->
                     <div class="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
                         <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </div>
-                </button>
+                </a>
 
-                <!-- Kuis Card -->
-                <button class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-purple-500 hover:shadow-2xl transition-all duration-300 overflow-hidden">
-                    <!-- Decorative background gradient -->
+                <!-- Lihat Materi Card -->
+                <a href="{{ route('siswa.materials') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-purple-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
                     <div class="relative">
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-purple-500/30">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/>
                             </svg>
                         </div>
-
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">Kuis Interaktif</h3>
-                        <p class="text-sm text-gray-500 mb-3">Uji pemahamanmu dengan kuis</p>
-
-                        <!-- Badge/Indicator -->
+                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">Lihat Materi</h3>
+                        <p class="text-sm text-gray-500 mb-3">Materi pembelajaran dari guru</p>
                         <div class="inline-flex items-center px-3 py-1 rounded-full bg-purple-50 text-purple-600 text-xs font-semibold">
                             <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
                             </svg>
-                            3 Tersedia
+                            Tersedia
                         </div>
                     </div>
-
-                    <!-- Arrow Icon -->
                     <div class="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
                         <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                     </div>
-                </button>
+                </a>
 
                 <!-- Progress Card -->
-                <button class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-green-500 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                <a href="{{ route('siswa.recommendations') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-green-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                     <!-- Decorative background gradient -->
                     <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
                     <div class="relative">
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-green-500/30">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                         </div>
-
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">Progress Belajar</h3>
-                        <p class="text-sm text-gray-500 mb-3">Pantau pencapaian belajarmu</p>
-
+                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">Rekomendasi Materi & Progres Pembelajaran</h3>
+                        <p class="text-sm text-gray-500 mb-3">AI merekomendasikan materi berdasarkan perkembangan belajarmu</p>
                         <!-- Progress Bar -->
-                        <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
-                            <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-500 group-hover:w-[75%]" style="width: 65%"></div>
+                        <div class="flex items-center gap-2 text-sm text-green-600 font-semibold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                            Dapatkan Rekomendasi
                         </div>
-                        <p class="text-xs font-semibold text-green-600">65% Selesai</p>
                     </div>
 
                     <!-- Arrow Icon -->
@@ -263,7 +250,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                     </div>
-                </button>
+                </a>
             </div>
         </div>
 
@@ -335,110 +322,173 @@
         </div>
 
         <!-- Tugas Terbaru -->
-        <div>
+        <div id="tugas-terbaru" x-data="{ showAll: false }" class="mb-12">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Tugas Terbaru</h2>
-                <a href="#" class="text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-1">
-                    Lihat Semua
+                <button @click="showAll = !showAll" class="text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-1">
+                    <span x-text="showAll ? 'Lihat Sedikit' : 'Lihat Semua'"></span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path x-show="!showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path x-show="showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
-                </a>
+                </button>
             </div>
 
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-                <!-- Assignment 1 -->
-                <div class="p-6 border-b border-gray-100 hover:bg-gray-50 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">⏰ Deadline: 2 hari lagi</span>
-                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Matematika</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Latihan Soal Persamaan Linear</h3>
-                            <p class="text-sm text-gray-600 mb-4">Kerjakan 15 soal tentang persamaan linear dua variabel</p>
-                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    28 Jan 2025
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
-                                    15 soal
-                                </div>
-                            </div>
-                        </div>
-                        <button class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg">
-                            Kerjakan
-                        </button>
-                    </div>
-                </div>
+                @forelse($assignments as $index => $assignment)
+                    @php
+                        $deadline = \Carbon\Carbon::parse($assignment->deadline);
+                        $isLate = now()->isAfter($deadline);
+                        $daysLeft = now()->diffInDays($deadline, false);
+                        $isCompleted = $assignment->is_completed;
 
-                <!-- Assignment 2 -->
-                <div class="p-6 border-b border-gray-100 hover:bg-gray-50 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">⏰ Deadline: 5 hari lagi</span>
-                                <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">Bahasa Inggris</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Essay: My Favorite Book</h3>
-                            <p class="text-sm text-gray-600 mb-4">Tulis essay minimal 200 kata tentang buku favoritmu</p>
-                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    31 Jan 2025
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
-                                    Essay 200+ kata
-                                </div>
-                            </div>
-                        </div>
-                        <button class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg">
-                            Kerjakan
-                        </button>
-                    </div>
-                </div>
+                        if ($isCompleted) {
+                            $badgeClass = 'bg-green-100 text-green-700';
+                            $badgeText = '✓ Selesai';
+                        } elseif ($isLate) {
+                            $badgeClass = 'bg-gray-100 text-gray-700';
+                            $badgeText = '⏰ Terlambat';
+                        } elseif ($daysLeft <= 2) {
+                            $badgeClass = 'bg-red-100 text-red-700';
+                            $badgeText = '⏰ Deadline: ' . ceil($daysLeft) . ' hari lagi';
+                        } else {
+                            $badgeClass = 'bg-yellow-100 text-yellow-700';
+                            $badgeText = '⏰ Deadline: ' . ceil($daysLeft) . ' hari lagi';
+                        }
 
-                <!-- Assignment 3 (Completed) -->
-                <div class="p-6 hover:bg-gray-50 transition">
+                        $subjectColors = [
+                            'blue' => 'bg-blue-100 text-blue-700',
+                            'purple' => 'bg-purple-100 text-purple-700',
+                            'green' => 'bg-green-100 text-green-700',
+                            'orange' => 'bg-orange-100 text-orange-700',
+                            'pink' => 'bg-pink-100 text-pink-700',
+                        ];
+                        $colorKeys = array_keys($subjectColors);
+                        $subjectColor = $subjectColors[$colorKeys[$assignment->id_class % count($colorKeys)]];
+                    @endphp
+
+                    <div x-show="showAll || {{ $index }} < 5" x-cloak class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
+                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-3">
+                                    <span class="px-3 py-1.5 {{ $badgeClass }} text-xs font-bold rounded-full">{{ $badgeText }}</span>
+                                    <span class="px-3 py-1.5 {{ $isCompleted ? 'bg-green-100 text-green-700' : $subjectColor }} text-xs font-bold rounded-full">{{ $assignment->class->nama_class }}</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $assignment->judul }}</h3>
+                                <p class="text-sm text-gray-600 mb-4">{{ Str::limit($assignment->deskripsi, 100) }}</p>
+                                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                                    @if($isCompleted && $assignment->submission)
+                                        <div class="flex items-center gap-1.5">
+                                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span class="font-semibold text-green-600">Nilai: {{ $assignment->submission->score }}/{{ $assignment->max_score }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            Submitted: {{ $assignment->submission->submitted_at->format('d M Y') }}
+                                        </div>
+                                    @else
+                                        <div class="flex items-center gap-1.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            {{ $deadline->format('d M Y') }}
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                            </svg>
+                                            {{ ucfirst(str_replace('_', ' ', $assignment->tipe)) }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @if($isCompleted)
+                                <a href="{{ route('siswa.submissions.show', $assignment->submission->id_submission) }}" class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-semibold inline-block text-center">
+                                    Lihat Detail
+                                </a>
+                            @else
+                                <a href="{{ route('siswa.assignments.show', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg inline-block text-center">
+                                    Kerjakan
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-12 text-center">
+                        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Tugas</h3>
+                        <p class="text-gray-600">Tugas dari guru akan muncul di sini</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Materi Pembelajaran -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Materi Pembelajaran</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+                @forelse($materials as $material)
+                <div class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full">✓ Selesai</span>
-                                <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full">IPA</span>
+                                <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">{{ $material->class->nama_kelas }}</span>
+                                <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">📚 Materi</span>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Laporan Praktikum Fisika</h3>
-                            <p class="text-sm text-gray-600 mb-4">Upload laporan hasil praktikum hukum Newton</p>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $material->judul }}</h3>
+                            <p class="text-sm text-gray-600 mb-4">{{ Str::limit($material->konten, 100) }}</p>
                             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                                 <div class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
-                                    <span class="font-semibold text-green-600">Nilai: 90/100</span>
+                                    {{ $material->creator->nama ?? 'Guru' }}
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
-                                    Submitted: 20 Jan 2025
+                                    {{ $material->created_at->format('d M Y') }}
                                 </div>
+                                @if($material->file_path)
+                                <div class="flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ strtoupper(pathinfo($material->file_path, PATHINFO_EXTENSION)) }}
+                                </div>
+                                @endif
                             </div>
                         </div>
-                        <button class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-semibold">
-                            Lihat Detail
+                        @if($material->file_path)
+                        <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg inline-block text-center">
+                            Download
+                        </a>
+                        @else
+                        <button class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg inline-block text-center">
+                            Lihat
                         </button>
+                        @endif
                     </div>
                 </div>
+                @empty
+                <div class="p-12 text-center">
+                    <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Materi</h3>
+                    <p class="text-gray-600">Materi dari guru akan muncul di sini</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -529,6 +579,8 @@
     </div>
 
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/notifications.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>`n`n    @if(session('newNotification'))`n    <script>`n        if ('Notification' in window && Notification.permission === 'granted') {`n            showNotification('{{ session('newNotification.title') }}', '{{ session('newNotification.message') }}');`n        }`n    </script>`n    @endif
 </body>
 </html>
+

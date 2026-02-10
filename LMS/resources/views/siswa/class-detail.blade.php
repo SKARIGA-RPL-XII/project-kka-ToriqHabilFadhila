@@ -39,13 +39,8 @@
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
             <div class="relative z-10">
-                <!-- Back Button & Title -->
+                <!-- Title -->
                 <div class="flex items-start gap-4 mb-6">
-                    <a href="{{ route('dashboard') }}" class="p-2.5 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-110 flex-shrink-0 mt-1" title="Kembali ke Dashboard">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </a>
                     <div class="flex-1">
                         <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
                             {{ $kelas->nama_kelas }}
@@ -78,8 +73,36 @@
             </div>
         </div>
 
+        <!-- Quick Action Card -->
+        <div class="mb-8">
+            <!-- Lihat Materi Card -->
+            <a href="{{ route('siswa.materials') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-indigo-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">Lihat Materi</h3>
+                        <p class="text-sm text-gray-500">Materi pembelajaran dari guru</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-semibold">
+                            <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2 animate-pulse"></span>
+                            {{ $kelas->materials->count() }} Materi
+                        </div>
+                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+        </div>
+
         <!-- Assignments Section -->
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
+        <div id="tugas-quiz" class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
             <!-- Section Header -->
             <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-8 py-6 border-b border-purple-100">
                 <div class="flex items-center justify-between">
@@ -89,7 +112,7 @@
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
                         </div>
-                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Tugas & Quiz</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Tugas & Quiz Aktif</h2>
                     </div>
                     <span class="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-full shadow-sm">
                         Total: {{ $kelas->assignments->count() }}
@@ -99,7 +122,11 @@
             <!-- Assignments List -->
             <div class="divide-y divide-gray-100">
                 @forelse($kelas->assignments as $index => $assignment)
-                    <div class="assignment-card p-6 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-transparent" style="animation-delay: {{ $index * 0.1 }}s">
+                    @php
+                        $submission = $assignment->submissions->first();
+                        $isCompleted = $submission !== null;
+                    @endphp
+                    <a href="{{ $isCompleted ? route('siswa.submissions.show', $submission->id_submission) : route('siswa.assignments.show', $assignment->id_assignment) }}" class="assignment-card block p-6 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-transparent transition-all" style="animation-delay: {{ $index * 0.1 }}s">
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                             <!-- Assignment Info -->
                             <div class="flex-1">
@@ -145,19 +172,24 @@
                                         $deadline = is_string($assignment->deadline)
                                             ? \Carbon\Carbon::parse($assignment->deadline)
                                             : $assignment->deadline;
-                                        $daysLeft = now()->startOfDay()->diffInDays($deadline->startOfDay(), false);
+                                        $isLate = now()->isAfter($deadline);
+                                        $daysLeft = now()->diffInDays($deadline, false);
                                     @endphp
-                                    @if($daysLeft >= 0)
+                                    @if($isCompleted)
+                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">
+                                            ✓ Sudah Dikerjakan
+                                        </span>
+                                    @elseif($isLate)
+                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                                            Terlambat
+                                        </span>
+                                    @else
                                         <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full
                                             @if($daysLeft <= 1) bg-red-100 text-red-700
                                             @elseif($daysLeft <= 3) bg-yellow-100 text-yellow-700
                                             @else bg-blue-100 text-blue-700
                                             @endif">
-                                            {{ $daysLeft == 0 ? 'Hari ini' : ($daysLeft == 1 ? 'Besok' : $daysLeft . ' hari lagi') }}
-                                        </span>
-                                    @else
-                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
-                                            Terlewat
+                                            {{ $daysLeft == 0 ? 'Hari ini' : ($daysLeft == 1 ? 'Besok' : ceil($daysLeft) . ' hari lagi') }}
                                         </span>
                                     @endif
                                 </div>
@@ -173,7 +205,7 @@
                                 </span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 @empty
                     <!-- Empty State -->
                     <div class="text-center py-16 px-4">

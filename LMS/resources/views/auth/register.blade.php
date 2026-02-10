@@ -190,18 +190,6 @@
                         </div>
                     </div>
 
-                    <!-- Remember & Forgot -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" name="remember"
-                                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
-                        </label>
-                        <a href="{{ route('password.request') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                            Lupa password?
-                        </a>
-                    </div>
-
                     <!-- Submit Button -->
                     <button type="submit" class="w-full py-3.5 px-6 rounded-xl gradient-primary text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-[1.02] transition-all duration-300">
                         Register Sekarang

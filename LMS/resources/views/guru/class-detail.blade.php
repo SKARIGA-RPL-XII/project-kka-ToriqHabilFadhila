@@ -31,6 +31,79 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(139, 92, 246, 0.15);
         }
+
+        /* Desktop Modal Animation - Scale from center */
+        @keyframes modalDesktop {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Mobile Modal Animation - Slide from bottom */
+        @keyframes modalMobile {
+            0% {
+                transform: translateY(100%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Backdrop Fade */
+        @keyframes backdropFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Desktop Modal Styles */
+        .modal-desktop {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: modalDesktop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Mobile Modal Styles */
+        @media (max-width: 640px) {
+            .modal-mobile {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                transform: none;
+                animation: modalMobile 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            }
+        }
+
+        .animate-backdrop {
+            animation: backdropFade 0.2s ease-out forwards;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
@@ -42,13 +115,8 @@
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
             <div class="relative z-10">
-                <!-- Back Button & Title -->
+                <!-- Title -->
                 <div class="flex items-start gap-4 mb-6">
-                    <a href="{{ route('dashboard') }}" class="p-2.5 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-110 flex-shrink-0 mt-1" title="Kembali ke Dashboard">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </a>
                     <div class="flex-1">
                         <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
                             {{ $kelas->nama_kelas }}
@@ -85,6 +153,52 @@
         </div>
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Quick Action Buttons -->
+            <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <!-- Buat Kelas -->
+                <button onclick="openCreateClassModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Buat Kelas</h3>
+                    <p class="text-sm text-gray-500">Tambah kelas baru</p>
+                </button>
+
+                <!-- Upload Materi -->
+                <button onclick="openUploadMateriModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Upload Materi</h3>
+                    <p class="text-sm text-gray-500">Tambah materi baru</p>
+                </button>
+
+                <!-- Buat Tugas/Quiz -->
+                <button onclick="openCreateTugasModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-green-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Buat Tugas</h3>
+                    <p class="text-sm text-gray-500">Tugas & Quiz baru</p>
+                </button>
+
+                <!-- Lihat Jawaban -->
+                <button onclick="openJawabanSiswaModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-orange-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Lihat Jawaban</h3>
+                    <p class="text-sm text-gray-500">Review & feedback</p>
+                </button>
+            </div>
             <!-- Sidebar: Daftar Siswa -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
                 <!-- Section Header -->
@@ -115,7 +229,7 @@
                                     {{ $enrollment->user->nama }}
                                 </p>
                                 <p class="text-xs text-gray-500">
-                                    Bergabung {{ $enrollment->created_at->diffForHumans() }}
+                                    Bergabung {{ \Carbon\Carbon::parse($enrollment->created_at)->diffForHumans() }}
                                 </p>
                             </div>
                             <!-- Status Badge -->
@@ -139,31 +253,33 @@
                     @endforelse
                 </div>
             </div>
-            <!-- Main Content: Tugas & Quiz -->
-            <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
-                <!-- Section Header -->
-                <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-5 border-b border-purple-100">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2.5 bg-purple-600 rounded-xl">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                                </svg>
+            <!-- Main Content: Tugas & Materi -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Tugas & Quiz Section -->
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
+                    <!-- Section Header -->
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-5 border-b border-purple-100">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2.5 bg-purple-600 rounded-xl">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-bold text-gray-800">Tugas & Quiz Aktif</h2>
+                                    <p class="text-xs text-gray-500">Kelola semua penugasan</p>
+                                </div>
                             </div>
-                            <div>
-                                <h2 class="text-lg font-bold text-gray-800">Tugas & Quiz</h2>
-                                <p class="text-xs text-gray-500">Kelola semua penugasan</p>
-                            </div>
+                            <span class="text-xs font-medium text-gray-500 bg-white px-3 py-1.5 rounded-full shadow-sm">
+                                Total: {{ $kelas->assignments->count() }}
+                            </span>
                         </div>
-                        <span class="text-xs font-medium text-gray-500 bg-white px-3 py-1.5 rounded-full shadow-sm">
-                            Total: {{ $kelas->assignments->count() }}
-                        </span>
                     </div>
-                </div>
                 <!-- Assignments List -->
-                <div class="p-6 space-y-4 max-h-[600px] overflow-y-auto">
+                <div x-data="{ showAll: false }" class="p-6 space-y-4 max-h-[600px] overflow-y-auto">
                     @forelse($kelas->assignments as $index => $assignment)
-                        <div class="assignment-card bg-gradient-to-r from-white to-gray-50 border border-gray-200 rounded-2xl p-6 hover:border-purple-300" style="animation-delay: {{ $index * 0.1 }}s">
+                        <div x-show="showAll || {{ $index }} < 3" x-cloak class="assignment-card bg-gradient-to-r from-white to-gray-50 border border-gray-200 rounded-2xl p-6 hover:border-purple-300" style="animation-delay: {{ $index * 0.1 }}s">
                             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                                 <!-- Assignment Info -->
                                 <div class="flex-1">
@@ -197,44 +313,82 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <!-- Deadline Info -->
-                                    <div class="flex items-center gap-2 text-sm ml-11">
-                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                                        </svg>
-                                        <span class="text-gray-500">
-                                            Deadline: <span class="font-semibold text-gray-700">{{ is_string($assignment->deadline) ? $assignment->deadline : $assignment->deadline->format('d M Y, H:i') }}</span>
-                                        </span>
+                                    <!-- Deadline & Stats Info -->
+                                    <div class="flex flex-wrap items-center gap-3 text-sm ml-11">
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="text-gray-500">
+                                                Deadline: <span class="font-semibold text-gray-700">{{ is_string($assignment->deadline) ? $assignment->deadline : $assignment->deadline->format('d M Y, H:i') }}</span>
+                                            </span>
+                                            @php
+                                                $deadline = is_string($assignment->deadline)
+                                                    ? \Carbon\Carbon::parse($assignment->deadline)
+                                                    : $assignment->deadline;
+                                                $daysLeft = now()->startOfDay()->diffInDays($deadline->startOfDay(), false);
+                                            @endphp
+                                            @if($daysLeft >= 0)
+                                                <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full
+                                                    @if($daysLeft <= 1) bg-red-100 text-red-700
+                                                    @elseif($daysLeft <= 3) bg-yellow-100 text-yellow-700
+                                                    @else bg-blue-100 text-blue-700
+                                                    @endif">
+                                                    {{ $daysLeft == 0 ? 'Hari ini' : ($daysLeft == 1 ? 'Besok' : $daysLeft . ' hari lagi') }}
+                                                </span>
+                                            @else
+                                                <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                                                    Terlewat
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="text-gray-500">
+                                                <span class="font-semibold text-purple-600">{{ $assignment->questions->count() }}</span> Soal
+                                            </span>
+                                        </div>
                                         @php
-                                            $deadline = is_string($assignment->deadline)
-                                                ? \Carbon\Carbon::parse($assignment->deadline)
-                                                : $assignment->deadline;
-                                            $daysLeft = now()->startOfDay()->diffInDays($deadline->startOfDay(), false);
+                                            $submissionCount = $assignment->submissions()->where('status', '!=', 'draft')->count();
+                                            $totalStudents = $kelas->enrollments->count();
                                         @endphp
-                                        @if($daysLeft >= 0)
-                                            <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full
-                                                @if($daysLeft <= 1) bg-red-100 text-red-700
-                                                @elseif($daysLeft <= 3) bg-yellow-100 text-yellow-700
-                                                @else bg-blue-100 text-blue-700
-                                                @endif">
-                                                {{ $daysLeft == 0 ? 'Hari ini' : ($daysLeft == 1 ? 'Besok' : $daysLeft . ' hari lagi') }}
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="text-gray-500">
+                                                <span class="font-semibold text-green-600">{{ $submissionCount }}/{{ $totalStudents }}</span> siswa mengumpulkan
                                             </span>
-                                        @else
-                                            <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
-                                                Terlewat
-                                            </span>
-                                        @endif
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- Action Button -->
-                                <div class="flex-shrink-0">
-                                    <a href="{{ route('guru.assignments.questions', $assignment->id_assignment) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                <!-- Action Buttons -->
+                                <div class="flex-shrink-0 flex gap-2">
+                                    <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-purple-300 text-purple-700 text-sm font-semibold rounded-xl hover:bg-purple-50 transition-all duration-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                         </svg>
-                                        Kelola
+                                        Lihat Jawaban
                                     </a>
+                                    @if($assignment->tipe === 'essay' || $assignment->tipe === 'praktik')
+                                        <a href="{{ route('guru.assignments.questions', $assignment->id_assignment) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                            </svg>
+                                            Tambah Soal
+                                        </a>
+                                    @else
+                                        <a href="{{ route('guru.assignments.questions', $assignment->id_assignment) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            Kelola Soal
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -250,7 +404,7 @@
                             <p class="text-gray-500 max-w-md mx-auto mb-6">
                                 Mulai buat tugas atau quiz untuk siswa Anda
                             </p>
-                            <button class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg">
+                            <button onclick="openCreateTugasModal()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                 </svg>
@@ -258,9 +412,291 @@
                             </button>
                         </div>
                     @endforelse
+                    
+                    @if($kelas->assignments->count() > 3)
+                    <div class="text-center pt-4">
+                        <button @click="showAll = !showAll" class="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-1 mx-auto">
+                            <span x-text="showAll ? 'Lihat Sedikit' : 'Lihat Semua'"></span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path x-show="!showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                <path x-show="showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            
+            <!-- Materi Section -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-5 border-b border-blue-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-blue-600 rounded-xl">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-800">Materi Pembelajaran</h2>
+                                <p class="text-xs text-gray-500">Dokumen & file materi</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500 bg-white px-3 py-1.5 rounded-full shadow-sm">
+                            Total: {{ $kelas->materials->count() }}
+                        </span>
+                    </div>
+                </div>
+                <div x-data="{ showAll: false }" class="p-6 space-y-3 max-h-[400px] overflow-y-auto">
+                    @forelse($kelas->materials as $index => $material)
+                        <div x-show="showAll || {{ $index }} < 3" x-cloak class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition">
+                            <div class="p-3 bg-blue-100 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-semibold text-gray-900 truncate">{{ $material->judul }}</h4>
+                                <p class="text-xs text-gray-500">{{ $material->created_at->format('d M Y') }}</p>
+                            </div>
+                            @if($material->file_path)
+                                <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
+                                    Download
+                                </a>
+                            @endif
+                        </div>
+                    @empty
+                        <div class="text-center py-12">
+                            <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p class="text-sm text-gray-500">Belum ada materi</p>
+                        </div>
+                    @endforelse
+                    
+                    @if($kelas->materials->count() > 3)
+                    <div class="text-center pt-4">
+                        <button @click="showAll = !showAll" class="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 mx-auto">
+                            <span x-text="showAll ? 'Lihat Sedikit' : 'Lihat Semua'"></span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path x-show="!showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                <path x-show="showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+    <!-- Modal: Buat Kelas -->
+    <div id="createClassModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeCreateClassModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Buat Kelas Baru</h3>
+                <p class="text-gray-600">Isi informasi kelas untuk generate token</p>
+            </div>
+
+            <form method="POST" action="{{ route('guru.classes.store') }}" class="px-6 pt-6 pb-6 space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Nama Kelas</label>
+                    <input type="text" name="nama_kelas" placeholder="Contoh: 8A" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi Matapelajaran</label>
+                    <input type="text" name="deskripsi" placeholder="Contoh: Matematika, IPA, Bahasa Inggris, dsb" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Maksimal Siswa</label>
+                    <input type="number" name="max_students" value="50" min="1" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" required>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+                    <button type="button" onclick="closeCreateClassModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:to-indigo-700 transition shadow-md">
+                        Buat Kelas
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Upload Materi -->
+    <div id="uploadMateriModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeUploadMateriModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Upload Materi</h3>
+                <p class="text-gray-600">Upload file materi pembelajaran untuk siswa</p>
+            </div>
+
+            <form method="POST" action="{{ route('guru.materials.store') }}" enctype="multipart/form-data" class="px-6 pt-6 pb-6 space-y-4">
+                @csrf
+                <input type="hidden" name="id_class" value="{{ $kelas->id_class }}">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Judul Materi</label>
+                    <input type="text" name="judul" placeholder="Contoh: Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Konten (Opsional)</label>
+                    <textarea name="konten" rows="3" placeholder="Deskripsi materi..." class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Upload File</label>
+                    <div id="dropzone" class="relative flex flex-col items-center justify-center w-full h-40 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                        <input id="fileInput" type="file" name="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                        <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v6m0 0l-3-3m3 3l3-3"/>
+                        </svg>
+                        <p class="text-sm text-gray-600 font-medium">Drag & drop file di sini</p>
+                        <p class="text-xs text-gray-500">atau klik untuk memilih file</p>
+                    </div>
+                    <p id="fileName" class="mt-2 text-sm text-gray-700 hidden"></p>
+                    <p class="text-xs text-gray-500 mt-1">PDF, DOC, PPT, XLS, ZIP (Max 10MB)</p>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+                    <button type="button" onclick="closeUploadMateriModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition shadow-md">
+                        Upload Materi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Buat Tugas/Quiz -->
+    <div id="createTugasModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeCreateTugasModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Buat Tugas / Quiz</h3>
+                <p class="text-gray-600">Tambahkan tugas atau quiz baru untuk siswa</p>
+            </div>
+
+            <form method="POST" action="{{ route('guru.assignments.store') }}" class="px-6 pt-6 pb-6 space-y-4">
+                @csrf
+                <input type="hidden" name="id_class" value="{{ $kelas->id_class }}">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Tipe</label>
+                    <select name="tipe" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                        <option value="essay">📝 Essay</option>
+                        <option value="pilihan_ganda">🎯 Pilihan Ganda</option>
+                        <option value="praktik">💻 Praktik</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Judul</label>
+                    <input type="text" name="judul" placeholder="Contoh: Latihan Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi</label>
+                    <textarea name="deskripsi" rows="3" placeholder="Jelaskan tugas/quiz ini..." class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deadline</label>
+                    <input type="datetime-local" name="deadline" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Nilai Maksimal</label>
+                    <input type="number" name="max_score" value="100" min="1" max="100" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+                    <button type="button" onclick="closeCreateTugasModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-green-600 to-teal-600 px-4 py-3 font-semibold text-white hover:from-green-700 hover:to-teal-700 transition shadow-md">
+                        Buat
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Lihat Jawaban Siswa -->
+    <div id="jawabanSiswaModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-2xl bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeJawabanSiswaModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 pb-4 border-b border-gray-200">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Pilih Tugas</h3>
+                <p class="text-gray-600">Pilih tugas untuk melihat jawaban siswa</p>
+            </div>
+
+            <div class="px-6 py-4">
+                @forelse($kelas->assignments as $assignment)
+                <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="block mb-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">{{ $assignment->judul }}</h4>
+                            <p class="text-xs text-gray-500">{{ $assignment->deskripsi }}</p>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
+                @empty
+                <div class="text-center py-12">
+                    <p class="text-gray-500">Belum ada tugas</p>
+                </div>
+                @endforelse
+            </div>
+
+            <div class="px-6 pb-6">
+                <button onclick="closeJawabanSiswaModal()" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

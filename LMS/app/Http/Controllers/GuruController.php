@@ -101,6 +101,26 @@ class GuruController extends Controller
             'created_by' => Auth::user()->id_user,
         ]);
 
+        // Notify students about new assignment
+        $class = Classes::with('enrollments')->find($request->id_class);
+        foreach ($class->enrollments as $enrollment) {
+            \App\Models\Notification::create([
+                'id_user' => $enrollment->id_user,
+                'type' => 'new_assignment',
+                'title' => 'Tugas Baru!',
+                'message' => "Tugas baru '{$request->judul}' telah ditambahkan di kelas {$class->nama_kelas}.",
+                'related_id' => $assignment->id_assignment,
+                'created_at' => now(),
+            ]);
+        }
+
+        // Untuk essay/praktik: langsung ke halaman tambah soal dengan pesan khusus
+        if (in_array($request->tipe, ['essay', 'praktik'])) {
+            return redirect()->route('guru.assignments.questions', $assignment->id_assignment)
+                ->with('success', 'Tugas berhasil dibuat! Silakan tambahkan soal-soal di bawah ini.');
+        }
+
+        // Untuk pilihan ganda: tetap ke halaman kelola soal
         return redirect()->route('guru.assignments.questions', $assignment->id_assignment)
             ->with('success', 'Tugas berhasil dibuat! Sekarang tambahkan soal.');
     }
@@ -123,6 +143,7 @@ class GuruController extends Controller
 
         $request->validate([
             'soal' => 'required|string',
+            'kunci_jawaban' => in_array($assignment->tipe, ['essay', 'praktik']) ? 'nullable|string' : 'nullable',
             'poin' => 'required|integer|min:1',
             'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
             'pilihan.*' => 'required|string',
@@ -132,6 +153,7 @@ class GuruController extends Controller
         DB::transaction(function () use ($request, $assignment) {
             $question = $assignment->questions()->create([
                 'soal' => $request->soal,
+                'kunci_jawaban' => $request->kunci_jawaban,
                 'poin' => $request->poin,
                 'urutan' => $assignment->questions()->count() + 1,
             ]);
@@ -156,6 +178,7 @@ class GuruController extends Controller
 
         $request->validate([
             'soal' => 'required|string',
+            'kunci_jawaban' => in_array($assignment->tipe, ['essay', 'praktik']) ? 'nullable|string' : 'nullable',
             'poin' => 'required|integer|min:1',
             'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
             'pilihan.*' => 'required|string',
@@ -167,6 +190,7 @@ class GuruController extends Controller
             // update soal utama
             $question->update([
                 'soal' => $request->soal,
+                'kunci_jawaban' => $request->kunci_jawaban,
                 'poin' => $request->poin,
             ]);
 
@@ -182,6 +206,51 @@ class GuruController extends Controller
         });
 
         return redirect()->back()->with('success', 'Soal berhasil diperbarui!');
+    }
+
+    public function updateAssignmentDeadline(Request $request, $id)
+    {
+        $request->validate([
+            'deadline' => 'required|date',
+        ]);
+
+        $assignment = Assignment::findOrFail($id);
+        $assignment->update(['deadline' => $request->deadline]);
+
+        return redirect()->back()->with('success', 'Deadline berhasil diperbarui!');
+    }
+
+    public function showSubmissions($id)
+    {
+        $assignment = Assignment::with(['class.enrollments.user', 'submissions.user', 'questions.options'])->findOrFail($id);
+        return view('guru.submissions', compact('assignment'));
+    }
+
+    public function gradeSubmission(Request $request, $id)
+    {
+        $request->validate([
+            'score' => 'required|numeric|min:0',
+        ]);
+
+        $submission = \App\Models\Submission::with('assignment')->findOrFail($id);
+        $submission->update([
+            'score' => $request->score,
+            'status' => 'graded',
+            'graded_by' => Auth::user()->id_user,
+            'graded_at' => now(),
+        ]);
+
+        // Notify student about grade
+        \App\Models\Notification::create([
+            'id_user' => $submission->id_user,
+            'type' => 'grade',
+            'title' => 'Tugas Dinilai!',
+            'message' => "Tugas '{$submission->assignment->judul}' telah dinilai. Nilai: {$request->score}/{$submission->assignment->max_score}",
+            'related_id' => $submission->id_submission,
+            'created_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Nilai berhasil diberikan!');
     }
 
 }
