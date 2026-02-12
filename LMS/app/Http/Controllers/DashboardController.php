@@ -35,20 +35,17 @@ class DashboardController extends Controller
 
     private function siswaView(User $user)
     {
-        $allClasses = $user->enrollments()
-            ->with(['class.creator', 'class.enrollments'])
-            ->whereHas('class', function ($q) {
-                $q->where('status', 'active');
-            })
-            ->get()
-            ->pluck('class');
+        $classIds = $user->enrollments()->pluck('id_class');
+        
+        $allClasses = Classes::whereIn('id_class', $classIds)
+            ->where('status', 'active')
+            ->with(['creator', 'enrollments'])
+            ->get();
 
-        $assignments = Assignment::whereIn('id_class', $allClasses->pluck('id_class'))
+        $assignments = Assignment::whereIn('id_class', $classIds)
             ->with(['class', 'creator'])
+            ->where('is_published', true)
             ->where('deadline', '>=', now())
-            ->withCount(['submissions as is_submitted' => function ($q) use ($user) {
-                $q->where('id_user', $user->id_user);
-            }])
             ->orderBy('deadline', 'asc')
             ->limit(10)
             ->get()
@@ -62,7 +59,7 @@ class DashboardController extends Controller
                 return $assignment;
             });
 
-        $materials = Material::whereIn('id_class', $allClasses->pluck('id_class'))
+        $materials = Material::whereIn('id_class', $classIds)
             ->with(['class', 'creator'])
             ->orderBy('created_at', 'desc')
             ->limit(10)

@@ -136,26 +136,10 @@
     <section class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <span class="absolute top-10 left-1/2 -translate-x-1/2 text-white/30 text-6xl animate-float-slow pointer-events-none z-0">
-                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
-            <span class="absolute top-48 right-48 text-white/35 text-4xl animate-float">
-                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
-            <span class="absolute bottom-32 left-1/3 text-white/35 text-4xl animate-float-reverse">
-                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
-            <span class="absolute top-28 right-1/4 text-white/30 text-3xl animate-float-slow">
-                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
+            <span class="absolute top-10 left-1/2 -translate-x-1/2 text-white/30 text-6xl animate-float-slow pointer-events-none z-0">✦</span>
+            <span class="absolute top-48 right-48 text-white/35 text-4xl animate-float">✦</span>
+            <span class="absolute bottom-32 left-1/3 text-white/35 text-4xl animate-float-reverse">✦</span>
+            <span class="absolute top-28 right-1/4 text-white/30 text-3xl animate-float-slow">✦</span>
             <span class="absolute top-24 right-20 w-3 h-3 bg-white/40 rounded-full blur-sm animate-pulse"></span>
             <span class="absolute bottom-24 right-1/3 w-2.5 h-2.5 bg-white/40 rounded-full blur-sm animate-pulse"></span>
         </div>
@@ -360,20 +344,16 @@
 
                         if ($isCompleted) {
                             $badgeClass = 'bg-green-100 text-green-700';
-                            $badgeIcon = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-                            $badgeText = 'Selesai';
+                            $badgeText = '✓ Selesai';
                         } elseif ($isLate) {
                             $badgeClass = 'bg-gray-100 text-gray-700';
-                            $badgeIcon = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                            $badgeText = 'Terlambat';
+                            $badgeText = '⏰ Terlambat';
                         } elseif ($daysLeft <= 2) {
                             $badgeClass = 'bg-red-100 text-red-700';
-                            $badgeIcon = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                            $badgeText = 'Deadline: ' . ceil($daysLeft) . ' hari lagi';
+                            $badgeText = '⏰ Deadline: ' . ceil($daysLeft) . ' hari lagi';
                         } else {
                             $badgeClass = 'bg-yellow-100 text-yellow-700';
-                            $badgeIcon = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                            $badgeText = 'Deadline: ' . ceil($daysLeft) . ' hari lagi';
+                            $badgeText = '⏰ Deadline: ' . ceil($daysLeft) . ' hari lagi';
                         }
 
                         $subjectColors = [
@@ -391,10 +371,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-3">
-                                    <span class="px-3 py-1.5 {{ $badgeClass }} text-xs font-bold rounded-full inline-flex items-center gap-1">
-                                        {!! $badgeIcon !!}
-                                        {{ $badgeText }}
-                                    </span>
+                                    <span class="px-3 py-1.5 {{ $badgeClass }} text-xs font-bold rounded-full">{{ $badgeText }}</span>
                                     <span class="px-3 py-1.5 {{ $isCompleted ? 'bg-green-100 text-green-700' : $subjectColor }} text-xs font-bold rounded-full">{{ $assignment->class->nama_class }}</span>
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $assignment->judul }}</h3>
@@ -465,12 +442,7 @@
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">{{ $material->class->nama_kelas }}</span>
-                                <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                    </svg>
-                                    Materi
-                                </span>
+                                <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">📚 Materi</span>
                             </div>
                             <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $material->judul }}</h3>
                             <p class="text-sm text-gray-600 mb-4">{{ Str::limit($material->konten, 100) }}</p>
@@ -608,15 +580,7 @@
 
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-
-    @if(session('newNotification'))
-    <script>
-        if ('Notification' in window && Notification.permission === 'granted') {
-            showNotification('{{ session('newNotification.title') }}', '{{ session('newNotification.message') }}');
-        }
-    </script>
-    @endif
+    <script src="{{ asset('js/app.js') }}"></script>`n`n    @if(session('newNotification'))`n    <script>`n        if ('Notification' in window && Notification.permission === 'granted') {`n            showNotification('{{ session('newNotification.title') }}', '{{ session('newNotification.message') }}');`n        }`n    </script>`n    @endif
 </body>
 </html>
 

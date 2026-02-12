@@ -24,7 +24,7 @@
     <!-- Login Container -->
     <div class="relative z-10 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 bg-white">
         <!-- Left Side - Illustration & Info -->
-        <div class="hidden md:flex flex-col justify-center items-center p-12 pr-24 text-white bg-gradient-to-br from-purple-600 to-pink-600 relative clip-left">
+        <div class="hidden md:flex flex-col justify-center items-center p-12 pr-24 text-white bg-gradient-to-r from-purple-600 to-pink-600 relative clip-left">
             <div class="mb-8">
                 <img src="/images/LMS.png" alt="LMS Logo" class="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-white/20 mb-6">
                 <h1 class="text-4xl font-extrabold mb-4">
@@ -191,7 +191,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="w-full py-3.5 px-6 rounded-xl gradient-primary text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-[1.02] transition-all duration-300">
+                    <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
                         Register Sekarang
                     </button>
                 </form>

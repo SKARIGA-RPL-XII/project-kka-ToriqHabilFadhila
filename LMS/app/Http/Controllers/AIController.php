@@ -18,10 +18,11 @@ class AIController extends Controller
     }
 
     // Guru: Analisis progres siswa
-    public function analyzeProgress($userId, $classId)
+    public function analyzeProgress(Request $request, $userId, $classId)
     {
         $user = \App\Models\User::findOrFail($userId);
         $class = \App\Models\Classes::findOrFail($classId);
+        $question = $request->query('question', 'Bagaimana progress siswa ini?');
         
         $submissions = Submission::where('id_user', $userId)
             ->whereHas('assignment', function($q) use ($classId) {
@@ -43,7 +44,8 @@ class AIController extends Controller
             'completed' => $completed,
             'total' => $total,
             'avg_score' => round($avgScore, 1),
-            'late' => $late
+            'late' => $late,
+            'question' => $question
         ];
 
         $analysis = $this->ai->analyzeStudentProgress($studentData);

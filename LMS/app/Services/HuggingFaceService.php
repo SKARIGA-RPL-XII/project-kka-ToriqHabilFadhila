@@ -34,6 +34,7 @@ class HuggingFaceService
                     ],
                     'max_tokens' => $maxTokens,
                     'temperature' => 0.1,
+                    'seed' => 42,
                 ]);
             if ($response->failed()) {
                 Log::error('HF Router Error', [
@@ -55,15 +56,16 @@ class HuggingFaceService
 
     public function analyzeStudentProgress(array $data)
     {
-        $system = 'Kamu asisten guru. Jawab SINGKAT.';
+        $system = 'Kamu asisten guru. Jawab SINGKAT tanpa format markdown atau simbol **.';
         $user =
             "Nama: {$data['nama']}\n" .
             "Kelas: {$data['kelas']}\n" .
             "Tugas selesai: {$data['completed']}/{$data['total']}\n" .
             "Rata-rata nilai: {$data['avg_score']}\n" .
             "Terlambat: {$data['late']}\n\n" .
-            "Analisis: performa, area lemah, rekomendasi. Masing-masing 1-2 kalimat.";
-        return $this->callAPI($system, $user, 200);
+            "Analisis: performa, area lemah, rekomendasi. Masing-masing 1-2 kalimat. TANPA simbol ** atau markdown.";
+        $response = $this->callAPI($system, $user, 200);
+        return $response ? str_replace(['**', '*'], '', $response) : $response;
     }
 
     public function provideFeedback(string $question, string $answer)

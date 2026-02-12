@@ -34,7 +34,6 @@
             <div class="p-6 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">Daftar Jawaban</h2>
             </div>
-
             <div class="divide-y divide-gray-100">
                 @forelse($assignment->submissions as $submission)
                     <div class="p-6 hover:bg-gray-50 transition">
@@ -143,7 +142,7 @@
                                     <p class="text-xs font-semibold mb-1">✨ Hasil AI Grading:</p>
                                     <p id="ai-feedback-{{ $submission->id_submission }}" class="text-sm"></p>
                                 </div>
-                                
+
                                 <p class="text-xs text-gray-500 mt-2">
                                     💡 <strong>Penilaian Manual:</strong> Atau isi nilai manual di kolom di bawah.
                                 </p>
@@ -229,16 +228,16 @@
                 if (data.success) {
                     // Auto-fill score
                     document.getElementById(`score-${submissionId}`).value = data.score;
-                    
+
                     // Show AI feedback
                     const resultDiv = document.getElementById(`ai-result-${submissionId}`);
                     const feedbackP = document.getElementById(`ai-feedback-${submissionId}`);
-                    
+
                     // Check if there's an error in feedback
                     if (data.feedback.includes('Error:')) {
                         resultDiv.className = 'mt-3 p-3 bg-yellow-50 border border-yellow-300 rounded-xl';
                         feedbackP.className = 'text-sm text-yellow-800';
-                        feedbackP.innerHTML = '<span class="font-semibold text-yellow-700">⚠️ AI Tidak Tersedia</span><br>' + 
+                        feedbackP.innerHTML = '<span class="font-semibold text-yellow-700">⚠️ AI Tidak Tersedia</span><br>' +
                             '<span class="text-xs">API key tidak valid atau koneksi bermasalah. Silakan nilai manual dengan mengisi kolom di bawah.</span><br>' +
                             '<span class="text-xs text-gray-600 mt-1 block">Detail: ' + data.feedback.replace('Error: ', '') + '</span>';
                     } else {
@@ -246,7 +245,7 @@
                         feedbackP.className = 'text-sm text-green-800';
                         feedbackP.textContent = data.feedback;
                     }
-                    
+
                     resultDiv.classList.remove('hidden');
                     btn.innerHTML = '✅ Selesai! Nilai: ' + data.score;
                 } else {
@@ -254,7 +253,7 @@
                     const feedbackP = document.getElementById(`ai-feedback-${submissionId}`);
                     resultDiv.className = 'mt-3 p-3 bg-yellow-50 border border-yellow-300 rounded-xl';
                     feedbackP.className = 'text-sm text-yellow-800';
-                    feedbackP.innerHTML = '<span class="font-semibold text-yellow-700">⚠️ AI Tidak Tersedia</span><br>' + 
+                    feedbackP.innerHTML = '<span class="font-semibold text-yellow-700">⚠️ AI Tidak Tersedia</span><br>' +
                         '<span class="text-xs">Silakan nilai manual dengan mengisi kolom di bawah.</span><br>' +
                         '<span class="text-xs text-gray-600 mt-1 block">Detail: ' + (data.message || 'Gagal mengoreksi') + '</span>';
                     resultDiv.classList.remove('hidden');
@@ -266,7 +265,7 @@
                 const feedbackP = document.getElementById(`ai-feedback-${submissionId}`);
                 resultDiv.className = 'mt-3 p-3 bg-yellow-50 border border-yellow-300 rounded-xl';
                 feedbackP.className = 'text-sm text-yellow-800';
-                feedbackP.innerHTML = '<span class="font-semibold text-yellow-700">⚠️ Koneksi Bermasalah</span><br>' + 
+                feedbackP.innerHTML = '<span class="font-semibold text-yellow-700">⚠️ Koneksi Bermasalah</span><br>' +
                     '<span class="text-xs">Tidak dapat terhubung ke server AI. Silakan nilai manual.</span>';
                 resultDiv.classList.remove('hidden');
                 btn.disabled = false;

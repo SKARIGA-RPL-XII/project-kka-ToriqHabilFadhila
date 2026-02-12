@@ -61,8 +61,11 @@
                 {{-- Hero Content --}}
                 <div class="text-center lg:text-left">
                     <div class="inline-block mb-4">
-                        <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
-                            <i class="fa-solid fa-book"></i> Platform Pembelajaran Terdepan
+                        <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold inline-flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                            </svg>
+                            Platform Pembelajaran Terdepan
                         </span>
                     </div>
                     <h1 class="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
@@ -156,8 +159,11 @@
         <div class="w-full px-4 sm:px-6 md:px-16">
             {{-- Section Header --}}
             <div class="text-center mb-16">
-                <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
-                    <i class="fa-solid fa-star text-purple-600"></i> Fitur Unggulan
+                <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    Fitur Unggulan
                 </span>
                 <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 mt-4 mb-4">
                     Kenapa Memilih
@@ -252,8 +258,11 @@
         <div class="w-full px-4 sm:px-6 md:px-16">
             {{-- Section Header --}}
             <div class="text-center mb-16">
-                <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                    <i class="fa-solid fa-bullseye text-purple-600"></i> Cara Kerja
+                <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Cara Kerja
                 </span>
                 <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 mt-4 mb-4">
                     Mulai Belajar dalam

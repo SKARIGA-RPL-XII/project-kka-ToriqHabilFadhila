@@ -129,9 +129,21 @@
     <section class="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <span class="absolute top-10 left-1/2 -translate-x-1/2 text-white/30 text-6xl animate-float-slow pointer-events-none z-0">✦</span>
-            <span class="absolute top-48 right-48 text-white/35 text-4xl animate-float">✦</span>
-            <span class="absolute bottom-32 left-1/3 text-white/35 text-4xl animate-float-reverse">✦</span>
+            <span class="absolute top-10 left-1/2 -translate-x-1/2 text-white/30 text-6xl animate-float-slow pointer-events-none z-0">
+                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+            </span>
+            <span class="absolute top-48 right-48 text-white/35 text-4xl animate-float">
+                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+            </span>
+            <span class="absolute bottom-32 left-1/3 text-white/35 text-4xl animate-float-reverse">
+                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+            </span>
         </div>
         <div class="relative w-full px-4 sm:px-6 md:px-16 py-16 sm:py-20">
             <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
@@ -279,33 +291,47 @@
         </div>
 
         <!-- Tugas & Quiz Aktif -->
-        <div class="mb-12">
+        <div x-data="{ showAllAssignments: false }" class="mb-12">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Tugas & Quiz Aktif</h2>
-                <a href="#" class="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-1">
-                    Lihat Semua
+                <button @click="showAllAssignments = !showAllAssignments" class="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-1">
+                    <span x-text="showAllAssignments ? 'Lihat Sedikit' : 'Lihat Semua'"></span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path x-show="!showAllAssignments" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        <path x-show="showAllAssignments" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
                     </svg>
-                </a>
+                </button>
             </div>
 
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-                @forelse($assignments as $assignment)
-                <div class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
+                @forelse($assignments as $index => $assignment)
+                <div x-show="showAllAssignments || {{ $index }} < 3" x-cloak class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }}</span>
-                                <span class="px-3 py-1.5
-                                    @if($assignment->tipe === 'essay') bg-green-100 text-green-700
-                                    @elseif($assignment->tipe === 'pilihan_ganda') bg-orange-100 text-orange-700
-                                    @else bg-purple-100 text-purple-700
-                                    @endif
-                                    text-xs font-bold rounded-full">
-                                    @if($assignment->tipe === 'essay') 📝 Essay
-                                    @elseif($assignment->tipe === 'pilihan_ganda') 🎯 Pilihan Ganda
-                                    @else 💻 Praktik
+                                @if($assignment->tipe === 'essay')
+                                    <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
+                                @elseif($assignment->tipe === 'pilihan_ganda')
+                                    <span class="px-3 py-1.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
+                                @else
+                                    <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
+                                @endif
+                                    @if($assignment->tipe === 'essay')
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                        Essay
+                                    @elseif($assignment->tipe === 'pilihan_ganda')
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                        </svg>
+                                        Pilihan Ganda
+                                    @else
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                                        </svg>
+                                        Praktik
                                     @endif
                                 </span>
                             </div>
@@ -344,6 +370,74 @@
             </div>
         </div>
 
+        <!-- Progress Belajar Siswa -->
+        <div class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Progress Belajar Siswa</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @forelse($classes as $kelas)
+                    @php
+                        $totalStudents = $kelas->enrollments->count();
+                        $classAssignments = \App\Models\Assignment::where('id_class', $kelas->id_class)->get();
+                        $totalAssignments = $classAssignments->count();
+                        $totalSubmissions = \App\Models\Submission::whereIn('id_assignment', $classAssignments->pluck('id_assignment'))->count();
+                        $avgScore = \App\Models\Submission::whereIn('id_assignment', $classAssignments->pluck('id_assignment'))->where('status', 'graded')->avg('score') ?? 0;
+                        $completionRate = $totalAssignments > 0 && $totalStudents > 0 ? ($totalSubmissions / ($totalAssignments * $totalStudents)) * 100 : 0;
+                    @endphp
+                    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">{{ $kelas->nama_kelas }}</h3>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $totalStudents }} Siswa</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-600">Tingkat Penyelesaian</span>
+                                    <span class="text-sm font-bold text-purple-600">{{ number_format($completionRate, 1) }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2.5 rounded-full" style="width: {{ $completionRate }}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-blue-50 rounded-xl p-3">
+                                    <p class="text-xs text-blue-600 mb-1">Total Tugas</p>
+                                    <p class="text-2xl font-bold text-blue-700">{{ $totalAssignments }}</p>
+                                </div>
+                                <div class="bg-green-50 rounded-xl p-3">
+                                    <p class="text-xs text-green-600 mb-1">Rata-rata Nilai</p>
+                                    <p class="text-2xl font-bold text-green-700">{{ number_format($avgScore, 1) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <a href="{{ route('guru.classes.show', $kelas->id_class) }}" class="flex-1 text-center px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold text-sm">
+                                    Lihat Detail
+                                </a>
+                                <button onclick="openAskProgressModal({{ $kelas->id_class }}, '{{ $kelas->nama_kelas }}')" class="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition font-semibold text-sm">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-3 bg-white rounded-2xl shadow-md border border-gray-100 p-8 text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <p class="font-semibold text-gray-900 mb-1">Belum ada data progress</p>
+                        <p class="text-sm text-gray-500">Buat kelas dan tugas untuk melihat progress siswa</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
         <!-- Materi yang Diupload -->
         <div>
             <div class="flex items-center justify-between mb-6">
@@ -357,7 +451,12 @@
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $material->class->nama_kelas }}</span>
-                                <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">📚 Materi</span>
+                                <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                    Materi
+                                </span>
                             </div>
                             <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $material->judul }}</h3>
                             <p class="text-sm text-gray-600 mb-4">{{ Str::limit($material->konten, 100) }} • Diupload: {{ $material->created_at->format('d M Y, H:i') }}</p>
@@ -542,17 +641,21 @@
 
     <!-- Modal: Buat Tugas/Quiz -->
     <div id="createTugasModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
-        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <button onclick="closeCreateTugasModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+        <div
+            class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeCreateTugasModal()"
+                class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
             <div class="px-6 pt-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
+                <div
+                    class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-2">Buat Tugas / Quiz</h3>
@@ -561,44 +664,65 @@
 
             <form method="POST" action="{{ route('guru.assignments.store') }}" class="px-6 pt-6 pb-6 space-y-4">
                 @csrf
+                <input type="hidden" name="id_class" value="{{ $kelas->id_class }}">
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Tipe</label>
-                    <select name="tipe" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
-                        <option value="essay">📝 Essay</option>
-                        <option value="pilihan_ganda">🎯 Pilihan Ganda</option>
-                        <option value="praktik">💻 Praktik</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-900 mb-2">Pilih Kelas</label>
-                    <select name="id_class" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
-                        @foreach($classes as $kelas)
-                            <option value="{{ $kelas->id_class }}">{{ $kelas->nama_kelas }} - {{ $kelas->deskripsi }}</option>
-                        @endforeach
-                    </select>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="tipe" value="essay" class="peer sr-only" required>
+                            <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-green-500 peer-checked:bg-gradient-to-br peer-checked:from-green-50 peer-checked:to-emerald-50 peer-checked:shadow-md hover:border-green-400">
+                                <div class="text-2xl mb-1">✍️</div>
+                                <div class="text-xs font-semibold text-gray-700">Essay</div>
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="tipe" value="pilihan_ganda" class="peer sr-only">
+                            <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-orange-500 peer-checked:bg-gradient-to-br peer-checked:from-orange-50 peer-checked:to-amber-50 peer-checked:shadow-md hover:border-orange-400">
+                                <div class="text-2xl mb-1">✅</div>
+                                <div class="text-xs font-semibold text-gray-700">Pilihan Ganda</div>
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="tipe" value="praktik" class="peer sr-only">
+                            <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-purple-500 peer-checked:bg-gradient-to-br peer-checked:from-purple-50 peer-checked:to-pink-50 peer-checked:shadow-md hover:border-purple-400">
+                                <div class="text-2xl mb-1">💻</div>
+                                <div class="text-xs font-semibold text-gray-700">Praktik</div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Judul</label>
-                    <input type="text" name="judul" placeholder="Contoh: Latihan Persamaan Linear" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                    <input type="text" name="judul" placeholder="Contoh: Latihan Persamaan Linear"
+                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi</label>
-                    <textarea name="deskripsi" rows="3" placeholder="Jelaskan tugas/quiz ini..." class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required></textarea>
+                    <textarea name="deskripsi" rows="3" placeholder="Jelaskan tugas/quiz ini..."
+                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        required></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Deadline</label>
-                    <input type="datetime-local" name="deadline" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                    <input type="datetime-local" name="deadline"
+                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Nilai Maksimal</label>
-                    <input type="number" name="max_score" value="100" min="1" max="100" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition" required>
+                    <input type="number" name="max_score" value="100" min="1" max="100"
+                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        required>
                 </div>
 
                 <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-                    <button type="button" onclick="closeCreateTugasModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    <button type="button" onclick="closeCreateTugasModal()"
+                        class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-green-600 to-teal-600 px-4 py-3 font-semibold text-white hover:from-green-700 hover:to-teal-700 transition shadow-md">
+                    <button type="submit"
+                        class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:to-pink-700 transition shadow-md">
                         Buat
                     </button>
                 </div>
@@ -655,85 +779,104 @@
             </button>
 
             <div class="px-6 pt-8 pb-4 border-b border-gray-200">
-                <h3 class="text-2xl font-bold text-gray-900 mb-2">Jawaban Siswa</h3>
-                <p class="text-gray-600">Latihan Persamaan Linear - Matematika 8A</p>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Pilih Tugas</h3>
+                <p class="text-gray-600">Pilih tugas untuk melihat jawaban siswa</p>
             </div>
 
             <div class="px-6 py-4">
-                <!-- Student Answer 1 -->
-                <div class="mb-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
-                                A
-                            </div>
+                @forelse($assignments as $assignment)
+                    <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}"
+                        class="block mb-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+                        <div class="flex items-center justify-between">
                             <div>
-                                <h4 class="font-semibold text-gray-900">Ahmad Fadli</h4>
-                                <p class="text-xs text-gray-500">Dikumpulkan: 26 Jan 2025, 14:30</p>
+                                <h4 class="font-semibold text-gray-900">{{ $assignment->judul }}</h4>
+                                <p class="text-xs text-gray-500">{{ $assignment->class->nama_kelas }} - {{ $assignment->deskripsi }}</p>
                             </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
                         </div>
-                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">✓ Sudah dinilai</span>
+                    </a>
+                @empty
+                    <div class="text-center py-12">
+                        <p class="text-gray-500">Belum ada tugas</p>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm text-gray-600">Nilai: <span class="font-bold text-green-600">90/100</span></p>
-                        <button class="text-purple-600 hover:text-purple-700 font-semibold text-sm">Lihat Detail →</button>
-                    </div>
-                </div>
-
-                <!-- Student Answer 2 -->
-                <div class="mb-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
-                                S
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900">Siti Nurhaliza</h4>
-                                <p class="text-xs text-gray-500">Dikumpulkan: 26 Jan 2025, 15:00</p>
-                            </div>
-                        </div>
-                        <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">⏳ Perlu dinilai</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm text-gray-600">Status: <span class="font-semibold text-yellow-600">Menunggu penilaian</span></p>
-                        <button class="text-purple-600 hover:text-purple-700 font-semibold text-sm">Review →</button>
-                    </div>
-                </div>
-
-                <!-- Student Answer 3 -->
-                <div class="mb-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold">
-                                B
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900">Budi Santoso</h4>
-                                <p class="text-xs text-gray-500">Dikumpulkan: 27 Jan 2025, 08:15</p>
-                            </div>
-                        </div>
-                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">✓ Sudah dinilai</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm text-gray-600">Nilai: <span class="font-bold text-green-600">85/100</span></p>
-                        <button class="text-purple-600 hover:text-purple-700 font-semibold text-sm">Lihat Detail →</button>
-                    </div>
-                </div>
-
-                <!-- Not Submitted Students -->
-                <div class="mt-6 p-4 bg-red-50 rounded-xl border border-red-200">
-                    <h4 class="font-semibold text-red-800 mb-2 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                        </svg>
-                        Belum Mengumpulkan (14 siswa)
-                    </h4>
-                    <p class="text-sm text-red-700">Andi, Dewi, Eko, Fitri, Gilang, Hana, Indra, Joko, Kirana, Lina, Mira, Nanda, Omar, Putri</p>
-                </div>
+                @endforelse
             </div>
 
             <div class="px-6 pb-6">
                 <button onclick="closeJawabanSiswaModal()" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Tanya Progress Siswa -->
+    <div id="askProgressModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-2xl bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeAskProgressModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 pb-4 border-b border-gray-200">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Tanya Progress Siswa</h3>
+                        <p class="text-gray-600" id="modalClassName">Kelas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Pilih Siswa</label>
+                    <select id="studentSelect" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition">
+                        <option value="">-- Pilih Siswa --</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Pertanyaan Anda</label>
+                    <textarea id="questionInput" rows="3" placeholder="Contoh: Bagaimana progress Ahmad dalam mengerjakan tugas?" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition"></textarea>
+                </div>
+
+                <button onclick="askAI()" id="askButton" class="w-full px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition font-semibold shadow-md flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Tanya AI
+                </button>
+
+                <div id="aiResponse" class="hidden mt-6 p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border-2 border-pink-200">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-900 mb-2">Analisis AI</h4>
+                            <div id="aiResponseText" class="text-sm text-gray-700 whitespace-pre-wrap"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="aiLoading" class="hidden mt-6 p-4 bg-gray-50 rounded-xl text-center">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-pink-500 border-t-transparent"></div>
+                    <p class="text-sm text-gray-600 mt-2">AI sedang menganalisis...</p>
+                </div>
+            </div>
+
+            <div class="px-6 pb-6">
+                <button onclick="closeAskProgressModal()" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                     Tutup
                 </button>
             </div>

@@ -94,6 +94,8 @@ Route::middleware('auth')->group(function () {
             ->name('guru.assignments.questions');
         Route::post('/guru/assignments/{id}/questions', [GuruController::class, 'storeQuestion'])
             ->name('guru.questions.store');
+        Route::post('/guru/assignments/{id}/questions/generate', [GuruController::class, 'generateQuestions'])
+            ->name('guru.questions.generate');
         Route::put('/guru/assignments/{id}/deadline', [GuruController::class, 'updateAssignmentDeadline'])
             ->name('guru.assignments.deadline');
         Route::get('/guru/assignments/{id}/submissions', [GuruController::class, 'showSubmissions'])
@@ -102,10 +104,18 @@ Route::middleware('auth')->group(function () {
             ->name('guru.submissions.grade');
         Route::get('/guru/classes/{id}', [GuruController::class, 'showClass'])
             ->name('guru.classes.show');
+        Route::get('/guru/classes/{id}/students', [GuruController::class, 'getStudents'])
+            ->name('guru.classes.students');
         Route::prefix('guru')->middleware('auth')->group(function () {
             Route::put('/guru/questions/{id}', [GuruController::class, 'updateQuestion'])
                 ->name('guru.questions.update');
+            Route::delete('/guru/questions/{id}', [GuruController::class, 'deleteQuestion'])
+                ->name('guru.questions.delete');
+            Route::delete('/guru/assignments/{id}/questions/bulk-delete', [GuruController::class, 'bulkDeleteQuestions'])
+                ->name('guru.questions.bulkDelete');
         });
+        Route::post('/guru/assignments/{id}/publish', [GuruController::class, 'publishAssignment'])
+            ->name('guru.assignments.publish');
         // AI: Analisis progres siswa
         Route::get('/guru/ai/analyze/{userId}/{classId}', [AIController::class, 'analyzeProgress'])
             ->name('guru.ai.analyze');

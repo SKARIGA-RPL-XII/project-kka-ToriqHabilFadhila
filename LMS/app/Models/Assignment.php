@@ -17,6 +17,7 @@ class Assignment extends Model
         'deadline',
         'max_score',
         'created_by',
+        'is_published',
     ];
 
     protected $casts = [

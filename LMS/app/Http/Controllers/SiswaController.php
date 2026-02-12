@@ -54,9 +54,19 @@ class SiswaController extends Controller
 
     public function showClass($id)
     {
-        $kelas = Classes::with(['enrollments.user', 'creator', 'assignments.submissions' => function($query) {
-            $query->where('id_user', Auth::id());
-        }, 'materials'])->findOrFail($id);
+        $kelas = Classes::with([
+            'enrollments.user', 
+            'creator', 
+            'assignments' => function($query) {
+                $query->where('is_published', true)
+                    ->orderBy('deadline', 'asc')
+                    ->with(['submissions' => function($q) {
+                        $q->where('id_user', Auth::id());
+                    }]);
+            }, 
+            'materials'
+        ])->findOrFail($id);
+        
         return view('siswa.class-detail', compact('kelas'));
     }
 

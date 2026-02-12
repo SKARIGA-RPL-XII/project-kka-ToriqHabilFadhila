@@ -27,30 +27,62 @@
                 <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl">
                     <span class="font-semibold">Nilai Maks: {{ $assignment->max_score }}</span>
                 </div>
+                @php
+                    $existingSubmission = \App\Models\Submission::where('id_assignment', $assignment->id_assignment)
+                        ->where('id_user', auth()->id())
+                        ->where('status', '!=', 'draft')
+                        ->first();
+                @endphp
+                @if($existingSubmission)
+                    <div class="bg-green-500/30 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-green-300">
+                        <span class="font-bold">✓ Sudah Dikumpulkan</span>
+                    </div>
+                @endif
             </div>
         </div>
 
         <!-- Assignment Content -->
+        @if($existingSubmission)
+            <div class="bg-white rounded-3xl shadow-xl p-8 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                    <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Tugas Sudah Dikumpulkan</h2>
+                <p class="text-gray-600 mb-6">Kamu sudah mengumpulkan tugas ini pada {{ $existingSubmission->submitted_at->format('d M Y, H:i') }}</p>
+                @if($existingSubmission->status === 'graded')
+                    <div class="inline-block bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-6">
+                        <p class="text-sm text-gray-600 mb-2">Nilai Kamu:</p>
+                        <p class="text-4xl font-bold text-green-600">{{ $existingSubmission->score }}/{{ $assignment->max_score }}</p>
+                    </div>
+                @else
+                    <div class="inline-block bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 mb-6">
+                        <p class="text-yellow-800 font-semibold">⏳ Menunggu Penilaian dari Guru</p>
+                    </div>
+                @endif
+                <div class="flex justify-center gap-4">
+                    <a href="{{ route('siswa.submissions.show', $existingSubmission->id_submission) }}" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
+                        Lihat Detail Jawaban
+                    </a>
+                    <a href="{{ route('dashboard') }}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-semibold">
+                        Kembali ke Dashboard
+                    </a>
+                </div>
+            </div>
+        @else
         <div class="bg-white rounded-3xl shadow-xl p-8">
             @if($assignment->tipe === 'pilihan_ganda')
                 <form method="POST" action="{{ route('siswa.assignments.submit', $assignment->id_assignment) }}">
                     @csrf
-                    @php
-                        // Acak urutan soal untuk setiap siswa
-                        $shuffledQuestions = $assignment->questions->shuffle();
-                    @endphp
-                    @foreach($shuffledQuestions as $index => $question)
+                    @foreach($assignment->questions->sortBy('urutan') as $index => $question)
                         <div class="mb-8 pb-8 {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
                             <h3 class="text-lg font-bold text-gray-900 mb-4">
                                 {{ $index + 1 }}. {{ $question->soal }}
                                 <span class="text-sm text-gray-500">({{ $question->poin }} poin)</span>
                             </h3>
                             <div class="space-y-3">
-                                @php
-                                    // Acak urutan opsi untuk setiap soal
-                                    $shuffledOptions = $question->options->shuffle();
-                                @endphp
-                                @foreach($shuffledOptions as $optIndex => $option)
+                                @foreach($question->options as $optIndex => $option)
                                     <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 cursor-pointer transition">
                                         <input type="radio" name="answers[{{ $question->id_question }}]" value="{{ $option->id_option }}" class="w-5 h-5 text-indigo-600" required>
                                         <span class="text-gray-800">{{ chr(65 + $optIndex) }}. {{ $option->pilihan }}</span>
@@ -112,6 +144,7 @@
                 </div>
             @endif
         </div>
+        @endif
     </div>
 </body>
 </html>

@@ -112,7 +112,7 @@
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
                         </div>
-                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Tugas & Quiz Aktif</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Tugas &amp; Quiz Aktif</h2>
                     </div>
                     <span class="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-full shadow-sm">
                         Total: {{ $kelas->assignments->count() }}
@@ -131,12 +131,14 @@
                             <!-- Assignment Info -->
                             <div class="flex-1">
                                 <div class="flex items-start gap-3 mb-3">
-                                    <!-- Type Icon -->
-                                    <div class="p-2 rounded-lg flex-shrink-0
-                                        @if($assignment->tipe === 'essay') bg-green-100
-                                        @elseif($assignment->tipe === 'pilihan_ganda') bg-orange-100
-                                        @else bg-purple-100
-                                        @endif">
+                                    @php
+                                        $iconBgClass = match($assignment->tipe) {
+                                            'essay' => 'bg-green-100',
+                                            'pilihan_ganda' => 'bg-orange-100',
+                                            default => 'bg-purple-100'
+                                        };
+                                    @endphp
+                                    <div class="p-2 rounded-lg flex-shrink-0 {{ $iconBgClass }}">
                                         @if($assignment->tipe === 'essay')
                                             <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
@@ -184,11 +186,14 @@
                                             Terlambat
                                         </span>
                                     @else
-                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full
-                                            @if($daysLeft <= 1) bg-red-100 text-red-700
-                                            @elseif($daysLeft <= 3) bg-yellow-100 text-yellow-700
-                                            @else bg-blue-100 text-blue-700
-                                            @endif">
+                                        @php
+                                            $deadlineBadgeClass = match(true) {
+                                                $daysLeft <= 1 => 'bg-red-100 text-red-700',
+                                                $daysLeft <= 3 => 'bg-yellow-100 text-yellow-700',
+                                                default => 'bg-blue-100 text-blue-700'
+                                            };
+                                        @endphp
+                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full {{ $deadlineBadgeClass }}">
                                             {{ $daysLeft == 0 ? 'Hari ini' : ($daysLeft == 1 ? 'Besok' : ceil($daysLeft) . ' hari lagi') }}
                                         </span>
                                     @endif
@@ -196,11 +201,14 @@
                             </div>
                             <!-- Type Badge -->
                             <div class="flex-shrink-0">
-                                <span class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl shadow-sm
-                                    @if($assignment->tipe === 'essay') bg-gradient-to-r from-green-500 to-green-600 text-white
-                                    @elseif($assignment->tipe === 'pilihan_ganda') bg-gradient-to-r from-orange-500 to-orange-600 text-white
-                                    @else bg-gradient-to-r from-purple-500 to-purple-600 text-white
-                                    @endif">
+                                @php
+                                    $badgeClass = match($assignment->tipe) {
+                                        'essay' => 'bg-gradient-to-r from-green-500 to-green-600 text-white',
+                                        'pilihan_ganda' => 'bg-gradient-to-r from-orange-500 to-orange-600 text-white',
+                                        default => 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
+                                    };
+                                @endphp
+                                <span class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl shadow-sm {{ $badgeClass }}">
                                     {{ ucfirst(str_replace('_', ' ', $assignment->tipe)) }}
                                 </span>
                             </div>

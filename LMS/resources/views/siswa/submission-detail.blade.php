@@ -55,31 +55,26 @@
                             </h3>
 
                             @if($submission->assignment->tipe === 'pilihan_ganda')
-                                @php
-                                    $selectedOption = $question->options->where('id_option', $answer)->first();
-                                    $correctOption = $question->options->where('is_correct', true)->first();
-                                @endphp
-
                                 <div class="space-y-3">
                                     @foreach($question->options as $optIndex => $option)
-                                        <div class="flex items-center gap-3 p-4 border-2 rounded-xl
-                                            @if($option->id_option == $answer && $option->is_correct)
-                                                border-green-500 bg-green-50
-                                            @elseif($option->id_option == $answer && !$option->is_correct)
-                                                border-red-500 bg-red-50
-                                            @elseif($option->is_correct)
-                                                border-green-300 bg-green-50/50
-                                            @else
-                                                border-gray-200
-                                            @endif">
-                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center
-                                                @if($option->id_option == $answer)
-                                                    {{ $option->is_correct ? 'border-green-600 bg-green-600' : 'border-red-600 bg-red-600' }}
-                                                @elseif($option->is_correct)
-                                                    border-green-600
-                                                @else
-                                                    border-gray-300
-                                                @endif">
+                                        @php
+                                            $borderClass = match(true) {
+                                                $option->id_option == $answer && $option->is_correct => 'border-green-500 bg-green-50',
+                                                $option->id_option == $answer && !$option->is_correct => 'border-red-500 bg-red-50',
+                                                $option->is_correct => 'border-green-300 bg-green-50/50',
+                                                default => 'border-gray-200'
+                                            };
+                                        @endphp
+                                        <div class="flex items-center gap-3 p-4 border-2 rounded-xl {{ $borderClass }}">
+                                            @php
+                                                $radioClass = match(true) {
+                                                    $option->id_option == $answer && $option->is_correct => 'border-green-600 bg-green-600',
+                                                    $option->id_option == $answer && !$option->is_correct => 'border-red-600 bg-red-600',
+                                                    $option->is_correct => 'border-green-600',
+                                                    default => 'border-gray-300'
+                                                };
+                                            @endphp
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center {{ $radioClass }}">
                                                 @if($option->id_option == $answer)
                                                     <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                         <circle cx="10" cy="10" r="4"/>
