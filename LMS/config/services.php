@@ -35,6 +35,10 @@ return [
         ],
     ],
 
+    'huggingface' => [
+        'api_key' => env('HUGGINGFACE_API_KEY'),
+    ],
+
     // GOOGLE OAUTH
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),

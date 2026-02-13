@@ -138,7 +138,7 @@ class AIController extends Controller
         $request->validate([
             'submission_id' => 'required|exists:submissions,id_submission'
         ]);
-        $submission = Submission::with(+'assignment.questions')->findOrFail($request->submission_id);
+        $submission = Submission::with('assignment.questions')->findOrFail($request->submission_id);
         $assignment = $submission->assignment;
         // Only for essay/praktik
         if (!in_array($assignment->tipe, ['essay', 'praktik'])) {

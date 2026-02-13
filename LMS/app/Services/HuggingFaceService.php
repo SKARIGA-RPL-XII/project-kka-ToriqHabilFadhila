@@ -13,7 +13,7 @@ class HuggingFaceService
 
     public function __construct()
     {
-        $this->apiKey = env('HUGGINGFACE_API_KEY');
+        $this->apiKey = config('services.huggingface.api_key');
         if (!$this->apiKey) {
             throw new \Exception('HUGGINGFACE_API_KEY tidak ditemukan');
         }
@@ -81,9 +81,9 @@ class HuggingFaceService
     {
         $system = 'Kamu sistem penilaian. WAJIB balas JSON: {"score":0,"feedback":"teks"} TANPA teks lain.';
         $user = "Soal: $question\nKunci: $key\nJawaban: $answer\nMax: $maxScore\n\nNilai dalam JSON. Feedback WAJIB diisi.";
-        
+
         $raw = $this->callAPI($system, $user, 120);
-        
+
         if (!$raw) {
             return ['score' => 0, 'feedback' => 'AI tidak merespons'];
         }
@@ -103,19 +103,19 @@ class HuggingFaceService
                 ];
             }
         }
-        
+
         return ['score' => 0, 'feedback' => 'Format tidak valid'];
     }
 
     public function recommendMaterials(array $studentProfile)
     {
         $system = 'Kamu asisten rekomendasi materi. Jawab SINGKAT dan PADAT.';
-        
+
         $performanceNote = '';
         if (isset($studentProfile['avg_score']) && $studentProfile['avg_score'] < 60) {
             $performanceNote = "PENTING: Nilai rata-rata rendah ({$studentProfile['avg_score']}). Fokus pada materi dasar dan penguatan fundamental.\n";
         }
-        
+
         $user =
             $performanceNote .
             "Mata Pelajaran: {$studentProfile['subject']}\n" .
