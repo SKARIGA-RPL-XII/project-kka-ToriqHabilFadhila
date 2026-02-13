@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -11,33 +10,28 @@ use Illuminate\Support\Facades\Auth;
 class AIController extends Controller
 {
     protected $ai;
-
     public function __construct(HuggingFaceService $ai)
     {
         $this->ai = $ai;
     }
-
     // Guru: Analisis progres siswa
     public function analyzeProgress(Request $request, $userId, $classId)
     {
         $user = \App\Models\User::findOrFail($userId);
         $class = \App\Models\Classes::findOrFail($classId);
         $question = $request->query('question', 'Bagaimana progress siswa ini?');
-        
         $submissions = Submission::where('id_user', $userId)
-            ->whereHas('assignment', function($q) use ($classId) {
+            ->whereHas('assignment', function ($q) use ($classId) {
                 $q->where('id_class', $classId);
             })
             ->with('assignment')
             ->get();
-
         $total = $submissions->count();
         $completed = $submissions->where('status', 'graded')->count();
         $avgScore = $submissions->where('status', 'graded')->avg('score') ?? 0;
-        $late = $submissions->filter(function($sub) {
+        $late = $submissions->filter(function ($sub) {
             return $sub->submitted_at > $sub->assignment->deadline;
         })->count();
-
         $studentData = [
             'nama' => $user->nama,
             'kelas' => $class->nama_kelas,
@@ -47,9 +41,7 @@ class AIController extends Controller
             'late' => $late,
             'question' => $question
         ];
-
         $analysis = $this->ai->analyzeStudentProgress($studentData);
-
         return response()->json([
             'success' => true,
             'analysis' => $analysis,
@@ -64,12 +56,10 @@ class AIController extends Controller
             'question' => 'required|string',
             'answer' => 'required|string'
         ]);
-
         $feedback = $this->ai->provideFeedback(
             $request->question,
             $request->answer
         );
-
         return response()->json([
             'success' => true,
             'feedback' => $feedback
@@ -81,16 +71,14 @@ class AIController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        
+
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User tidak valid'
             ], 400);
         }
-        
         $classIds = $user->enrollments()->pluck('id_class');
-        
         if ($classIds->isEmpty()) {
             return response()->json([
                 'success' => true,
@@ -103,35 +91,29 @@ class AIController extends Controller
                 ]
             ]);
         }
-        
         $submissions = Submission::where('id_user', $user->id_user)
-            ->whereHas('assignment', function($q) use ($classIds) {
+            ->whereHas('assignment', function ($q) use ($classIds) {
                 $q->whereIn('id_class', $classIds);
             })
             ->with('assignment.class')
             ->orderBy('submitted_at', 'desc')
             ->take(5)
             ->get();
-
         $lastScores = $submissions->pluck('score')->filter()->implode(', ') ?: 'Belum ada';
         $avgScore = $submissions->avg('score') ?? 0;
         $totalSubmissions = $submissions->count();
         $completedCount = $submissions->where('status', 'graded')->count();
-        
-        $weakTopics = $submissions->filter(function($sub) {
+        $weakTopics = $submissions->filter(function ($sub) {
             return $sub->score < 70;
         })->pluck('assignment.judul')->take(3)->implode(', ') ?: 'Tidak ada';
-
         $availableMaterials = \App\Models\Material::whereIn('id_class', $classIds)
             ->with('class')
             ->get()
-            ->map(function($m) {
+            ->map(function ($m) {
                 return $m->judul . ' (' . $m->class->nama_kelas . ')';
             })
             ->implode(', ');
-
         $performanceStatus = $avgScore < 60 ? 'Perlu Perhatian Khusus' : ($avgScore >= 80 ? 'Baik' : 'Cukup');
-
         $studentProfile = [
             'subject' => $submissions->first()?->assignment?->class?->nama_kelas ?? 'Umum',
             'last_scores' => $lastScores,
@@ -142,9 +124,7 @@ class AIController extends Controller
             'learning_style' => $avgScore >= 80 ? 'Visual & Praktik' : 'Perlu Penguatan Dasar',
             'available_materials' => $availableMaterials ?: 'Belum ada materi'
         ];
-
         $recommendations = $this->ai->recommendMaterials($studentProfile);
-
         return response()->json([
             'success' => true,
             'recommendations' => $recommendations,
@@ -158,10 +138,8 @@ class AIController extends Controller
         $request->validate([
             'submission_id' => 'required|exists:submissions,id_submission'
         ]);
-
-        $submission = Submission::with('assignment.questions')->findOrFail($request->submission_id);
+        $submission = Submission::with(+'assignment.questions')->findOrFail($request->submission_id);
         $assignment = $submission->assignment;
-        
         // Only for essay/praktik
         if (!in_array($assignment->tipe, ['essay', 'praktik'])) {
             return response()->json([
@@ -169,33 +147,26 @@ class AIController extends Controller
                 'message' => 'AI grading hanya untuk soal essay/praktik'
             ], 400);
         }
-
         $answers = json_decode($submission->jawaban, true);
         $totalScore = 0;
         $feedbacks = [];
         $questionNum = 1;
-
         foreach ($answers as $questionId => $studentAnswer) {
             $question = $assignment->questions->where('id_question', $questionId)->first();
-            
             if (!$question || !$question->kunci_jawaban) {
                 continue;
             }
-
             $result = $this->ai->gradeAnswer(
                 $question->soal,
                 $question->kunci_jawaban,
                 $studentAnswer,
                 $question->poin
             );
-
             $totalScore += $result['score'];
             $feedbacks[] = "Soal {$questionNum}: {$result['feedback']}";
             $questionNum++;
         }
-
         $finalFeedback = implode(" | ", $feedbacks);
-
         return response()->json([
             'success' => true,
             'score' => min($totalScore, $assignment->max_score),

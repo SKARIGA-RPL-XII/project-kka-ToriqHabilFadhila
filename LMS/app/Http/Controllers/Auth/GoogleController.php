@@ -31,73 +31,74 @@ class GoogleController extends Controller
             ->redirect();
     }
 
-    /**
-     * Callback Google (login / register otomatis)
-     */
     public function callback(): RedirectResponse
     {
         try {
-            /** @var GoogleProvider $provider */
-            $provider = Socialite::driver('google');
-            $googleUser = $provider->stateless()->user();
-            $mode = session('google_auth_mode', 'login');
+            /** @var \Laravel\Socialite\Two\User $googleUser */
+            $googleUser = Socialite::driver('google')->stateless()->user();
             $user = User::where('email', $googleUser->getEmail())->first();
 
-            // ❌ Login tapi akun belum ada
-            if (! $user && $mode === 'login') {
-                return redirect()->route('login')
-                    ->withErrors([
-                        'email' => 'Akun Google "' . $googleUser->getEmail() . '" belum terdaftar. Silakan daftar terlebih dahulu atau gunakan akun Google yang sudah terdaftar.'
-                    ])
-                    ->with('warning', 'Akun Google tidak ditemukan dalam sistem kami.');
-            }
-
-            // ❌ Register tapi akun sudah ada
-            if ($user && $mode === 'register') {
-                return redirect()->route('register')
-                    ->withErrors([
-                        'email' => 'Akun Google "' . $googleUser->getEmail() . '" sudah terdaftar. Silakan login menggunakan akun tersebut.'
-                    ])
-                    ->with('info', 'Akun sudah ada, silakan login.');
-            }
-
-            // ✅ Register via Google - akun baru
-            if (! $user && $mode === 'register') {
-                $user = User::create([
-                    'nama'        => $googleUser->getName(),
-                    'email'       => $googleUser->getEmail(),
-                    'password'    => Hash::make(Str::random(32)),
-                    'role'        => 'siswa',
-                    'is_active'   => true,
-                    'is_verified' => true,
-                    'last_login'  => now(),
+            // Akun belum ada -> redirect ke form register
+            if (!$user) {
+                session([
+                    'google_data' => [
+                        'name' => $googleUser->getName(),
+                        'email' => $googleUser->getEmail(),
+                        'avatar' => $googleUser->getAvatar(),
+                        'profile_picture' => $googleUser->getAvatar(),
+                    ]
                 ]);
-
-                Auth::login($user);
-                return redirect()->route('dashboard')
-                    ->with('success', 'Selamat datang ' . $user->nama . '! Akun Google Anda berhasil didaftarkan dan Anda sudah login.')
-                    ->with('redirect_delay', true);
+                return redirect()->route('google.complete');
             }
 
-            // ✅ Login user lama
+            // Akun sudah ada -> langsung login
             $user->update(['last_login' => now()]);
             Auth::login($user);
             return redirect()->route('dashboard')
-                ->with('success', 'Selamat datang kembali, ' . $user->nama . '! Login Google berhasil.')
-                ->with('redirect_delay', true);
+                ->with('success', 'Selamat datang kembali, ' . $user->nama . '!');
 
         } catch (\Exception $e) {
-            // Log error untuk debugging
-            Log::error('Google Auth Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-                'mode' => session('google_auth_mode', 'login')
-            ]);
-            $route = session('google_auth_mode', 'login') === 'register' ? 'register' : 'login';
-            return redirect()->route($route)
-                ->withErrors([
-                    'email' => 'Terjadi kesalahan saat menghubungkan dengan Google. Silakan coba lagi atau gunakan metode login lain.'
-                ])
-                ->with('warning', 'Koneksi ke Google mengalami gangguan.');
+            Log::error('Google Auth Error: ' . $e->getMessage());
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Terjadi kesalahan saat menghubungkan dengan Google.']);
         }
+    }
+
+    public function showComplete()
+    {
+        if (!session('google_data')) {
+            return redirect()->route('login');
+        }
+        return view('auth.google-complete');
+    }
+
+    public function storeComplete(Request $request): RedirectResponse
+    {
+        $googleData = session('google_data');
+        if (!$googleData) {
+            return redirect()->route('login');
+        }
+
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'role' => 'required|in:guru,siswa',
+        ]);
+
+        $user = User::create([
+            'nama' => $validated['nama'],
+            'email' => $googleData['email'],
+            'password' => Hash::make(Str::random(32)),
+            'role' => $validated['role'],
+            'is_active' => true,
+            'is_verified' => true,
+            'last_login' => now(),
+            'profile_picture' => $googleData['profile_picture'] ?? null,
+        ]);
+
+        session()->forget('google_data');
+        Auth::login($user);
+        
+        return redirect()->route('dashboard')
+            ->with('success', 'Selamat datang ' . $user->nama . '!');
     }
 }

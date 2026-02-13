@@ -116,13 +116,14 @@ class GuruController extends Controller
             ]);
         }
 
-        // Untuk essay/praktik: langsung ke halaman tambah soal dengan pesan khusus
-        if (in_array($request->tipe, ['essay', 'praktik'])) {
-            return redirect()->route('guru.assignments.questions', $assignment->id_assignment)
-                ->with('success', 'Tugas berhasil dibuat! Silakan tambahkan soal-soal di bawah ini.');
+        // Untuk praktik: langsung publish tanpa soal
+        if ($request->tipe === 'praktik') {
+            $assignment->update(['is_published' => true]);
+            return redirect()->route('guru.classes.show', $request->id_class)
+                ->with('success', 'Tugas praktik berhasil dibuat dan dipublikasi! Siswa dapat langsung mengupload file.');
         }
 
-        // Untuk pilihan ganda: tetap ke halaman kelola soal
+        // Untuk essay/pilihan ganda: ke halaman tambah soal
         return redirect()->route('guru.assignments.questions', $assignment->id_assignment)
             ->with('success', 'Tugas berhasil dibuat! Sekarang tambahkan soal.');
     }
@@ -183,7 +184,6 @@ class GuruController extends Controller
     {
         $question = Question::with('assignment', 'options')->findOrFail($id);
         $assignment = $question->assignment;
-
         $request->validate([
             'soal' => 'required|string',
             'kunci_jawaban' => in_array($assignment->tipe, ['essay', 'praktik']) ? 'nullable|string' : 'nullable',
@@ -192,16 +192,13 @@ class GuruController extends Controller
             'pilihan.*' => 'required|string',
             'jawaban_benar' => $assignment->tipe === 'pilihan_ganda' ? 'required|integer' : 'nullable',
         ]);
-
         DB::transaction(function () use ($request, $question, $assignment) {
-
             // update soal utama
             $question->update([
                 'soal' => $request->soal,
                 'kunci_jawaban' => $request->kunci_jawaban,
                 'poin' => $request->poin,
             ]);
-
             // kalau pilihan ganda, update opsinya
             if ($assignment->tipe === 'pilihan_ganda') {
                 foreach ($question->options as $index => $option) {
@@ -212,7 +209,6 @@ class GuruController extends Controller
                 }
             }
         });
-
         return redirect()->back()->with('success', 'Soal berhasil diperbarui!');
     }
 
@@ -221,10 +217,8 @@ class GuruController extends Controller
         $request->validate([
             'deadline' => 'required|date',
         ]);
-
         $assignment = Assignment::findOrFail($id);
         $assignment->update(['deadline' => $request->deadline]);
-
         return redirect()->back()->with('success', 'Deadline berhasil diperbarui!');
     }
 
@@ -237,39 +231,29 @@ class GuruController extends Controller
     public function generateQuestions(Request $request, $id)
     {
         $assignment = Assignment::findOrFail($id);
-        
         $request->validate([
             'file' => 'required|file|mimes:pdf,doc,docx,txt|max:10240',
         ]);
-
         try {
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
-            
             // Extract text from file
             $extractedText = $this->extractTextFromFile($file);
-            
             Log::info('AI Generate - File: ' . $fileName);
             Log::info('AI Generate - Extracted text length: ' . strlen($extractedText));
             Log::info('AI Generate - First 500 chars: ' . substr($extractedText, 0, 500));
-            
             if (empty($extractedText)) {
                 return redirect()->back()->with('error', 'Gagal mengekstrak teks dari file. Pastikan file berisi teks yang dapat dibaca.');
             }
-
             // Call AI to parse questions
             $questions = $this->parseQuestionsWithAI($extractedText, $assignment->tipe);
-            
             Log::info('AI Generate - Questions found: ' . count($questions));
-            
             if (empty($questions)) {
                 return redirect()->back()->with('error', 'AI tidak dapat menemukan soal dalam file. Pastikan format sesuai dengan contoh.');
             }
-
             // Save questions to database
             DB::transaction(function () use ($questions, $assignment) {
                 $urutan = $assignment->questions()->count() + 1;
-                
                 foreach ($questions as $questionData) {
                     $question = $assignment->questions()->create([
                         'soal' => $questionData['soal'],
@@ -277,7 +261,6 @@ class GuruController extends Controller
                         'poin' => $questionData['poin'] ?? 10,
                         'urutan' => $urutan++,
                     ]);
-
                     if ($assignment->tipe === 'pilihan_ganda' && isset($questionData['pilihan'])) {
                         foreach ($questionData['pilihan'] as $index => $pilihan) {
                             $question->options()->create([
@@ -288,9 +271,7 @@ class GuruController extends Controller
                     }
                 }
             });
-
             return redirect()->back()->with('success', count($questions) . ' soal berhasil di-generate oleh AI!');
-            
         } catch (\Exception $e) {
             Log::error('AI Generate Questions Error: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
@@ -302,12 +283,10 @@ class GuruController extends Controller
     {
         $extension = strtolower($file->getClientOriginalExtension());
         $filePath = $file->getRealPath();
-        
         try {
             if ($extension === 'txt') {
                 return file_get_contents($filePath);
             }
-            
             if ($extension === 'pdf') {
                 // Try using smalot/pdfparser library
                 try {
@@ -320,11 +299,9 @@ class GuruController extends Controller
                 } catch (\Exception $e) {
                     Log::warning('PDF parser library error: ' . $e->getMessage());
                 }
-                
                 // Fallback: Simple text extraction
                 $content = file_get_contents($filePath);
                 $text = '';
-                
                 // Try to extract text between BT and ET markers (PDF text objects)
                 if (preg_match_all('/BT\s*(.+?)\s*ET/s', $content, $matches)) {
                     foreach ($matches[1] as $match) {
@@ -334,12 +311,10 @@ class GuruController extends Controller
                         }
                     }
                 }
-                
                 if (!empty($text)) {
                     return $text;
                 }
             }
-            
             if (in_array($extension, ['doc', 'docx'])) {
                 if ($extension === 'docx') {
                     // Try using PHPWord library
@@ -357,13 +332,11 @@ class GuruController extends Controller
                     } catch (\Exception $e) {
                         Log::warning('PHPWord library error: ' . $e->getMessage());
                     }
-                    
                     // Fallback: Extract from DOCX ZIP
                     $zip = new \ZipArchive();
                     if ($zip->open($filePath) === true) {
                         $content = $zip->getFromName('word/document.xml');
                         $zip->close();
-                        
                         if ($content) {
                             $text = strip_tags($content);
                             return html_entity_decode($text);
@@ -371,18 +344,15 @@ class GuruController extends Controller
                     }
                 }
             }
-            
         } catch (\Exception $e) {
             Log::error('File extraction error: ' . $e->getMessage());
         }
-        
         return "";
     }
 
     private function extractTextFromElement($element)
     {
         $text = '';
-        
         // Handle different types of PHPWord elements
         if ($element instanceof \PhpOffice\PhpWord\Element\Text) {
             $text .= $element->getText();
@@ -400,25 +370,21 @@ class GuruController extends Controller
                 $text .= $this->extractTextFromElement($childElement);
             }
         }
-        
         return $text;
     }
 
     private function parseQuestionsWithAI($text, $tipe)
     {
         $questions = [];
-        
         $text = str_replace("\r\n", "\n", $text);
         $text = str_replace("\r", "\n", $text);
         $text = preg_replace('/\n{3,}/', "\n\n", $text);
         $text = trim($text);
-        
         if ($tipe === 'pilihan_ganda') {
             // Split by question numbers (1. or 1) at start of line)
             $lines = explode("\n", $text);
             $currentQuestion = null;
             $currentText = '';
-            
             foreach ($lines as $line) {
                 $line = trim($line);
                 // Check if line starts with number
@@ -438,7 +404,6 @@ class GuruController extends Controller
                     $currentText .= $line . "\n";
                 }
             }
-            
             // Don't forget last question
             if ($currentQuestion !== null && !empty($currentText)) {
                 $parsed = $this->parseSingleMultipleChoice($currentText);
@@ -451,7 +416,6 @@ class GuruController extends Controller
             $lines = explode("\n", $text);
             $currentQuestion = null;
             $currentText = '';
-            
             foreach ($lines as $line) {
                 $line = trim($line);
                 if (preg_match('/^(\d+)\s*[\.\)]\s*(.*)$/', $line, $match)) {
@@ -467,7 +431,6 @@ class GuruController extends Controller
                     $currentText .= $line . "\n";
                 }
             }
-            
             if ($currentQuestion !== null && !empty($currentText)) {
                 $parsed = $this->parseSingleEssay($currentText);
                 if ($parsed) {
@@ -475,24 +438,20 @@ class GuruController extends Controller
                 }
             }
         }
-        
         return $questions;
     }
-    
+
     private function parseSingleMultipleChoice($text)
     {
         $text = trim($text);
-        
         // Extract poin
         $poin = $this->extractPoints($text);
-        
         // Extract soal (text before first option A/B/C/D)
         if (preg_match('/^(.+?)(?=A\.\s)/s', $text, $soalMatch)) {
             $soal = $this->cleanQuestionText($soalMatch[1]);
         } else {
             return null;
         }
-        
         // Extract options A, B, C, D - improved to stop at Kunci Jawaban
         $pilihan = [];
         if (preg_match('/A\.\s*(.+?)(?=B\.|$)/s', $text, $match)) {
@@ -510,10 +469,8 @@ class GuruController extends Controller
             $optionD = preg_replace('/\s*Kunci.*$/s', '', $optionD);
             $pilihan[] = trim($optionD);
         }
-        
         // Extract correct answer
         $jawabanBenar = $this->extractCorrectAnswer($text);
-        
         if (count($pilihan) >= 2 && !empty($soal)) {
             return [
                 'soal' => $soal,
@@ -522,20 +479,16 @@ class GuruController extends Controller
                 'poin' => $poin,
             ];
         }
-        
         return null;
     }
-    
+
     private function parseSingleEssay($text)
     {
         $text = trim($text);
-        
         $poin = $this->extractPoints($text);
-        
         // Split by "Kunci Jawaban:" or similar patterns
         $soal = '';
         $kunciJawaban = '';
-        
         // Try to split soal and kunci jawaban
         if (preg_match('/^(.+?)(?:Kunci\s*Jawaban|Jawaban|Kunci)\s*:\s*(.+?)(?:\(\s*Poin|$)/s', $text, $matches)) {
             $soal = $this->cleanQuestionText($matches[1]);
@@ -544,7 +497,6 @@ class GuruController extends Controller
             // If no kunci jawaban found, treat all as soal
             $soal = $this->cleanQuestionText($text);
         }
-        
         if (!empty($soal)) {
             return [
                 'soal' => $soal,
@@ -552,7 +504,6 @@ class GuruController extends Controller
                 'poin' => $poin,
             ];
         }
-        
         return null;
     }
 
@@ -596,14 +547,12 @@ class GuruController extends Controller
     {
         $question = Question::findOrFail($id);
         $assignmentId = $question->id_assignment;
-        
         DB::transaction(function () use ($question) {
             // Delete options if exists
             $question->options()->delete();
             // Delete question
             $question->delete();
         });
-        
         return redirect()->back()->with('success', 'Soal berhasil dihapus!');
     }
 
@@ -612,38 +561,31 @@ class GuruController extends Controller
         $request->validate([
             'ids' => 'required|json',
         ]);
-        
         $ids = json_decode($request->ids, true);
-        
         if (empty($ids)) {
             return redirect()->back()->with('error', 'Tidak ada soal yang dipilih!');
         }
-        
         DB::transaction(function () use ($ids, $id) {
             /** @var Question[] $questions */
             $questions = Question::where('id_assignment', $id)
                 ->whereIn('id_question', $ids)
                 ->get();
-            
             foreach ($questions as $question) {
                 $question->options()->delete();
                 $question->delete();
             }
         });
-        
         return redirect()->back()->with('success', count($ids) . ' soal berhasil dihapus!');
     }
 
     public function publishAssignment($id)
     {
         $assignment = Assignment::with('questions')->findOrFail($id);
-        
-        if ($assignment->questions->count() === 0) {
+        // Praktik tidak perlu soal
+        if ($assignment->tipe !== 'praktik' && $assignment->questions->count() === 0) {
             return redirect()->back()->with('error', 'Tidak bisa mempublikasi tugas tanpa soal!');
         }
-        
         $assignment->update(['is_published' => true]);
-        
         return redirect()->route('guru.classes.show', $assignment->id_class)
             ->with('success', 'Tugas berhasil dipublikasi dan sekarang terlihat oleh siswa!');
     }
@@ -653,7 +595,6 @@ class GuruController extends Controller
         $request->validate([
             'score' => 'required|numeric|min:0',
         ]);
-
         $submission = \App\Models\Submission::with('assignment')->findOrFail($id);
         $submission->update([
             'score' => $request->score,
@@ -661,7 +602,6 @@ class GuruController extends Controller
             'graded_by' => Auth::user()->id_user,
             'graded_at' => now(),
         ]);
-
         // Notify student about grade
         \App\Models\Notification::create([
             'id_user' => $submission->id_user,
@@ -671,8 +611,24 @@ class GuruController extends Controller
             'related_id' => $submission->id_submission,
             'created_at' => now(),
         ]);
-
         return redirect()->back()->with('success', 'Nilai berhasil diberikan!');
     }
 
+    public function deleteAssignment($id)
+    {
+        $assignment = Assignment::with(['questions.options', 'submissions'])->findOrFail($id);
+        DB::transaction(function () use ($assignment) {
+            // Delete submissions
+            $assignment->submissions()->delete();
+            // Delete question options
+            foreach ($assignment->questions as $question) {
+                $question->options()->delete();
+            }
+            // Delete questions
+            $assignment->questions()->delete();
+            // Delete assignment
+            $assignment->delete();
+        });
+        return redirect()->back()->with('success', 'Tugas berhasil dihapus!');
+    }
 }

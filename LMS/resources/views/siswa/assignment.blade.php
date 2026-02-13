@@ -8,15 +8,16 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50">
+    @include('components.notifications')
     @include('components.navbar')
 
-    <div class="w-full px-4 sm:px-6 md:px-16 py-12">
+    <div class="w-full px-4 sm:px-6 md:px-12 py-8">
         <!-- Header -->
-        <div class="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
+        <div class="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-2xl shadow-xl p-6 mb-6 text-white animate-fade-in-up overflow-hidden relative">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
-            <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ $assignment->judul }}</h1>
-            <p class="text-lg text-purple-100 mb-4">{{ $assignment->deskripsi }}</p>
+            <h1 class="text-2xl md:text-3xl font-bold mb-2">{{ $assignment->judul }}</h1>
+            <p class="text-base text-purple-100 mb-3">{{ $assignment->deskripsi }}</p>
             <div class="flex flex-wrap gap-3">
                 <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl">
                     <span class="font-semibold">Kelas: {{ $assignment->class->nama_kelas }}</span>
@@ -62,10 +63,10 @@
                     </div>
                 @endif
                 <div class="flex justify-center gap-4">
-                    <a href="{{ route('siswa.submissions.show', $existingSubmission->id_submission) }}" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
+                    <a href="{{ route('siswa.submissions.show', $existingSubmission->id_submission) }}" class="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
                         Lihat Detail Jawaban
                     </a>
-                    <a href="{{ route('dashboard') }}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-semibold">
+                    <a href="{{ route('dashboard') }}" class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 text-sm rounded-xl hover:bg-gray-50 transition font-semibold">
                         Kembali ke Dashboard
                     </a>
                 </div>
@@ -93,10 +94,10 @@
                     @endforeach
 
                     <div class="flex justify-end gap-4 mt-8">
-                        <a href="{{ route('dashboard') }}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-semibold">
+                        <a href="{{ route('dashboard') }}" class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 text-sm rounded-xl hover:bg-gray-50 transition font-semibold">
                             Batal
                         </a>
-                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
+                        <button type="submit" class="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
                             Submit Jawaban
                         </button>
                     </div>
@@ -110,41 +111,101 @@
                                 {{ $index + 1 }}. {{ $question->soal }}
                                 <span class="text-sm text-gray-500">({{ $question->poin }} poin)</span>
                             </h3>
-                            <textarea name="answers[{{ $question->id_question }}]" rows="6" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Tulis jawabanmu di sini..." required></textarea>
+                            <textarea name="answers[{{ $question->id_question }}]" rows="5" class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Tulis jawabanmu di sini..." required></textarea>
                         </div>
                     @endforeach
 
                     <div class="flex justify-end gap-4 mt-8">
-                        <a href="{{ route('dashboard') }}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-semibold">
+                        <a href="{{ route('dashboard') }}" class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 text-sm rounded-xl hover:bg-gray-50 transition font-semibold">
                             Batal
                         </a>
-                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
+                        <button type="submit" class="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
                             Submit Jawaban
                         </button>
                     </div>
                 </form>
             @else
-                <div class="text-center py-12">
-                    <p class="text-gray-600 mb-4">Tugas praktik - Upload file jawabanmu</p>
-                    <form method="POST" action="{{ route('siswa.assignments.submit', $assignment->id_assignment) }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="max-w-xl mx-auto">
-                            <input type="file" name="file" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 mb-4" required>
-                            <textarea name="jawaban" rows="4" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 mb-4" placeholder="Catatan tambahan (opsional)"></textarea>
-                            <div class="flex justify-center gap-4">
-                                <a href="{{ route('dashboard') }}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-semibold">
-                                    Batal
-                                </a>
-                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
-                                    Submit Tugas
-                                </button>
+                <form method="POST" action="{{ route('siswa.assignments.submit', $assignment->id_assignment) }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="max-w-2xl mx-auto">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
                             </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Upload File Tugas Praktik</h3>
+                            <p class="text-gray-600">Upload file hasil pekerjaanmu (dokumen, presentasi, kode, video, dll)</p>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">File Tugas</label>
+                            <div id="dropzonePraktik" class="relative flex flex-col items-center justify-center w-full h-48 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                                <input id="fileInputPraktik" type="file" name="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar,.7z,.tar,.gz,.jpg,.jpeg,.png,.mp4,.avi,.mov" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required />
+                                <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v6m0 0l-3-3m3 3l3-3"/>
+                                </svg>
+                                <p class="text-sm text-gray-600 font-medium mb-1">Drag & drop file di sini</p>
+                                <p class="text-xs text-gray-500">atau klik untuk memilih file</p>
+                            </div>
+                            <p id="fileNamePraktik" class="mt-3 text-sm text-gray-700 hidden"></p>
+                            <p class="text-xs text-gray-500 mt-2">Format: PDF, DOC, DOCX, PPT, PPTX, ZIP, RAR, 7Z, JPG, PNG, MP4 (Max 50MB)</p>
+                            <p class="text-xs text-yellow-600 mt-1">⚠️ Jika ingin upload folder project, compress dulu menjadi ZIP/RAR</p>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">Catatan Tambahan (Opsional)</label>
+                            <textarea name="jawaban" rows="3" class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="Tambahkan catatan atau penjelasan tentang tugas yang kamu kerjakan..."></textarea>
+                        </div>
+
+                        <div class="flex justify-center gap-4">
+                            <a href="{{ route('dashboard') }}" class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 text-sm rounded-xl hover:bg-gray-50 transition font-semibold">
+                                Batal
+                            </a>
+                            <button type="submit" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm rounded-xl hover:from-purple-700 hover:to-pink-700 transition font-semibold shadow-md">
+                                Submit Tugas
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <script>
+                    const fileInputPraktik = document.getElementById('fileInputPraktik');
+                    const fileNamePraktik = document.getElementById('fileNamePraktik');
+                    const dropzonePraktik = document.getElementById('dropzonePraktik');
+
+                    fileInputPraktik.addEventListener('change', function() {
+                        if (this.files && this.files[0]) {
+                            fileNamePraktik.textContent = '📎 File terpilih: ' + this.files[0].name;
+                            fileNamePraktik.classList.remove('hidden');
+                        }
+                    });
+
+                    dropzonePraktik.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        this.classList.add('border-purple-500', 'bg-purple-50');
+                    });
+
+                    dropzonePraktik.addEventListener('dragleave', function(e) {
+                        e.preventDefault();
+                        this.classList.remove('border-purple-500', 'bg-purple-50');
+                    });
+
+                    dropzonePraktik.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        this.classList.remove('border-purple-500', 'bg-purple-50');
+                        if (e.dataTransfer.files.length) {
+                            fileInputPraktik.files = e.dataTransfer.files;
+                            fileNamePraktik.textContent = '📎 File terpilih: ' + e.dataTransfer.files[0].name;
+                            fileNamePraktik.classList.remove('hidden');
+                        }
+                    });
+                </script>
             @endif
         </div>
         @endif
     </div>
+
+    <script src="{{ asset('js/notifications.js') }}"></script>
 </body>
 </html>

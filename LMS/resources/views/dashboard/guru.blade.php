@@ -125,47 +125,94 @@
     @include('components.notifications')
     @include('components.navbar')
 
-    <!-- Hero Section -->
     <section class="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-black/10"></div>
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <span class="absolute top-10 left-1/2 -translate-x-1/2 text-white/30 text-6xl animate-float-slow pointer-events-none z-0">
-                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
-            <span class="absolute top-48 right-48 text-white/35 text-4xl animate-float">
-                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
-            <span class="absolute bottom-32 left-1/3 text-white/35 text-4xl animate-float-reverse">
-                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
+        <!-- Animated Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-0 left-20 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
         </div>
-        <div class="relative w-full px-4 sm:px-6 md:px-16 py-16 sm:py-20">
-            <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
-                <!-- KIRI: TEXT -->
-                <div class="text-left relative">
-                    <span class="inline-flex items-center gap-2 mb-4 px-5 py-2 text-base font-semibold rounded-full bg-white/20 text-purple-100 backdrop-blur">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                        Panel Manajemen Guru
-                    </span>
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-                        Selamat Datang, <span class="text-yellow-300">{{ auth()->user()->nama }}!</span>
-                    </h2>
-                    <p class="text-lg sm:text-xl mb-8 text-purple-100 max-w-xl">
-                        Kelola kelas, upload materi pembelajaran, buat tugas & quiz, dan pantau progress siswa dengan mudah.
-                    </p>
-                </div>
-                <div class="hidden lg:block absolute bottom-0 right-0 translate-x-[-60px] pointer-events-none">
-                    <img src="/SVG/Education.svg" alt="Teacher Dashboard" class="w-[320px] xl:w-[360px] 2xl:w-[400px] h-auto opacity-90">
+
+        <!-- Floating Icons -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 animate-float">
+                <svg class="w-12 h-12 text-white/20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+            </div>
+            <div class="absolute top-40 right-20 animate-float-slow">
+                <svg class="w-16 h-16 text-white/15" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                </svg>
+            </div>
+            <div class="absolute bottom-20 left-1/4 animate-float-reverse">
+                <svg class="w-10 h-10 text-white/20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"/>
+                </svg>
+            </div>
+            <div class="absolute top-1/3 right-1/3 animate-pulse">
+                <div class="w-4 h-4 bg-white/30 rounded-full"></div>
+            </div>
+            <div class="absolute bottom-1/3 right-1/4 animate-pulse animation-delay-1000">
+                <div class="w-3 h-3 bg-yellow-300/40 rounded-full"></div>
+            </div>
+        </div>
+
+        <div class="relative w-full px-4 sm:px-6 md:px-16 py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left Content -->
+                    <div class="space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <span class="text-sm font-semibold">Panel Manajemen Guru</span>
+                        </div>
+
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+                            Selamat Datang,<br>
+                            <span class="bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 bg-clip-text text-transparent animate-gradient">
+                                {{ Auth::user()?->nama ?? 'Admin' }}!
+                            </span>
+                        </h1>
+
+                        <p class="text-lg sm:text-xl text-red-50 max-w-2xl">
+                            Kelola kelas, upload materi pembelajaran, buat tugas & quiz, dan pantau progress siswa dengan mudah.
+                        </p>
+
+                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
+                            <div class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-green-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 20v-9l-4 1.125V20h4Zm0 0h8m-8 0V6.66667M16 20v-9l4 1.125V20h-4Zm0 0V6.66667M18 8l-6-4-6 4m5 1h2m-2 3h2"/>
+                                </svg>
+                                <span class="text-sm font-medium">Manajemen Kelas</span>
+                            </div>
+                            <div class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl">
+                                <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                                <span class="text-sm font-medium">Pantau Aktivitas Belajar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Illustration -->
+                    <div class="hidden lg:flex justify-center items-center">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+                            <img src="/SVG/Education.svg" alt="Admin Dashboard" class="relative w-full max-w-lg h-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Bottom Wave -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="rgb(249 250 251)"/>
+            </svg>
         </div>
     </section>
 
@@ -350,12 +397,17 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
-                            Lihat Jawaban
-                        </a>
-                        <button onclick="openEditDeadlineModal({{ $assignment->id_assignment }}, '{{ $assignment->deadline->format('Y-m-d\TH:i') }}')" class="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
-                            Edit Deadline
-                        </button>
+                        <div class="flex gap-2">
+                            <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                                Lihat Jawaban
+                            </a>
+                            <button onclick="openEditDeadlineModal({{ $assignment->id_assignment }}, '{{ $assignment->deadline->format('Y-m-d\TH:i') }}')" class="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                                Edit Deadline
+                            </button>
+                            <button onclick="openDeleteAssignmentModal({{ $assignment->id_assignment }}, '{{ $assignment->judul }}')" class="px-6 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                                Hapus
+                            </button>
+                        </div>
                     </div>
                 </div>
                 @empty
@@ -879,6 +931,34 @@
                 <button onclick="closeAskProgressModal()" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                     Tutup
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Hapus Tugas -->
+    <div id="deleteAssignmentModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="p-6 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 animate-warning">
+                    <svg class="w-7 h-7 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Hapus Tugas?</h3>
+                <p class="text-gray-600 mb-1">Tugas: <span id="deleteAssignmentTitle" class="font-semibold"></span></p>
+                <p class="text-gray-600">Semua data soal dan jawaban siswa akan terhapus permanen.</p>
+            </div>
+            <div class="flex flex-col-reverse sm:flex-row gap-3 px-6 pb-6">
+                <button onclick="closeDeleteAssignmentModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    Batal
+                </button>
+                <form id="deleteAssignmentForm" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-3 font-semibold text-white hover:from-red-700 hover:to-red-800 transition shadow-md">
+                        Ya, Hapus
+                    </button>
+                </form>
             </div>
         </div>
     </div>

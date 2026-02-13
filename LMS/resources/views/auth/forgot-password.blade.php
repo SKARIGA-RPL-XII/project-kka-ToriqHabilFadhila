@@ -24,7 +24,7 @@
     <!-- Login Container -->
     <div class="relative z-10 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 bg-white">
         <!-- Left Side - Illustration & Info -->
-        <div class="hidden md:flex flex-col justify-center items-center p-12 pr-24 text-white bg-gradient-to-br from-purple-600 to-pink-600 relative clip-left">
+        <div class="hidden md:flex flex-col justify-center items-center p-12 text-white bg-gradient-to-r from-purple-600 to-pink-600 relative clip-left">
             <div class="mb-8">
                 <img src="/images/LMS.png" alt="LMS Logo" class="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-white/20 mb-6">
                 <h1 class="text-4xl font-extrabold mb-4">
@@ -121,7 +121,7 @@
                         </div>
 
                         <!-- Submit -->
-                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all">
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all">
                             Kirim Link Reset Password
                         </button>
                     </form>
@@ -196,8 +196,8 @@
                         </div>
 
                         <!-- Submit -->
-                        <button type="submit" class="w-full py-3.5 px-6 gradient-primary text-white font-semibold shadow-lg hover:scale-[1.02] transition-all">
-                            Reset Password
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all">
+                            Kirim Link Reset Password
                         </button>
                     </form>
                 @endif

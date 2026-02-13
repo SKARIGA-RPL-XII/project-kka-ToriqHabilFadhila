@@ -1,17 +1,17 @@
 <!-- Loading Overlay -->
-<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[10000] hidden items-center justify-center transition-opacity duration-300">
-    <div class="bg-white rounded-2xl p-8 max-w-sm mx-4 text-center shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="loading-content">
+<div id="loading-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] hidden items-center justify-center">
+    <div class="bg-white rounded-2xl p-8 max-w-sm mx-4 text-center shadow-2xl" id="loading-content">
         <div class="w-20 h-20 mx-auto mb-4 relative">
-            <div class="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
-            <div class="absolute inset-2 border-4 border-transparent border-t-blue-400 rounded-full animate-spin" style="animation-duration: 0.8s; animation-direction: reverse;"></div>
+            <div class="absolute inset-0 border-4 border-purple-100 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-transparent border-t-purple-600 rounded-full animate-spin"></div>
+            <div class="absolute inset-2 border-4 border-transparent border-t-pink-400 rounded-full animate-spin" style="animation-duration: 0.8s; animation-direction: reverse;"></div>
         </div>
         <h3 class="text-xl font-bold text-gray-900 mb-2">Memproses...</h3>
         <p class="text-sm text-gray-600">Mohon tunggu sebentar</p>
         <div class="mt-4 flex justify-center gap-1">
-            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0s"></div>
-            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            <div class="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+            <div class="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
         </div>
     </div>
 </div>

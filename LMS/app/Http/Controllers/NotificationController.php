@@ -13,9 +13,7 @@ class NotificationController extends Controller
         $notification = Notification::where('id_notification', $id)
             ->where('id_user', Auth::user()->id_user)
             ->firstOrFail();
-        
         $notification->update(['is_read' => true]);
-        
         return redirect()->back();
     }
 
@@ -26,7 +24,6 @@ class NotificationController extends Controller
             'body' => 'required|string',
             'url' => 'nullable|string'
         ]);
-
         return response()->json(['success' => true]);
     }
 }

@@ -122,21 +122,21 @@
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
     @include('components.navbar')
-    <div class="w-full px-4 sm:px-6 md:px-16 py-12">
+    <div class="w-full px-4 sm:px-6 md:px-12 py-8">
         <!-- Header Section -->
         <div
-            class="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
+            class="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-2xl shadow-xl p-6 mb-6 text-white animate-fade-in-up overflow-hidden relative">
             <!-- Decorative Elements -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-            <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+            <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-24 -mt-24"></div>
+            <div class="absolute bottom-0 left-0 w-36 h-36 bg-white/10 rounded-full -ml-18 -mb-18"></div>
             <div class="relative z-10">
                 <!-- Title -->
                 <div class="flex items-start gap-4 mb-6">
                     <div class="flex-1">
-                        <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
+                        <h1 class="text-2xl md:text-3xl font-bold mb-2 leading-tight">
                             {{ $kelas->nama_kelas }}
                         </h1>
-                        <p class="text-lg text-purple-100 mb-3">{{ $kelas->deskripsi }}</p>
+                        <p class="text-base text-purple-100 mb-2">{{ $kelas->deskripsi }}</p>
                         <!-- Token Code -->
                         <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl">
                             <svg class="w-5 h-5 text-purple-200" fill="currentColor" viewBox="0 0 20 20">
@@ -424,25 +424,25 @@
                                     <!-- Action Buttons -->
                                     <div class="flex-shrink-0 flex gap-2">
                                         <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}"
-                                            class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-purple-300 text-purple-700 text-sm font-semibold rounded-xl hover:bg-purple-50 transition-all duration-300">
+                                            class="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-purple-300 text-purple-700 text-sm font-semibold rounded-xl hover:bg-purple-50 transition-all duration-300">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
                                             Lihat Jawaban
                                         </a>
-                                        @if($assignment->tipe === 'essay' || $assignment->tipe === 'praktik')
+                                        @if($assignment->tipe === 'essay')
                                             <a href="{{ route('guru.assignments.questions', $assignment->id_assignment) }}"
-                                                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                                class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M12 4v16m8-8H4" />
                                                 </svg>
                                                 Tambah Soal
                                             </a>
-                                        @else
+                                        @elseif($assignment->tipe === 'pilihan_ganda')
                                             <a href="{{ route('guru.assignments.questions', $assignment->id_assignment) }}"
-                                                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                                class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -471,8 +471,8 @@
                                     Mulai buat tugas atau quiz untuk siswa Anda
                                 </p>
                                 <button onclick="openCreateTugasModal()"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
                                     </svg>
@@ -536,7 +536,7 @@
                                 </div>
                                 @if($material->file_path)
                                     <a href="{{ Storage::url($material->file_path) }}" target="_blank"
-                                        class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
+                                        class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition shadow-md">
                                         Download
                                     </a>
                                 @endif
@@ -602,13 +602,13 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Judul Materi</label>
                     <input type="text" name="judul" placeholder="Contoh: Persamaan Linear"
-                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Konten (Opsional)</label>
                     <textarea name="konten" rows="3" placeholder="Deskripsi materi..."
-                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Upload File</label>
@@ -630,11 +630,11 @@
 
                 <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
                     <button type="button" onclick="closeUploadMateriModal()"
-                        class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                        class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition font-semibold">
                         Batal
                     </button>
                     <button type="submit"
-                        class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition shadow-md">
+                        class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition shadow-md">
                         Upload Materi
                     </button>
                 </div>
@@ -697,35 +697,35 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Judul</label>
                     <input type="text" name="judul" placeholder="Contoh: Latihan Persamaan Linear"
-                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
                         required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi</label>
                     <textarea name="deskripsi" rows="3" placeholder="Jelaskan tugas/quiz ini..."
-                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
                         required></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Deadline</label>
                     <input type="datetime-local" name="deadline"
-                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
                         required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Nilai Maksimal</label>
                     <input type="number" name="max_score" value="100" min="1" max="100"
-                        class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
                         required>
                 </div>
 
                 <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
                     <button type="button" onclick="closeCreateTugasModal()"
-                        class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                        class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition font-semibold">
                         Batal
                     </button>
                     <button type="submit"
-                        class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:to-pink-700 transition shadow-md">
+                        class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2.5 text-sm font-semibold text-white hover:from-purple-700 hover:to-pink-700 transition shadow-md">
                         Buat
                     </button>
                 </div>
@@ -772,7 +772,7 @@
 
             <div class="px-6 pb-6">
                 <button onclick="closeJawabanSiswaModal()"
-                    class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    class="w-full rounded-xl border-2 border-gray-300 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition font-semibold">
                     Tutup
                 </button>
             </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AIController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::post('/logout', [AuthServices::class, 'logout'])->name('logout');
 // Google OAuth
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.auth');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
+Route::get('/auth/google/complete', [GoogleController::class, 'showComplete'])->name('google.complete');
+Route::post('/auth/google/complete', [GoogleController::class, 'storeComplete'])->name('google.complete.store');
 
 
 /*
@@ -80,6 +83,28 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     /*
     |--------------------------------------------------------------------------
+    | ADMIN
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/users', [AdminController::class, 'getUsers'])
+            ->name('admin.users');
+        Route::post('/admin/users', [AdminController::class, 'storeUser'])
+            ->name('admin.users.store');
+        Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])
+            ->name('admin.users.update');
+        Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])
+            ->name('admin.users.delete');
+        Route::get('/admin/classes', [AdminController::class, 'getClasses'])
+            ->name('admin.classes');
+        Route::delete('/admin/classes/{id}', [AdminController::class, 'deleteClass'])
+            ->name('admin.classes.delete');
+        Route::get('/admin/monitoring', [AdminController::class, 'getMonitoring'])
+            ->name('admin.monitoring');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | GURU
     |--------------------------------------------------------------------------
     */
@@ -98,6 +123,8 @@ Route::middleware('auth')->group(function () {
             ->name('guru.questions.generate');
         Route::put('/guru/assignments/{id}/deadline', [GuruController::class, 'updateAssignmentDeadline'])
             ->name('guru.assignments.deadline');
+        Route::delete('/guru/assignments/{id}', [GuruController::class, 'deleteAssignment'])
+            ->name('guru.assignments.delete');
         Route::get('/guru/assignments/{id}/submissions', [GuruController::class, 'showSubmissions'])
             ->name('guru.assignments.submissions');
         Route::put('/guru/submissions/{id}/grade', [GuruController::class, 'gradeSubmission'])

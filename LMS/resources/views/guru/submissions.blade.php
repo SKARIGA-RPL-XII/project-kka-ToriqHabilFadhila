@@ -150,8 +150,8 @@
                                 <form method="POST" action="{{ route('guru.submissions.grade', $submission->id_submission) }}" id="grade-form-{{ $submission->id_submission }}" class="flex gap-3 mt-3">
                                     @csrf
                                     @method('PUT')
-                                    <input type="number" name="score" id="score-{{ $submission->id_submission }}" min="0" max="{{ $assignment->max_score }}" placeholder="Nilai (0-{{ $assignment->max_score }})" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                                    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold">
+                                    <input type="number" name="score" id="score-{{ $submission->id_submission }}" min="0" max="{{ $assignment->max_score }}" placeholder="Nilai (0-{{ $assignment->max_score }})" class="flex-1 rounded-xl border-2 border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                                    <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md">
                                         Beri Nilai
                                     </button>
                                 </form>

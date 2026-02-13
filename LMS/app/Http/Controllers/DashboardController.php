@@ -21,27 +21,25 @@ class DashboardController extends Controller
         if (!$user) {
             return redirect()->route('login');
         }
-
         if ($user->role === 'siswa') {
             return $this->siswaView($user);
         }
-
         if ($user->role === 'guru') {
             return $this->guruView($user);
         }
-
+        if ($user->role === 'admin') {
+            return $this->adminView();
+        }
         return view('dashboard.admin');
     }
 
     private function siswaView(User $user)
     {
         $classIds = $user->enrollments()->pluck('id_class');
-        
         $allClasses = Classes::whereIn('id_class', $classIds)
             ->where('status', 'active')
             ->with(['creator', 'enrollments'])
             ->get();
-
         $assignments = Assignment::whereIn('id_class', $classIds)
             ->with(['class', 'creator'])
             ->where('is_published', true)
@@ -53,18 +51,15 @@ class DashboardController extends Controller
                 $submission = Submission::where('id_assignment', $assignment->id_assignment)
                     ->where('id_user', $user->id_user)
                     ->first();
-                
                 $assignment->submission = $submission;
                 $assignment->is_completed = $submission && $submission->status === 'graded';
                 return $assignment;
             });
-
         $materials = Material::whereIn('id_class', $classIds)
             ->with(['class', 'creator'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
-
         return view('dashboard.siswa', [
             'classes'     => $allClasses,
             'assignments' => $assignments,
@@ -78,13 +73,11 @@ class DashboardController extends Controller
             ->with(['enrollments.user', 'creator', 'activeToken'])
             ->where('status', 'active')
             ->get();
-
         $assignments = Assignment::whereIn('id_class', $allClasses->pluck('id_class'))
             ->with(['class.enrollments', 'creator'])
             ->orderBy('deadline', 'asc')
             ->limit(10)
             ->get();
-
         foreach ($assignments as $assignment) {
             $daysLeft = now()->diffInDays($assignment->deadline, false);
             if ($daysLeft <= 2 && $daysLeft >= 0) {
@@ -95,7 +88,6 @@ class DashboardController extends Controller
                         ->where('related_id', $assignment->id_assignment)
                         ->where('created_at', '>=', now()->subDays(1))
                         ->exists();
-                    
                     if (!$exists) {
                         Notification::create([
                             'id_user' => $enrollment->id_user,
@@ -109,13 +101,11 @@ class DashboardController extends Controller
                 }
             }
         }
-
         $materials = Material::whereIn('id_class', $allClasses->pluck('id_class'))
             ->with(['class', 'creator'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
-
         return view('dashboard.guru', [
             'classes' => $allClasses,
             'assignments' => $assignments,
@@ -123,4 +113,73 @@ class DashboardController extends Controller
         ]);
     }
 
+    private function adminView()
+    {
+        $stats = [
+            'total_users' => User::count(),
+            'total_guru' => User::where('role', 'guru')->count(),
+            'total_siswa' => User::where('role', 'siswa')->count(),
+            'total_classes' => Classes::count(),
+        ];
+        $activities = $this->getRecentActivities();
+        $progressBySubject = $this->getProgressBySubject();
+        $topClasses = Classes::withCount('enrollments')
+            ->orderBy('enrollments_count', 'desc')
+            ->take(3)
+            ->get();
+        return view('dashboard.admin', compact('stats', 'activities', 'progressBySubject', 'topClasses'));
+    }
+
+    private function getRecentActivities()
+    {
+        $activities = [];
+        $newUsers = User::where('created_at', '>=', now()->subDays(7))
+            ->orderBy('created_at', 'desc')
+            ->take(2)
+            ->get();
+        foreach ($newUsers as $user) {
+            $activities[] = [
+                'icon' => 'user-add',
+                'color' => 'green',
+                'title' => 'User Baru Terdaftar',
+                'description' => $user->nama . ' mendaftar sebagai ' . $user->role,
+                'time' => $user->created_at->diffForHumans(),
+            ];
+        }
+        $newClasses = Classes::with('creator')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->orderBy('created_at', 'desc')
+            ->take(2)
+            ->get();
+        foreach ($newClasses as $class) {
+            $activities[] = [
+                'icon' => 'class',
+                'color' => 'purple',
+                'title' => 'Kelas Baru Dibuat',
+                'description' => ($class->creator->nama ?? 'Guru') . ' membuat "' . $class->nama_kelas . '"',
+                'time' => $class->created_at->diffForHumans(),
+            ];
+        }
+        return array_slice($activities, 0, 4);
+    }
+
+    private function getProgressBySubject()
+    {
+        $classes = Classes::withCount(['assignments', 'enrollments'])->get();
+        $progress = [];
+        foreach ($classes as $class) {
+            $totalPossible = $class->assignments_count * $class->enrollments_count;
+            if ($totalPossible > 0) {
+                $completed = Submission::whereHas('assignment', function($q) use ($class) {
+                    $q->where('id_class', $class->id_class);
+                })->where('status', 'graded')->count();
+                $percentage = round(($completed / $totalPossible) * 100);
+                $progress[] = [
+                    'subject' => $class->nama_kelas,
+                    'progress' => $percentage,
+                ];
+            }
+        }
+        return array_slice($progress, 0, 4);
+    }
 }

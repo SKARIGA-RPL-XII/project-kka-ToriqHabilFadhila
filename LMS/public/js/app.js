@@ -158,6 +158,23 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     /* =====================
+        DELETE ASSIGNMENT
+    ====================== */
+    window.openDeleteAssignmentModal = function (assignmentId, title) {
+        const form = document.getElementById('deleteAssignmentForm');
+        const titleEl = document.getElementById('deleteAssignmentTitle');
+        if (form && titleEl) {
+            form.action = `/guru/assignments/${assignmentId}`;
+            titleEl.textContent = title;
+            openModal('deleteAssignmentModal');
+        }
+    };
+
+    window.closeDeleteAssignmentModal = function () {
+        closeModal('deleteAssignmentModal');
+    };
+
+    /* =====================
         ASK PROGRESS MODAL
     ====================== */
     window.openAskProgressModal = function (classId, className) {
@@ -243,32 +260,6 @@ document.addEventListener('DOMContentLoaded', function () {
         overlay.classList.add('hidden');
         overlay.classList.remove('flex');
     };
-
-    /* =====================
-        FORM UX DELAY
-    ====================== */
-    document.addEventListener('submit', function (e) {
-        const form = e.target;
-        if (form.dataset.noUx !== undefined) return;
-
-        const btn = form.querySelector('button[type="submit"]');
-        if (!btn) return;
-
-        e.preventDefault();
-
-        const original = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = `
-            <svg class="w-5 h-5 animate-spin inline mr-2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.2"/>
-                <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="4" fill="none"/>
-            </svg>
-            Memproses...
-        `;
-
-        setTimeout(showLoading, 300);
-        setTimeout(() => form.submit(), 800);
-    });
 
 });
 

@@ -1,30 +1,18 @@
-// Show loading overlay with smooth animation
+// Show loading overlay
 function showLoading() {
     const overlay = document.getElementById('loading-overlay');
-    const content = document.getElementById('loading-content');
-    if (overlay && content) {
+    if (overlay) {
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-            content.style.transform = 'scale(1)';
-            content.style.opacity = '1';
-        }, 10);
     }
 }
 
-// Hide loading overlay with smooth animation
+// Hide loading overlay
 function hideLoading() {
     const overlay = document.getElementById('loading-overlay');
-    const content = document.getElementById('loading-content');
-    if (overlay && content) {
-        overlay.style.opacity = '0';
-        content.style.transform = 'scale(0.95)';
-        content.style.opacity = '0';
-        setTimeout(() => {
-            overlay.classList.add('hidden');
-            overlay.classList.remove('flex');
-        }, 300);
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
     }
 }
 
@@ -35,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(e) {
             // Skip if form has data-no-loading attribute
             if (!this.hasAttribute('data-no-loading')) {
-                showLoading();
+                setTimeout(() => showLoading(), 100);
             }
         });
     });

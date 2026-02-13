@@ -133,7 +133,7 @@
                                 Pertanyaan Soal
                             @endif
                         </label>
-                        <textarea name="soal" rows="4" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                        <textarea name="soal" rows="3" required class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
                             placeholder="@if($assignment->tipe === 'essay')Contoh: Jelaskan pengertian fotosintesis dan sebutkan faktor-faktor yang mempengaruhinya!@elseif($assignment->tipe === 'praktik')Contoh: Buatlah program sederhana menggunakan Python untuk menghitung luas lingkaran. Upload file .py hasil pekerjaan Anda.@elseTuliskan pertanyaan soal di sini...@endif"></textarea>
                         @if($assignment->tipe === 'essay')
                             <p class="mt-2 text-xs text-gray-500">
@@ -161,7 +161,7 @@
                             </svg>
                             Kunci Jawaban (untuk AI Grading)
                         </label>
-                        <textarea name="kunci_jawaban" rows="3" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                        <textarea name="kunci_jawaban" rows="2" class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
                             placeholder="@if($assignment->tipe === 'essay')Tuliskan jawaban ideal/kunci jawaban yang diharapkan. AI akan menggunakan ini untuk mengoreksi jawaban siswa.@elseTuliskan kriteria penilaian atau poin-poin penting yang harus ada dalam tugas praktik.@endif"></textarea>
                         <p class="mt-2 text-xs text-purple-600">
                             <svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,7 +180,7 @@
                             </svg>
                             Poin
                         </label>
-                        <input type="number" name="poin" value="10" min="1" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                        <input type="number" name="poin" value="10" min="1" required class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
                     </div>
 
                     <!-- Pilihan Jawaban (untuk Pilihan Ganda) -->
@@ -195,12 +195,12 @@
                             <div class="space-y-3 bg-gray-50 p-4 rounded-xl" id="optionsList">
                                 <div class="option-item flex gap-3 items-center bg-white p-3 rounded-lg border-2 border-gray-200 hover:border-purple-300 transition-all">
                                     <input type="radio" name="jawaban_benar" value="0" required class="w-5 h-5 text-purple-600 focus:ring-purple-500">
-                                    <input type="text" name="pilihan[]" placeholder="Pilihan A" required class="flex-1 px-4 py-2 bg-transparent focus:outline-none">
+                                    <input type="text" name="pilihan[]" placeholder="Pilihan A" required class="flex-1 px-3 py-2 text-sm bg-transparent focus:outline-none">>
                                     <span class="text-sm font-semibold text-gray-400">A</span>
                                 </div>
                                 <div class="option-item flex gap-3 items-center bg-white p-3 rounded-lg border-2 border-gray-200 hover:border-purple-300 transition-all">
                                     <input type="radio" name="jawaban_benar" value="1" required class="w-5 h-5 text-purple-600 focus:ring-purple-500">
-                                    <input type="text" name="pilihan[]" placeholder="Pilihan B" required class="flex-1 px-4 py-2 bg-transparent focus:outline-none">
+                                    <input type="text" name="pilihan[]" placeholder="Pilihan B" required class="flex-1 px-3 py-2 text-sm bg-transparent focus:outline-none">>
                                     <span class="text-sm font-semibold text-gray-400">B</span>
                                 </div>
                             </div>
@@ -214,7 +214,7 @@
                     @endif
 
                     <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 text-sm rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 4v16m8-8H4" />
@@ -361,19 +361,19 @@
                             @method('PUT')
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Soal</label>
-                                <textarea name="soal" rows="3" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" required>{{ $question->soal }}</textarea>
+                                <textarea name="soal" rows="2" class="w-full border-2 border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" required>{{ $question->soal }}</textarea>
                             </div>
 
                             @if($assignment->tipe === 'essay' || $assignment->tipe === 'praktik')
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Kunci Jawaban</label>
-                                <textarea name="kunci_jawaban" rows="2" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none">{{ $question->kunci_jawaban }}</textarea>
+                                <textarea name="kunci_jawaban" rows="2" class="w-full border-2 border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none">{{ $question->kunci_jawaban }}</textarea>
                             </div>
                             @endif
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Poin</label>
-                                <input type="number" name="poin" value="{{ $question->poin }}" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <input type="number" name="poin" value="{{ $question->poin }}" class="w-full border-2 border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
 
                             @if ($assignment->tipe === 'pilihan_ganda')
@@ -383,7 +383,7 @@
                                         @foreach ($question->options as $i => $opt)
                                             <div class="flex gap-3 items-center bg-gray-50 p-3 rounded-lg">
                                                 <input type="radio" name="jawaban_benar" value="{{ $i }}" {{ $opt->is_correct ? 'checked' : '' }} class="w-5 h-5 text-purple-600 focus:ring-purple-500">
-                                                <input type="text" name="pilihan[]" value="{{ $opt->pilihan }}" class="flex-1 border-2 border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <input type="text" name="pilihan[]" value="{{ $opt->pilihan }}" class="flex-1 border-2 border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                                 <span class="text-sm font-semibold text-gray-400">{{ chr(65 + $i) }}</span>
                                             </div>
                                         @endforeach
@@ -392,10 +392,10 @@
                             @endif
 
                             <div class="flex gap-3 pt-4">
-                                <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all hover:shadow-lg">
+                                <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm px-4 py-2.5 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md">
                                     Simpan Perubahan
                                 </button>
-                                <button type="button" @click="edit=false" class="px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all">
+                                <button type="button" @click="edit=false" class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-all">
                                     Batal
                                 </button>
                             </div>
@@ -622,6 +622,28 @@
             
             document.body.appendChild(form);
             form.submit();
+        }
+
+        let showingAll = false;
+        function toggleShowAll() {
+            const hiddenQuestions = document.querySelectorAll('.hidden-question');
+            const btn = document.getElementById('showAllBtn');
+            const btnText = document.getElementById('showAllText');
+            const btnIcon = btn.querySelector('svg');
+            
+            showingAll = !showingAll;
+            
+            hiddenQuestions.forEach(q => {
+                q.style.display = showingAll ? 'block' : 'none';
+            });
+            
+            if (showingAll) {
+                btnText.textContent = 'Lihat Lebih Sedikit';
+                btnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>';
+            } else {
+                btnText.textContent = 'Lihat Semua ({{ $assignment->questions->count() }} soal)';
+                btnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>';
+            }
         }
     </script>
 </body>

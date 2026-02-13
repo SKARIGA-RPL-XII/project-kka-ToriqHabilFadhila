@@ -132,54 +132,98 @@
     @include('components.notifications')
     @include('components.navbar')
 
-    <!-- Hero Section -->
     <section class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-black/10"></div>
+        <!-- Animated Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-0 left-20 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+        </div>
+
+        <!-- Floating Icons -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <span class="absolute top-10 left-1/2 -translate-x-1/2 text-white/30 text-6xl animate-float-slow pointer-events-none z-0">
+            <div class="absolute top-20 left-10 animate-float">
                 <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-            </span>
-            <span class="absolute top-48 right-48 text-white/35 text-4xl animate-float">
+            </div>
+            <div class="absolute top-40 right-20 animate-float-slow">
                 <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-            </span>
-            <span class="absolute bottom-32 left-1/3 text-white/35 text-4xl animate-float-reverse">
+            </div>
+            <div class="absolute bottom-20 left-1/4 animate-float-reverse">
                 <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-            </span>
-            <span class="absolute top-28 right-1/4 text-white/30 text-3xl animate-float-slow">
-                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-            </span>
-            <span class="absolute top-24 right-20 w-3 h-3 bg-white/40 rounded-full blur-sm animate-pulse"></span>
-            <span class="absolute bottom-24 right-1/3 w-2.5 h-2.5 bg-white/40 rounded-full blur-sm animate-pulse"></span>
+            </div>
+            <div class="absolute top-1/3 right-1/3 animate-pulse">
+                <div class="w-4 h-4 bg-white/30 rounded-full"></div>
+            </div>
+            <div class="absolute bottom-1/3 right-1/4 animate-pulse animation-delay-1000">
+                <div class="w-3 h-3 bg-yellow-300/40 rounded-full"></div>
+            </div>
         </div>
-        <div class="relative w-full px-4 sm:px-6 md:px-16 py-16 sm:py-20 text-center">
-            <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
-                <!-- KIRI: TEXT -->
-                <div class="text-left relative">
-                    <span class="inline-flex items-center gap-2 mb-4 px-5 py-2 text-base font-semibold rounded-full bg-white/20 text-indigo-100 backdrop-blur">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/>
-                        </svg>
-                        Learning Management System
-                    </span>
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-                        Selamat Datang, <span class="text-yellow-300">{{ auth()->user()->nama }}!</span>
-                    </h2>
-                    <p class="text-lg sm:text-xl mb-8 text-indigo-100 max-w-xl">
-                        Ikuti kelas, pelajari materi, kerjakan tugas, dan pantau progres belajarmu dengan lebih terarah dan modern.
-                    </p>
-                </div>
-                <div class="hidden lg:block absolute bottom-0 right-0  translate-x-[-60px] pointer-events-none">
-                    <img src="/SVG/Education.svg" alt="Student Dashboard Illustration" class="w-[320px] xl:w-[360px] 2xl:w-[400px] h-auto">
+
+        <div class="relative w-full px-4 sm:px-6 md:px-16 py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left Content -->
+                    <div class="space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <span class="text-sm font-semibold">Learning Management System</span>
+                        </div>
+
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+                            Selamat Datang,<br>
+                            <span class="bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 bg-clip-text text-transparent animate-gradient">
+                                {{ Auth::user()?->nama ?? 'Admin' }}!
+                            </span>
+                        </h1>
+
+                        <p class="text-lg sm:text-xl text-red-50 max-w-2xl">
+                            Ikuti kelas, pelajari materi, kerjakan tugas, dan pantau progres belajarmu dengan lebih terarah dan modern.
+                        </p>
+
+                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
+                            <!-- Kelas Saya -->
+                            <div class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-green-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 2c-1.10457 0-2 .89543-2 2v4c0 .55228.44772 1 1 1s1-.44772 1-1V4h12v7h-2c-.5523 0-1 .4477-1 1v2h-1c-.5523 0-1 .4477-1 1s.4477 1 1 1h5c.5523 0 1-.4477 1-1V3.85714C20 2.98529 19.3667 2 18.268 2H6Z"/>
+                                    <path d="M6 11.5C6 9.567 7.567 8 9.5 8S13 9.567 13 11.5 11.433 15 9.5 15 6 13.433 6 11.5ZM4 20c0-2.2091 1.79086-4 4-4h3c2.2091 0 4 1.7909 4 4 0 1.1046-.8954 2-2 2H6c-1.10457 0-2-.8954-2-2Z"/>
+                                </svg>
+                                <span class="text-sm font-medium">Kelas Saya</span>
+                            </div>
+
+                            <!-- Tugas & Nilai -->
+                            <div class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7.171 12.906-2.153 6.411 2.672-.89 1.568 2.34 1.825-5.183m5.73-2.678 2.154 6.411-2.673-.89-1.568 2.34-1.825-5.183M9.165 4.3c.58.068 1.153-.17 1.515-.628a1.681 1.681 0 0 1 2.64 0 1.68 1.68 0 0 0 1.515.628 1.681 1.681 0 0 1 1.866 1.866c-.068.58.17 1.154.628 1.516a1.681 1.681 0 0 1 0 2.639 1.682 1.682 0 0 0-.628 1.515 1.681 1.681 0 0 1-1.866 1.866 1.681 1.681 0 0 0-1.516.628 1.681 1.681 0 0 1-2.639 0 1.681 1.681 0 0 0-1.515-.628 1.681 1.681 0 0 1-1.867-1.866 1.681 1.681 0 0 0-.627-1.515 1.681 1.681 0 0 1 0-2.64c.458-.361.696-.935.627-1.515A1.681 1.681 0 0 1 9.165 4.3ZM14 9a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                                </svg>
+                                <span class="text-sm font-medium">Tugas & Nilai</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Illustration -->
+                    <div class="hidden lg:flex justify-center items-center">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+                            <img src="/SVG/Education.svg" alt="Admin Dashboard" class="relative w-full max-w-lg h-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Bottom Wave -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="rgb(249 250 251)"/>
+            </svg>
         </div>
     </section>
 
@@ -326,8 +370,8 @@
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Kelas</h3>
                         <p class="text-gray-500 mb-4">Kamu belum bergabung dengan kelas apa pun.</p>
-                        <button onclick="openJoinClassModal()" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <button onclick="openJoinClassModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm rounded-xl hover:bg-indigo-700 transition font-semibold shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                             </svg>
                             Join Kelas Sekarang
@@ -344,8 +388,8 @@
                 <button @click="showAll = !showAll" class="text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-1">
                     <span x-text="showAll ? 'Lihat Sedikit' : 'Lihat Semua'"></span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path x-show="!showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        <path x-show="showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        <path x-show="!showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        <path x-show="showAll" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
                     </svg>
                 </button>
             </div>
@@ -387,7 +431,7 @@
                         $subjectColor = $subjectColors[$colorKeys[$assignment->id_class % count($colorKeys)]];
                     @endphp
 
-                    <div x-show="showAll || {{ $index }} < 5" x-cloak class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
+                    <div x-show="showAll || {{ $index }} < 3" x-cloak class="p-6 {{ !$loop->last ? 'border-b border-gray-100' : '' }} hover:bg-gray-50 transition">
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-3">
@@ -430,11 +474,11 @@
                                 </div>
                             </div>
                             @if($isCompleted)
-                                <a href="{{ route('siswa.submissions.show', $assignment->submission->id_submission) }}" class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-semibold inline-block text-center">
+                                <a href="{{ route('siswa.submissions.show', $assignment->submission->id_submission) }}" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-xl hover:bg-gray-200 transition font-semibold inline-block text-center">
                                     Lihat Detail
                                 </a>
                             @else
-                                <a href="{{ route('siswa.assignments.show', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg inline-block text-center">
+                                <a href="{{ route('siswa.assignments.show', $assignment->id_assignment) }}" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md inline-block text-center">
                                     Kerjakan
                                 </a>
                             @endif
@@ -498,11 +542,11 @@
                             </div>
                         </div>
                         @if($material->file_path)
-                        <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg inline-block text-center">
+                        <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md inline-block text-center">
                             Download
                         </a>
                         @else
-                        <button class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md hover:shadow-lg inline-block text-center">
+                        <button class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md inline-block text-center">
                             Lihat
                         </button>
                         @endif
@@ -543,14 +587,14 @@
                 <button
                     type="button"
                     onclick="closeLogoutModal()"
-                    class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition font-semibold">
                     Batal
                 </button>
                 <form action="{{ route('logout') }}" method="POST" class="flex-1">
                     @csrf
                     <button
                         type="submit"
-                        class="w-full rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-3 font-semibold text-white hover:from-red-700 hover:to-red-800 transition shadow-md">
+                        class="w-full rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-2.5 text-sm font-semibold text-white hover:from-red-700 hover:to-red-800 transition shadow-md">
                         Ya, Logout
                     </button>
                 </form>
@@ -589,16 +633,16 @@
                 <label class="block text-sm font-semibold text-gray-900 mb-2">
                     Token Kelas
                 </label>
-                <input type="text" name="token" id="classToken" placeholder="Contoh: KLS-8A23" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
+                <input type="text" name="token" id="classToken" placeholder="Contoh: KLS-8A23" class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
                 <p class="mt-2 text-xs text-gray-500">
                     Token bersifat unik dan hanya berlaku untuk satu kelas.
                 </p>
                 <!-- Actions -->
                 <div class="flex flex-col-reverse sm:flex-row gap-3 pt-6 pb-6">
-                    <button type="button" onclick="closeJoinClassModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
+                    <button type="button" onclick="closeJoinClassModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition font-semibold">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 font-semibold text-white hover:from-indigo-700 hover:to-purple-700 transition shadow-md">
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white hover:from-indigo-700 hover:to-purple-700 transition shadow-md">
                         Join Kelas
                     </button>
                 </div>

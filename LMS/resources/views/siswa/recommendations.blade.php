@@ -3,28 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('images/LMS.png') }}" type="image/png">
     <title>Rekomendasi Materi - LMS</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50">
     @include('components.navbar')
 
-    <div class="max-w-4xl mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">🎯 Rekomendasi Materi Pembelajaran</h1>
-            <p class="text-gray-600">AI akan menganalisis performa belajarmu dan memberikan rekomendasi materi yang sesuai</p>
+    <div class="w-full px-4 sm:px-6 md:px-16 py-12">
+        <!-- Header -->
+        <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white overflow-hidden relative">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+            <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+            <div class="relative z-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">🎯 Rekomendasi Materi Pembelajaran</h1>
+                <p class="text-lg text-purple-100">AI akan menganalisis performa belajarmu dan memberikan rekomendasi materi yang sesuai</p>
+            </div>
         </div>
 
         <!-- Loading State -->
-        <div id="loading" class="bg-white rounded-2xl p-8 text-center">
+        <div id="loading" class="bg-white rounded-3xl shadow-xl p-8 text-center border border-gray-100">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
             <p class="text-gray-600">AI sedang menganalisis data belajarmu...</p>
         </div>
 
         <!-- Profile Card -->
-        <div id="profileCard" class="hidden bg-white rounded-2xl p-6 mb-6 shadow-md">
+        <div id="profileCard" class="hidden bg-white rounded-3xl p-6 mb-6 shadow-xl border border-gray-100">
             <h2 class="text-xl font-bold text-gray-900 mb-4">📊 Profil & Progress Belajar</h2>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="p-4 bg-blue-50 rounded-xl">
                     <p class="text-sm text-gray-600 mb-1">Mata Pelajaran</p>
                     <p class="font-semibold text-gray-900" id="subject">-</p>
@@ -57,13 +63,13 @@
         </div>
 
         <!-- Recommendations Card -->
-        <div id="recommendationsCard" class="hidden bg-white rounded-2xl p-6 shadow-md">
+        <div id="recommendationsCard" class="hidden bg-white rounded-3xl p-6 shadow-xl border border-gray-100">
             <h2 class="text-xl font-bold text-gray-900 mb-4">💡 Rekomendasi untuk Kamu</h2>
             <div id="recommendations" class="prose max-w-none text-gray-700"></div>
         </div>
 
         <!-- Error State -->
-        <div id="error" class="hidden bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+        <div id="error" class="hidden bg-red-50 border-2 border-red-200 rounded-3xl p-8 text-center shadow-xl">
             <svg class="w-12 h-12 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
