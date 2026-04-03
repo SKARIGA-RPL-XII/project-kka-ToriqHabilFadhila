@@ -220,6 +220,20 @@
                     <h3 class="font-semibold text-gray-900 mb-1">Lihat Jawaban</h3>
                     <p class="text-sm text-gray-500">Review & feedback</p>
                 </button>
+
+                <!-- Tanya AI -->
+                <button onclick="openAIGuruModal()"
+                    class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-indigo-500 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Tanya AI</h3>
+                    <p class="text-sm text-gray-500">Analisis & insights</p>
+                </button>
             </div>
             <!-- Sidebar: Daftar Siswa -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
@@ -317,26 +331,26 @@
                                             <!-- Type Icon -->
                                             @php
                                                 $bgClass = match($assignment->tipe) {
-                                                    'essay' => 'bg-green-100',
-                                                    'pilihan_ganda' => 'bg-orange-100',
-                                                    default => 'bg-purple-100'
+                                                    'essay' => 'bg-purple-100',
+                                                    'pilihan_ganda' => 'bg-indigo-100',
+                                                    default => 'bg-blue-100'
                                                 };
                                             @endphp
                                             <div class="p-2 rounded-lg flex-shrink-0 {{ $bgClass }}">
                                                 @if($assignment->tipe === 'essay')
-                                                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                                                         <path
                                                             d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                                     </svg>
                                                 @elseif($assignment->tipe === 'pilihan_ganda')
-                                                    <svg class="w-5 h-5 text-orange-600" fill="currentColor"
+                                                    <svg class="w-5 h-5 text-indigo-600" fill="currentColor"
                                                         viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd"
                                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                                             clip-rule="evenodd" />
                                                     </svg>
                                                 @else
-                                                    <svg class="w-5 h-5 text-purple-600" fill="currentColor"
+                                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor"
                                                         viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd"
                                                             d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z"
@@ -644,8 +658,7 @@
 
     <!-- Modal: Buat Tugas/Quiz -->
     <div id="createTugasModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
-        <div
-            class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeCreateTugasModal()"
                 class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -654,11 +667,9 @@
             </button>
 
             <div class="px-6 pt-8 text-center">
-                <div
-                    class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-2">Buat Tugas / Quiz</h3>
@@ -674,21 +685,33 @@
                         <label class="relative cursor-pointer">
                             <input type="radio" name="tipe" value="essay" class="peer sr-only" required>
                             <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-green-500 peer-checked:bg-gradient-to-br peer-checked:from-green-50 peer-checked:to-emerald-50 peer-checked:shadow-md hover:border-green-400">
-                                <div class="text-2xl mb-1">✍️</div>
+                                <div class="text-2xl mb-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </div>
                                 <div class="text-xs font-semibold text-gray-700">Essay</div>
                             </div>
                         </label>
                         <label class="relative cursor-pointer">
                             <input type="radio" name="tipe" value="pilihan_ganda" class="peer sr-only">
                             <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-orange-500 peer-checked:bg-gradient-to-br peer-checked:from-orange-50 peer-checked:to-amber-50 peer-checked:shadow-md hover:border-orange-400">
-                                <div class="text-2xl mb-1">✅</div>
+                                <div class="text-2xl mb-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                    </svg>
+                                </div>
                                 <div class="text-xs font-semibold text-gray-700">Pilihan Ganda</div>
                             </div>
                         </label>
                         <label class="relative cursor-pointer">
                             <input type="radio" name="tipe" value="praktik" class="peer sr-only">
                             <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-purple-500 peer-checked:bg-gradient-to-br peer-checked:from-purple-50 peer-checked:to-pink-50 peer-checked:shadow-md hover:border-purple-400">
-                                <div class="text-2xl mb-1">💻</div>
+                                <div class="text-2xl mb-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                                    </svg>
+                                </div>
                                 <div class="text-xs font-semibold text-gray-700">Praktik</div>
                             </div>
                         </label>
@@ -779,7 +802,135 @@
         </div>
     </div>
 
+    <!-- Modal: Tanya AI Guru -->
+    <div id="aiGuruModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="modal-desktop modal-mobile w-full sm:max-w-2xl bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeAIGuruModal()"
+                class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="px-6 pt-8 pb-4 border-b border-gray-200">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Tanya AI</h3>
+                        <p class="text-sm text-gray-600">Dapatkan analisis dan insights tentang kelas Anda</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-6 space-y-4">
+                <!-- Pilih Siswa -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Pilih Siswa (Opsional)</label>
+                    <select id="studentSelect" class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="">-- Analisis Seluruh Kelas --</option>
+                        @foreach($kelas->enrollments as $enrollment)
+                            <option value="{{ $enrollment->user->id_user }}">{{ $enrollment->user->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Pertanyaan -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Pertanyaan</label>
+                    <textarea id="aiQuestion" rows="4" placeholder="Contoh: Siapa siswa yang paling membutuhkan bantuan? Atau: Bagaimana performa kelas secara keseluruhan?"
+                        class="w-full rounded-xl border-2 border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></textarea>
+                </div>
+
+                <!-- Hasil AI -->
+                <div id="aiResultContainer" class="hidden">
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Hasil Analisis AI</label>
+                    <div id="aiResult" class="w-full rounded-xl border-2 border-indigo-200 bg-indigo-50 px-4 py-4 text-sm text-gray-700 max-h-64 overflow-y-auto custom-scrollbar"></div>
+                </div>
+
+                <!-- Loading -->
+                <div id="aiLoading" class="hidden text-center py-8">
+                    <div class="inline-flex items-center gap-2">
+                        <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                        <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">AI sedang menganalisis...</p>
+                </div>
+            </div>
+
+            <div class="px-6 pb-6 border-t border-gray-200 flex flex-col-reverse sm:flex-row gap-3">
+                <button type="button" onclick="closeAIGuruModal()"
+                    class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition font-semibold">
+                    Tutup
+                </button>
+                <button type="button" onclick="askAIGuru()"
+                    class="flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-4 py-2.5 text-sm font-semibold text-white hover:from-indigo-700 hover:to-indigo-800 transition shadow-md">
+                    Tanya AI
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}?v={{ time() }}"></script>
+    <script>
+        function openAIGuruModal() {
+            document.getElementById('aiGuruModal').classList.remove('hidden');
+        }
+
+        function closeAIGuruModal() {
+            document.getElementById('aiGuruModal').classList.add('hidden');
+            document.getElementById('aiResultContainer').classList.add('hidden');
+            document.getElementById('aiLoading').classList.add('hidden');
+            document.getElementById('aiQuestion').value = '';
+            document.getElementById('studentSelect').value = '';
+        }
+
+        function askAIGuru() {
+            const question = document.getElementById('aiQuestion').value.trim();
+            const studentId = document.getElementById('studentSelect').value;
+            const classId = '{{ $kelas->id_class }}';
+
+            if (!question) {
+                alert('Silakan masukkan pertanyaan');
+                return;
+            }
+
+            document.getElementById('aiLoading').classList.remove('hidden');
+            document.getElementById('aiResultContainer').classList.add('hidden');
+
+            fetch('{{ route('guru.ai.analyze', ['userId' => ':userId', 'classId' => ':classId']) }}'.replace(':userId', studentId || 0).replace(':classId', classId), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('aiLoading').classList.add('hidden');
+                document.getElementById('aiResultContainer').classList.remove('hidden');
+
+                if (data.success) {
+                    let result = '<div class="space-y-3">';
+                    result += '<p><strong>📊 Analisis:</strong></p>';
+                    result += '<p>' + (data.data?.analysis || 'Analisis tidak tersedia') + '</p>';
+                    result += '</div>';
+                    document.getElementById('aiResult').innerHTML = result;
+                } else {
+                    document.getElementById('aiResult').innerHTML = '<p class="text-red-600">❌ ' + (data.message || 'Gagal mendapatkan analisis') + '</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('aiLoading').classList.add('hidden');
+                document.getElementById('aiResultContainer').classList.remove('hidden');
+                document.getElementById('aiResult').innerHTML = '<p class="text-red-600">❌ Terjadi kesalahan: ' + error.message + '</p>';
+            });
+        }
+    </script>
 </body>
 </html>

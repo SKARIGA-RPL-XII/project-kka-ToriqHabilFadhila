@@ -22,6 +22,10 @@ class TokenKelas extends Model
         'times_used',
     ];
 
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -58,5 +62,16 @@ class TokenKelas extends Model
         }
 
         return true;
+    }
+
+    public function getStatusAttribute(): string
+    {
+        if ($this->expires_at && now()->greaterThan($this->expires_at)) {
+            return 'expired';
+        }
+        if ($this->max_uses > 0 && $this->times_used >= $this->max_uses) {
+            return 'max_uses_reached';
+        }
+        return 'active';
     }
 }

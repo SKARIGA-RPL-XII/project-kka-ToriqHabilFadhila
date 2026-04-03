@@ -34,7 +34,7 @@
 
     <div class="w-full px-4 sm:px-6 md:px-16 py-12">
         <!-- Header Section -->
-        <div class="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
+        <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white overflow-hidden relative">
             <!-- Decorative Elements -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
@@ -79,7 +79,7 @@
             <a href="{{ route('siswa.materials') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-indigo-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/>
                         </svg>
@@ -93,7 +93,7 @@
                             <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2 animate-pulse"></span>
                             {{ $kelas->materials->count() }} Materi
                         </div>
-                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                     </div>
@@ -104,10 +104,10 @@
         <!-- Assignments Section -->
         <div id="tugas-quiz" class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
             <!-- Section Header -->
-            <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-8 py-6 border-b border-purple-100">
+            <div class="bg-gradient-to-r from-indigo-50 to-pink-50 px-8 py-6 border-b border-indigo-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="p-3 bg-purple-600 rounded-xl">
+                        <div class="p-3 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-xl">
                             <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
@@ -123,38 +123,38 @@
             <div class="divide-y divide-gray-100">
                 @forelse($kelas->assignments as $index => $assignment)
                     @php
-                        $submission = $assignment->submissions->first();
-                        $isCompleted = $submission !== null;
+                        $submission = $assignment->submissions->where('id_user', auth()->id())->first();
+                        $isCompleted = $submission !== null && $submission->status !== 'draft';
                     @endphp
-                    <a href="{{ $isCompleted ? route('siswa.submissions.show', $submission->id_submission) : route('siswa.assignments.show', $assignment->id_assignment) }}" class="assignment-card block p-6 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-transparent transition-all" style="animation-delay: {{ $index * 0.1 }}s">
+                    <a href="{{ $isCompleted ? route('siswa.submissions.show', $submission->id_submission) : route('siswa.assignments.show', $assignment->id_assignment) }}" class="assignment-card block p-6 hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-transparent transition-all" style="animation-delay: {{ $index * 0.1 }}s">
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                             <!-- Assignment Info -->
                             <div class="flex-1">
                                 <div class="flex items-start gap-3 mb-3">
                                     @php
                                         $iconBgClass = match($assignment->tipe) {
-                                            'essay' => 'bg-green-100',
-                                            'pilihan_ganda' => 'bg-orange-100',
-                                            default => 'bg-purple-100'
+                                            'essay' => 'bg-indigo-100',
+                                            'pilihan_ganda' => 'bg-purple-100',
+                                            default => 'bg-pink-100'
                                         };
                                     @endphp
                                     <div class="p-2 rounded-lg flex-shrink-0 {{ $iconBgClass }}">
                                         @if($assignment->tipe === 'essay')
-                                            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                             </svg>
                                         @elseif($assignment->tipe === 'pilihan_ganda')
-                                            <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                             </svg>
                                         @else
-                                            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                                             </svg>
                                         @endif
                                     </div>
                                     <div class="flex-1">
-                                        <h3 class="font-bold text-lg text-gray-800 mb-1 group-hover:text-purple-600 transition">
+                                        <h3 class="font-bold text-lg text-gray-800 mb-1 group-hover:text-indigo-600 transition">
                                             {{ $assignment->judul }}
                                         </h3>
                                         <p class="text-sm text-gray-600 leading-relaxed">
@@ -163,7 +163,7 @@
                                     </div>
                                 </div>
                                 <!-- Deadline Info -->
-                                <div class="flex items-center gap-2 mt-3 text-sm">
+                                <div class="flex items-center gap-2 mt-3 text-sm flex-wrap">
                                     <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
                                     </svg>
@@ -178,11 +178,26 @@
                                         $daysLeft = now()->diffInDays($deadline, false);
                                     @endphp
                                     @if($isCompleted)
-                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">
-                                            ✓ Sudah Dikerjakan
-                                        </span>
+                                        @if($submission->status === 'graded')
+                                            <span class="ml-2 px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-700 flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Sudah Dinilai
+                                            </span>
+                                        @else
+                                            <span class="ml-2 px-3 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-700 flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Menunggu Penilaian
+                                            </span>
+                                        @endif
                                     @elseif($isLate)
-                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                                        <span class="ml-2 px-3 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-600 flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                            </svg>
                                             Terlambat
                                         </span>
                                     @else
@@ -193,23 +208,30 @@
                                                 default => 'bg-blue-100 text-blue-700'
                                             };
                                         @endphp
-                                        <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full {{ $deadlineBadgeClass }}">
+                                        <span class="ml-2 px-3 py-1 text-xs font-bold rounded-full {{ $deadlineBadgeClass }}">
                                             {{ $daysLeft == 0 ? 'Hari ini' : ($daysLeft == 1 ? 'Besok' : ceil($daysLeft) . ' hari lagi') }}
                                         </span>
                                     @endif
                                 </div>
                             </div>
-                            <!-- Type Badge -->
+                            <!-- Status Badge -->
                             <div class="flex-shrink-0">
                                 @php
-                                    $badgeClass = match($assignment->tipe) {
-                                        'essay' => 'bg-gradient-to-r from-green-500 to-green-600 text-white',
-                                        'pilihan_ganda' => 'bg-gradient-to-r from-orange-500 to-orange-600 text-white',
-                                        default => 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
-                                    };
+                                    if ($isCompleted) {
+                                        if ($submission->status === 'graded') {
+                                            $statusBadgeClass = 'bg-gradient-to-r from-green-500 to-emerald-600 text-white';
+                                            $statusText = 'Nilai: ' . $submission->score . '/' . $assignment->max_score;
+                                        } else {
+                                            $statusBadgeClass = 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white';
+                                            $statusText = 'Sudah Dikerjakan';
+                                        }
+                                    } else {
+                                        $statusBadgeClass = 'bg-gradient-to-r from-orange-500 to-red-600 text-white';
+                                        $statusText = 'Kerjakan';
+                                    }
                                 @endphp
-                                <span class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl shadow-sm {{ $badgeClass }}">
-                                    {{ ucfirst(str_replace('_', ' ', $assignment->tipe)) }}
+                                <span class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl shadow-sm {{ $statusBadgeClass }}">
+                                    {{ $statusText }}
                                 </span>
                             </div>
                         </div>

@@ -36,7 +36,7 @@
             </div>
 
             <!-- Features List -->
-            <div class="space-y-4 w-full">
+            <div class="space-y-4 w-full max-w-md pr-8">
                 <div class="flex items-center gap-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
                     <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-3 gap-4 w-full mt-8 pt-8 border-t border-white/20">
+            <div class="grid grid-cols-3 gap-4 w-full max-w-md mt-8 pt-8 pr-8 border-t border-white/20">
                 <div class="text-center">
                     <div class="text-3xl font-bold mb-1">1K+</div>
                     <div class="text-sm text-white/80">Pengguna</div>

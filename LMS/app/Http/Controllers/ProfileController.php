@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -31,17 +30,30 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id_user . ',id_user',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+        
         if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::delete('public/avatars/' . $user->avatar);
+            $avatarDir = storage_path('app/public/avatars');
+            if (!is_dir($avatarDir)) {
+                mkdir($avatarDir, 0755, true);
             }
-            $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/avatars', $avatarName);
-            $validated['avatar'] = $avatarName;
+            
+            if ($user->profile_picture) {
+                $oldPath = $avatarDir . '/' . $user->profile_picture;
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+            
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $user->id_user . '.' . $file->getClientOriginalExtension();
+            $file->move($avatarDir, $filename);
+            $validated['profile_picture'] = $filename;
+            unset($validated['avatar']);
         }
-        $user->fill($validated)->save(); // safer alternative to update()
+        
+        $user->fill($validated)->save();
         return back()->with('success', 'Profil Anda berhasil diperbarui! Perubahan telah disimpan.')
             ->with('redirect_delay', false);
     }
@@ -59,8 +71,10 @@ class ProfileController extends Controller
                 ->with('warning', 'Password lama salah.');
         }
         $user->password = Hash::make($validated['password']);
-        $user->save(); // safer alternative
-        return back()->with('success', 'Password berhasil diubah! Pastikan Anda mengingat password baru untuk login selanjutnya.')
-            ->with('redirect_delay', false);
+        $user->save();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login')->with('success', 'Password berhasil diubah! Silakan login dengan password baru Anda.');
     }
 }

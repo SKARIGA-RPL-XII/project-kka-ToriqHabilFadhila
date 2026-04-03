@@ -42,4 +42,9 @@ class Submission extends Model
     {
         return $this->belongsTo(User::class, 'graded_by', 'id_user');
     }
+
+    public function feedback()
+    {
+        return $this->hasOne(FeedbackAI::class, 'id_submission', 'id_submission');
+    }
 }

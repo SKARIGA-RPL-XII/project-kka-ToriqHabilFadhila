@@ -239,7 +239,7 @@
                 <a href="#tugas-terbaru" onclick="event.preventDefault(); document.getElementById('tugas-terbaru').scrollIntoView({behavior: 'smooth'});" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-indigo-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/30">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
@@ -262,7 +262,7 @@
                 <a href="{{ route('siswa.materials') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-purple-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-purple-500/30">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-purple-500/30">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/>
                             </svg>
@@ -284,19 +284,19 @@
                 </a>
 
                 <!-- Progress Card -->
-                <a href="{{ route('siswa.recommendations') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-green-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
+                <a href="{{ route('siswa.recommendations') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-pink-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                     <!-- Decorative background gradient -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-green-500/30">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-pink-500/30">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">Rekomendasi Materi & Progres Pembelajaran</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-pink-600 transition-colors">Rekomendasi Materi & Progres Pembelajaran</h3>
                         <p class="text-sm text-gray-500 mb-3">AI merekomendasikan materi berdasarkan perkembangan belajarmu</p>
                         <!-- Progress Bar -->
-                        <div class="flex items-center gap-2 text-sm text-green-600 font-semibold">
+                        <div class="flex items-center gap-2 text-sm text-pink-600 font-semibold">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                             </svg>
@@ -306,7 +306,7 @@
 
                     <!-- Arrow Icon -->
                     <div class="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                     </div>
@@ -330,7 +330,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse ($classes as $index => $kelas)
                 <div x-show="showAll || {{ $index }} < 3" x-cloak class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 transform hover:-translate-y-1">
-                    <div class="h-36 bg-gradient-to-br from-blue-500 to-indigo-600 relative">
+                    <div class="h-36 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 relative">
                         <div class="absolute inset-0 bg-black/10"></div>
                     </div>
                     <div class="p-6">
@@ -399,7 +399,7 @@
                     @php
                         $deadline = \Carbon\Carbon::parse($assignment->deadline);
                         $isLate = now()->isAfter($deadline);
-                        $daysLeft = now()->diffInDays($deadline, false);
+                        $daysLeft = (int) now()->diffInDays($deadline, false);
                         $isCompleted = $assignment->is_completed;
 
                         if ($isCompleted) {
@@ -413,11 +413,11 @@
                         } elseif ($daysLeft <= 2) {
                             $badgeClass = 'bg-red-100 text-red-700';
                             $badgeIcon = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                            $badgeText = 'Deadline: ' . ceil($daysLeft) . ' hari lagi';
+                            $badgeText = 'Deadline: ' . $daysLeft . ' hari lagi';
                         } else {
                             $badgeClass = 'bg-yellow-100 text-yellow-700';
                             $badgeIcon = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                            $badgeText = 'Deadline: ' . ceil($daysLeft) . ' hari lagi';
+                            $badgeText = 'Deadline: ' . $daysLeft . ' hari lagi';
                         }
 
                         $subjectColors = [
@@ -439,7 +439,22 @@
                                         {!! $badgeIcon !!}
                                         {{ $badgeText }}
                                     </span>
-                                    <span class="px-3 py-1.5 {{ $isCompleted ? 'bg-green-100 text-green-700' : $subjectColor }} text-xs font-bold rounded-full">{{ $assignment->class->nama_class }}</span>
+                                    <span class="px-3 py-1.5 {{ $isCompleted ? 'bg-green-100 text-green-700' : $subjectColor }} text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }}</span>
+                                    @php
+                                        $typeColors = [
+                                            'pilihan_ganda' => 'bg-blue-100 text-blue-700',
+                                            'essay' => 'bg-purple-100 text-purple-700',
+                                            'praktik' => 'bg-orange-100 text-orange-700',
+                                        ];
+                                        $typeLabels = [
+                                            'pilihan_ganda' => 'Pilihan Ganda',
+                                            'essay' => 'Essay',
+                                            'praktik' => 'Praktik',
+                                        ];
+                                    @endphp
+                                    <span class="px-3 py-1.5 {{ $typeColors[$assignment->tipe] ?? 'bg-gray-100 text-gray-700' }} text-xs font-bold rounded-full">
+                                        {{ $typeLabels[$assignment->tipe] ?? ucfirst(str_replace('_', ' ', $assignment->tipe)) }}
+                                    </span>
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $assignment->judul }}</h3>
                                 <p class="text-sm text-gray-600 mb-4">{{ Str::limit($assignment->deskripsi, 100) }}</p>

@@ -14,6 +14,19 @@ class NotificationController extends Controller
             ->where('id_user', Auth::user()->id_user)
             ->firstOrFail();
         $notification->update(['is_read' => true]);
+        
+        // Redirect ke halaman terkait jika ada
+        if ($notification->related_id) {
+            if ($notification->type === 'new_assignment') {
+                return redirect()->route('siswa.assignments.show', $notification->related_id);
+            } elseif ($notification->type === 'grade') {
+                $submission = \App\Models\Submission::find($notification->related_id);
+                if ($submission) {
+                    return redirect()->route('siswa.submissions.show', $submission->id_submission);
+                }
+            }
+        }
+        
         return redirect()->back();
     }
 

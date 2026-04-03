@@ -46,7 +46,6 @@
 </head>
 <body class="bg-gray-50 antialiased">
     @include('components.navbar')
-
     {{-- HERO SECTION --}}
     <section id="beranda" class="relative pt-32 pb-20 overflow-hidden">
         {{-- Background Elements --}}

@@ -15,6 +15,7 @@ class Material extends Model
         'konten',
         'file_path',
         'file_type',
+        'online_link',
         'uploaded_by',
     ];
 

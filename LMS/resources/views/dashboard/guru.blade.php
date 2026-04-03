@@ -125,7 +125,7 @@
     @include('components.notifications')
     @include('components.navbar')
 
-    <section class="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
+    <section class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
         <!-- Animated Background Pattern -->
         <div class="absolute inset-0 opacity-10">
             <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
@@ -226,7 +226,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Buat Kelas -->
                 <button onclick="openCreateClassModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-xl transition-all duration-300">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
@@ -236,8 +236,8 @@
                 </button>
 
                 <!-- Upload Materi -->
-                <button onclick="openUploadMateriModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                <button onclick="openUploadMateriModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-indigo-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                         </svg>
@@ -247,8 +247,8 @@
                 </button>
 
                 <!-- Buat Tugas/Quiz -->
-                <button onclick="openCreateTugasModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-green-500 hover:shadow-xl transition-all duration-300">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                <button onclick="openCreateTugasModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                         </svg>
@@ -258,8 +258,8 @@
                 </button>
 
                 <!-- Lihat Jawaban -->
-                <button onclick="openJawabanSiswaModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-orange-500 hover:shadow-xl transition-all duration-300">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                <button onclick="openJawabanSiswaModal()" class="group p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
@@ -288,12 +288,12 @@
                 <div x-show="showAll || {{ $index }} < 3" x-cloak class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 transform hover:-translate-y-1">
                     <!-- Class Card 1 -->
                     <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 transform hover:-translate-y-1">
-                        <div class="h-36 bg-gradient-to-br from-blue-500 to-indigo-600 relative">
+                        <div class="h-36 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 relative">
                             <div class="absolute inset-0 bg-black/10"></div>
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-2 mb-3">
-                                <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $kelas->nama_kelas }}</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">{{ $kelas->nama_kelas }}</span>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $kelas->deskripsi }}</h3>
                             <p class="text-sm text-gray-600 mb-4 flex items-center gap-2">
@@ -305,7 +305,7 @@
 
                             <p class="text-sm text-gray-600 mb-4">
                                 Token:
-                                <span class="font-mono font-bold text-blue-600">
+                                <span class="font-mono font-bold text-purple-600">
                                     {{ $kelas->activeToken->token_code ?? '-' }}
                                 </span>
                             </p>
@@ -356,7 +356,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }}</span>
+                                <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">{{ $assignment->class->nama_kelas }}</span>
                                 @if($assignment->tipe === 'essay')
                                     <span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
                                 @elseif($assignment->tipe === 'pilihan_ganda')
@@ -389,7 +389,7 @@
                                     $submissionCount = \App\Models\Submission::where('id_assignment', $assignment->id_assignment)->count();
                                     $totalStudents = $assignment->class->enrollments->count();
                                 @endphp
-                                <div class="flex items-center gap-1.5 text-blue-600 font-semibold">
+                                <div class="flex items-center gap-1.5 text-purple-600 font-semibold">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
@@ -398,10 +398,10 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                            <a href="{{ route('guru.assignments.submissions', $assignment->id_assignment) }}" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
                                 Lihat Jawaban
                             </a>
-                            <button onclick="openEditDeadlineModal({{ $assignment->id_assignment }}, '{{ $assignment->deadline->format('Y-m-d\TH:i') }}')" class="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                            <button onclick="openEditDeadlineModal({{ $assignment->id_assignment }}, '{{ $assignment->deadline->format('Y-m-d\TH:i') }}')" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
                                 Edit Deadline
                             </button>
                             <button onclick="openDeleteAssignmentModal({{ $assignment->id_assignment }}, '{{ $assignment->judul }}')" class="px-6 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
@@ -441,7 +441,7 @@
                     <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-gray-900">{{ $kelas->nama_kelas }}</h3>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $totalStudents }} Siswa</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">{{ $totalStudents }} Siswa</span>
                         </div>
 
                         <div class="space-y-4">
@@ -451,26 +451,26 @@
                                     <span class="text-sm font-bold text-purple-600">{{ number_format($completionRate, 1) }}%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2.5 rounded-full" style="width: {{ $completionRate }}%"></div>
+                                    <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 h-2.5 rounded-full" style="width: {{ $completionRate }}%"></div>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-3">
-                                <div class="bg-blue-50 rounded-xl p-3">
-                                    <p class="text-xs text-blue-600 mb-1">Total Tugas</p>
-                                    <p class="text-2xl font-bold text-blue-700">{{ $totalAssignments }}</p>
+                                <div class="bg-purple-50 rounded-xl p-3">
+                                    <p class="text-xs text-purple-600 mb-1">Total Tugas</p>
+                                    <p class="text-2xl font-bold text-purple-700">{{ $totalAssignments }}</p>
                                 </div>
-                                <div class="bg-green-50 rounded-xl p-3">
-                                    <p class="text-xs text-green-600 mb-1">Rata-rata Nilai</p>
-                                    <p class="text-2xl font-bold text-green-700">{{ number_format($avgScore, 1) }}</p>
+                                <div class="bg-indigo-50 rounded-xl p-3">
+                                    <p class="text-xs text-indigo-600 mb-1">Rata-rata Nilai</p>
+                                    <p class="text-2xl font-bold text-indigo-700">{{ number_format($avgScore, 1) }}</p>
                                 </div>
                             </div>
 
                             <div class="flex gap-2">
-                                <a href="{{ route('guru.classes.show', $kelas->id_class) }}" class="flex-1 text-center px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition font-semibold text-sm">
+                                <a href="{{ route('guru.classes.show', $kelas->id_class) }}" class="flex-1 text-center px-4 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition font-semibold text-sm">
                                     Lihat Detail
                                 </a>
-                                <button onclick="openAskProgressModal({{ $kelas->id_class }}, '{{ $kelas->nama_kelas }}')" class="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition font-semibold text-sm">
+                                <button onclick="openAskProgressModal({{ $kelas->id_class }}, '{{ $kelas->nama_kelas }}')" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition font-semibold text-sm">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
@@ -502,7 +502,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-3">
-                                <span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{{ $material->class->nama_kelas }}</span>
+                                <span class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">{{ $material->class->nama_kelas }}</span>
                                 <span class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full inline-flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -525,7 +525,7 @@
                         </div>
                         <div class="flex gap-2">
                             @if($material->file_path)
-                            <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
+                            <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition font-semibold shadow-md hover:shadow-lg whitespace-nowrap">
                                 Download
                             </a>
                             @endif
@@ -555,7 +555,7 @@
             </button>
 
             <div class="px-6 pt-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 shadow-lg">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
@@ -572,7 +572,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi Matapelajaran</label>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Deskripsi Mata Pelajaran</label>
                     <input type="text" name="deskripsi" placeholder="Contoh: Matematika, IPA, Bahasa Inggris, dsb" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" required>
                 </div>
 
@@ -585,7 +585,7 @@
                     <button type="button" onclick="closeCreateClassModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:to-indigo-700 transition shadow-md">
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition shadow-md">
                         Buat Kelas
                     </button>
                 </div>
@@ -616,7 +616,7 @@
             </button>
 
             <div class="px-6 pt-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 shadow-lg">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
@@ -683,7 +683,7 @@
                     <button type="button" onclick="closeUploadMateriModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition shadow-md">
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition shadow-md">
                         Upload Materi
                     </button>
                 </div>
@@ -704,7 +704,7 @@
 
             <div class="px-6 pt-8 text-center">
                 <div
-                    class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                    class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 shadow-lg">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -716,28 +716,45 @@
 
             <form method="POST" action="{{ route('guru.assignments.store') }}" class="px-6 pt-6 pb-6 space-y-4">
                 @csrf
-                <input type="hidden" name="id_class" value="{{ $kelas->id_class }}">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">Pilih Kelas</label>
+                    <select name="id_class" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" required>
+                        @foreach($classes as $kelas)
+                            <option value="{{ $kelas->id_class }}">{{ $kelas->nama_kelas }} - {{ $kelas->deskripsi }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-900 mb-2">Tipe</label>
                     <div class="grid grid-cols-3 gap-3">
                         <label class="relative cursor-pointer">
                             <input type="radio" name="tipe" value="essay" class="peer sr-only" required>
                             <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-green-500 peer-checked:bg-gradient-to-br peer-checked:from-green-50 peer-checked:to-emerald-50 peer-checked:shadow-md hover:border-green-400">
-                                <div class="text-2xl mb-1">✍️</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/>
+                                </svg>
                                 <div class="text-xs font-semibold text-gray-700">Essay</div>
                             </div>
                         </label>
                         <label class="relative cursor-pointer">
                             <input type="radio" name="tipe" value="pilihan_ganda" class="peer sr-only">
                             <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-orange-500 peer-checked:bg-gradient-to-br peer-checked:from-orange-50 peer-checked:to-amber-50 peer-checked:shadow-md hover:border-orange-400">
-                                <div class="text-2xl mb-1">✅</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <circle cx="6.5" cy="7" r="2" />
+                                    <line x1="15" y1="7" x2="23.5" y2="7" />
+                                    <circle cx="6.5" cy="13" r="2" />
+                                    <line x1="15" y1="13" x2="23.5" y2="13" />
+                                </svg>
                                 <div class="text-xs font-semibold text-gray-700">Pilihan Ganda</div>
                             </div>
                         </label>
                         <label class="relative cursor-pointer">
                             <input type="radio" name="tipe" value="praktik" class="peer sr-only">
                             <div class="p-4 text-center border-2 border-gray-300 rounded-xl transition-all peer-checked:border-purple-500 peer-checked:bg-gradient-to-br peer-checked:from-purple-50 peer-checked:to-pink-50 peer-checked:shadow-md hover:border-purple-400">
-                                <div class="text-2xl mb-1">💻</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <rect x="3" y="4" width="18" height="12" rx="2" />
+                                    <path d="M2 18h20" />
+                                </svg>
                                 <div class="text-xs font-semibold text-gray-700">Praktik</div>
                             </div>
                         </label>
@@ -774,7 +791,7 @@
                         Batal
                     </button>
                     <button type="submit"
-                        class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:to-pink-700 transition shadow-md">
+                        class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition shadow-md">
                         Buat
                     </button>
                 </div>
@@ -792,7 +809,7 @@
             </button>
 
             <div class="px-6 pt-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 shadow-lg">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
@@ -813,7 +830,7 @@
                     <button type="button" onclick="closeEditDeadlineModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition font-medium">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3 font-semibold text-white hover:from-orange-600 hover:to-orange-700 transition shadow-md">
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-4 py-3 font-semibold text-white hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition shadow-md">
                         Update Deadline
                     </button>
                 </div>
@@ -875,13 +892,13 @@
 
             <div class="px-6 pt-8 pb-4 border-b border-gray-200">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-900">Tanya Progress Siswa</h3>
+                        <h3 class="text-2xl font-bold text-gray-900">Tanya Progres Siswa</h3>
                         <p class="text-gray-600" id="modalClassName">Kelas</p>
                     </div>
                 </div>
@@ -900,16 +917,16 @@
                     <textarea id="questionInput" rows="3" placeholder="Contoh: Bagaimana progress Ahmad dalam mengerjakan tugas?" class="w-full rounded-xl border-2 border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition"></textarea>
                 </div>
 
-                <button onclick="askAI()" id="askButton" class="w-full px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition font-semibold shadow-md flex items-center justify-center gap-2">
+                <button onclick="askAI()" id="askButton" class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition font-semibold shadow-md flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                     Tanya AI
                 </button>
 
-                <div id="aiResponse" class="hidden mt-6 p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border-2 border-pink-200">
+                <div id="aiResponse" class="hidden mt-6 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200">
                     <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center flex-shrink-0">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center flex-shrink-0">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                             </svg>
@@ -922,7 +939,7 @@
                 </div>
 
                 <div id="aiLoading" class="hidden mt-6 p-4 bg-gray-50 rounded-xl text-center">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-pink-500 border-t-transparent"></div>
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-600 border-t-transparent"></div>
                     <p class="text-sm text-gray-600 mt-2">AI sedang menganalisis...</p>
                 </div>
             </div>

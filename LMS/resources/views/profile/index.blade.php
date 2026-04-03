@@ -30,10 +30,14 @@
                     <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
                     <div class="relative flex items-center gap-6">
                         <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-3xl font-bold overflow-hidden ring-4 ring-white/30">
-                            @if($user->avatar)
-                                <img src="{{ asset('storage/avatars/' . $user->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                            @php $avatarUrl = $user->avatar_url; @endphp
+                            @if($avatarUrl)
+                                <img src="{{ $avatarUrl }}" alt="Avatar" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                                <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-3xl font-bold" style="display:none;">{{ strtoupper(substr($user->nama, 0, 1)) }}</div>
                             @else
-                                {{ strtoupper(substr($user->nama, 0, 1)) }}
+                                <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-3xl font-bold">
+                                    {{ strtoupper(substr($user->nama, 0, 1)) }}
+                                </div>
                             @endif
                         </div>
                         <div>
@@ -71,8 +75,10 @@
                             <label class="block text-sm font-bold text-gray-700 mb-3">Foto Profile</label>
                             <div class="flex items-center gap-6">
                                 <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center overflow-hidden ring-4 ring-purple-100">
-                                    @if($user->avatar)
-                                        <img src="{{ asset('storage/avatars/' . $user->avatar) }}" alt="Avatar" class="w-full h-full object-cover" id="avatarPreview">
+                                    @php $avatarUrl = $user->avatar_url; @endphp
+                                    @if($avatarUrl)
+                                        <img src="{{ $avatarUrl }}" alt="Avatar" class="w-full h-full object-cover" id="avatarPreview" onerror="this.style.display='none'; document.getElementById('avatarInitial').style.display='flex'">
+                                        <span class="text-2xl font-bold text-purple-600 w-full h-full flex items-center justify-center" id="avatarInitial" style="display:none;">{{ strtoupper(substr($user->nama, 0, 1)) }}</span>
                                     @else
                                         <span class="text-2xl font-bold text-purple-600" id="avatarInitial">{{ strtoupper(substr($user->nama, 0, 1)) }}</span>
                                         <img src="" alt="Preview" class="w-full h-full object-cover hidden" id="avatarPreview">

@@ -43,6 +43,31 @@ class Classes extends Model
         return $this->hasOne(TokenKelas::class, 'id_class', 'id_class')->latestOfMany('id_token');
     }
 
+    // Cek apakah token aktif masih valid
+    public function hasValidToken(): bool
+    {
+        $token = $this->activeToken()->first();
+        if (!$token) {
+            return false;
+        }
+        return $token->isValid();
+    }
+
+    // Dapatkan status token aktif
+    public function getTokenStatus(): string
+    {
+        $token = $this->activeToken()->first();
+        if (!$token) {
+            return 'Tidak ada token';
+        }
+        if ($token->expires_at && now()->greaterThan($token->expires_at)) {
+            return 'Kadaluarsa';
+        }
+        if ($token->max_uses > 0 && $token->times_used >= $token->max_uses) {
+            return 'Batas penggunaan tercapai';
+        }
+        return 'Aktif';
+    }
 
     // Siswa yang ikut kelas
     public function enrollments()
@@ -58,5 +83,10 @@ class Classes extends Model
     public function materials()
     {
         return $this->hasMany(Material::class, 'id_class', 'id_class');
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class, 'id_class', 'id_class');
     }
 }

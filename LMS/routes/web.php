@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,29 +27,44 @@ Route::get('/forgot-password', [PageController::class, 'forgot'])->name('passwor
 
 /*
 |--------------------------------------------------------------------------
-| AUTH ACTIONS
+| AUTH ACTIONS (WITH RATE LIMITING)
 |--------------------------------------------------------------------------
 */
-Route::post('/login', [AuthServices::class, 'login'])->name('login.submit');
-Route::post('/register', [AuthServices::class, 'register'])->name('register.submit');
+Route::post('/login', [AuthServices::class, 'login'])
+    ->middleware('throttle:5,15')
+    ->name('login.submit');
+
+Route::post('/register', [AuthServices::class, 'register'])
+    ->middleware('throttle:3,60')
+    ->name('register.submit');
+
 Route::post('/logout', [AuthServices::class, 'logout'])->name('logout');
+
 // Google OAuth
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.auth');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
-Route::get('/auth/google/complete', [GoogleController::class, 'showComplete'])->name('google.complete');
-Route::post('/auth/google/complete', [GoogleController::class, 'storeComplete'])->name('google.complete.store');
 
+// Email verification routes
+Route::get('/email/verify', [AuthServices::class, 'verificationNotice'])->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [AuthServices::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
+Route::post('/email/verify/resend', [AuthServices::class, 'resendVerification'])
+    ->middleware('throttle:3,60')
+    ->name('verification.resend');
 
 /*
 |--------------------------------------------------------------------------
-| PASSWORD RESET
+| PASSWORD RESET (WITH RATE LIMITING)
 |--------------------------------------------------------------------------
 */
 Route::post('/forgot-password', [AuthServices::class, 'sendResetLink'])
+    ->middleware('throttle:3,60')
     ->name('password.email');
+
 Route::get('/reset-password/{token}', [AuthServices::class, 'showResetForm'])
     ->name('password.reset');
+
 Route::post('/reset-password', [AuthServices::class, 'resetPassword'])
+    ->middleware('throttle:3,60')
     ->name('password.update');
 
 
@@ -67,10 +83,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'profile'])->name('profile');
-    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/settings', [App\Http\Controllers\ProfileController::class, 'settings'])->name('settings');
-    Route::put('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/settings', [ProfileController::class, 'settings'])->name('settings');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/browser', [NotificationController::class, 'sendBrowserNotification'])->name('notifications.browser');
 });
@@ -133,22 +149,22 @@ Route::middleware('auth')->group(function () {
             ->name('guru.classes.show');
         Route::get('/guru/classes/{id}/students', [GuruController::class, 'getStudents'])
             ->name('guru.classes.students');
-        Route::prefix('guru')->middleware('auth')->group(function () {
-            Route::put('/guru/questions/{id}', [GuruController::class, 'updateQuestion'])
-                ->name('guru.questions.update');
-            Route::delete('/guru/questions/{id}', [GuruController::class, 'deleteQuestion'])
-                ->name('guru.questions.delete');
-            Route::delete('/guru/assignments/{id}/questions/bulk-delete', [GuruController::class, 'bulkDeleteQuestions'])
-                ->name('guru.questions.bulkDelete');
-        });
+        Route::put('/guru/questions/{id}', [GuruController::class, 'updateQuestion'])
+            ->name('guru.questions.update');
+        Route::delete('/guru/questions/{id}', [GuruController::class, 'deleteQuestion'])
+            ->name('guru.questions.delete');
+        Route::delete('/guru/assignments/{id}/questions/bulk-delete', [GuruController::class, 'bulkDeleteQuestions'])
+            ->name('guru.questions.bulkDelete');
         Route::post('/guru/assignments/{id}/publish', [GuruController::class, 'publishAssignment'])
             ->name('guru.assignments.publish');
-        // AI: Analisis progres siswa
         Route::get('/guru/ai/analyze/{userId}/{classId}', [AIController::class, 'analyzeProgress'])
             ->name('guru.ai.analyze');
-        // AI: Koreksi otomatis jawaban
         Route::post('/guru/ai/grade', [AIController::class, 'autoGrade'])
             ->name('guru.ai.grade');
+        Route::post('/guru/classes/{id}/regenerate-token', [GuruController::class, 'regenerateToken'])
+            ->name('guru.classes.regenerateToken');
+        Route::get('/guru/classes/{id}/progress', [GuruController::class, 'getClassProgress'])
+            ->name('guru.classes.progress');
     });
 
     /*
@@ -173,10 +189,13 @@ Route::middleware('auth')->group(function () {
             ->name('siswa.materials');
         Route::get('/siswa/recommendations', fn() => view('siswa.recommendations'))
             ->name('siswa.recommendations');
-        // AI: Feedback & Rekomendasi
         Route::post('/siswa/ai/feedback', [AIController::class, 'getFeedback'])
             ->name('siswa.ai.feedback');
         Route::get('/siswa/ai/recommendations', [AIController::class, 'getRecommendations'])
             ->name('ai.recommendations');
+        Route::get('/siswa/token/{token}/info', [SiswaController::class, 'getTokenInfo'])
+            ->name('siswa.token.info');
+        Route::get('/siswa/progress', [SiswaController::class, 'getProgress'])
+            ->name('siswa.progress');
     });
 });

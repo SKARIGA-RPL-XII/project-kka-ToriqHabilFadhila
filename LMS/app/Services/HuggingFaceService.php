@@ -21,7 +21,7 @@ class HuggingFaceService
         $this->model  = 'meta-llama/Meta-Llama-3-8B-Instruct';
     }
 
-    private function callAPI(string $system, string $user, int $maxTokens = 256)
+    private function callAPI(string $system, string $user, int $maxTokens = 256, float $temperature = 0.3)
     {
         try {
             $response = Http::withToken($this->apiKey)
@@ -33,7 +33,8 @@ class HuggingFaceService
                         ['role' => 'user', 'content' => $user],
                     ],
                     'max_tokens' => $maxTokens,
-                    'temperature' => 0.1,
+                    'temperature' => $temperature,
+                    'top_p' => 0.9,
                     'seed' => 42,
                 ]);
             if ($response->failed()) {
@@ -56,33 +57,71 @@ class HuggingFaceService
 
     public function analyzeStudentProgress(array $data)
     {
-        $system = 'Kamu asisten guru. Jawab SINGKAT tanpa format markdown atau simbol **.';
+        $system = "Anda adalah guru berpengalaman yang memberikan analisis progres siswa yang konstruktif dan mendorong. \n" .
+            "Instruksi:\n" .
+            "1. Analisis data dengan objektif dan profesional\n" .
+            "2. Identifikasi kekuatan dan area yang perlu ditingkatkan\n" .
+            "3. Berikan rekomendasi aksi konkret dan terukur\n" .
+            "4. Gunakan bahasa yang positif dan memotivasi\n" .
+            "5. Hindari markdown, simbol **, atau format khusus\n" .
+            "6. Jawab dalam 3-4 paragraf singkat";
+        
+        $performanceLevel = $data['avg_score'] >= 80 ? 'Sangat Baik' : ($data['avg_score'] >= 70 ? 'Baik' : ($data['avg_score'] >= 60 ? 'Cukup' : 'Perlu Perhatian'));
+        $completionRate = $data['total'] > 0 ? round(($data['completed'] / $data['total']) * 100) : 0;
+        
         $user =
+            "DATA SISWA:\n" .
             "Nama: {$data['nama']}\n" .
             "Kelas: {$data['kelas']}\n" .
-            "Tugas selesai: {$data['completed']}/{$data['total']}\n" .
-            "Rata-rata nilai: {$data['avg_score']}\n" .
-            "Terlambat: {$data['late']}\n\n" .
-            "Analisis: performa, area lemah, rekomendasi. Masing-masing 1-2 kalimat. TANPA simbol ** atau markdown.";
-        $response = $this->callAPI($system, $user, 200);
-        return $response ? str_replace(['**', '*'], '', $response) : $response;
+            "Tingkat Performa: {$performanceLevel}\n" .
+            "Tugas Selesai: {$data['completed']}/{$data['total']} ({$completionRate}%)\n" .
+            "Rata-rata Nilai: {$data['avg_score']}/100\n" .
+            "Tugas Terlambat: {$data['late']}\n\n" .
+            "DIMINTA:\n" .
+            "1. Analisis performa siswa (1-2 kalimat)\n" .
+            "2. Identifikasi area kekuatan dan kelemahan (1-2 kalimat)\n" .
+            "3. Rekomendasi tindakan spesifik (2-3 poin konkret)";
+        
+        $response = $this->callAPI($system, $user, 250, 0.4);
+        return $response ? str_replace(['**', '*', '##', '#'], '', $response) : $response;
     }
 
     public function provideFeedback(string $question, string $answer)
     {
-        return $this->callAPI(
-            'Anda adalah guru yang memberi feedback konstruktif.',
-            "Pertanyaan:\n$question\n\nJawaban siswa:\n$answer\n\nBeri feedback singkat.",
-            150
-        );
+        $system = "Anda adalah guru berpengalaman yang memberikan feedback konstruktif dan mendorong untuk jawaban siswa.\n" .
+            "Instruksi:\n" .
+            "1. Mulai dengan mengakui hal positif dari jawaban\n" .
+            "2. Identifikasi area yang dapat ditingkatkan dengan spesifik\n" .
+            "3. Berikan saran konkret untuk perbaikan\n" .
+            "4. Akhiri dengan motivasi positif\n" .
+            "5. Gunakan bahasa yang ramah dan mendukung\n" .
+            "6. Jawab dalam 3-4 kalimat singkat";
+        
+        $user = "PERTANYAAN:\n$question\n\n" .
+            "JAWABAN SISWA:\n$answer\n\n" .
+            "Berikan feedback yang konstruktif, spesifik, dan memotivasi.";
+        
+        return $this->callAPI($system, $user, 180, 0.5);
     }
 
     public function gradeAnswer(string $question, string $key, string $answer, int $maxScore)
     {
-        $system = 'Kamu sistem penilaian. WAJIB balas JSON: {"score":0,"feedback":"teks"} TANPA teks lain.';
-        $user = "Soal: $question\nKunci: $key\nJawaban: $answer\nMax: $maxScore\n\nNilai dalam JSON. Feedback WAJIB diisi.";
+        $system = "Anda adalah sistem penilaian otomatis yang adil dan objektif.\n" .
+            "INSTRUKSI PENTING:\n" .
+            "1. Bandingkan jawaban siswa dengan kunci jawaban\n" .
+            "2. Berikan skor berdasarkan akurasi, kelengkapan, dan kedalaman\n" .
+            "3. Skor harus antara 0 dan nilai maksimal yang diberikan\n" .
+            "4. Feedback harus spesifik dan membantu siswa memahami kesalahan\n" .
+            "5. WAJIB BALAS DALAM FORMAT JSON SAJA: {\"score\":angka,\"feedback\":\"teks\"}\n" .
+            "6. Jangan tambahkan teks lain di luar JSON";
+        
+        $user = "SOAL:\n$question\n\n" .
+            "KUNCI JAWABAN:\n$key\n\n" .
+            "JAWABAN SISWA:\n$answer\n\n" .
+            "NILAI MAKSIMAL: $maxScore\n\n" .
+            "Berikan penilaian dalam format JSON dengan score dan feedback yang jelas.";
 
-        $raw = $this->callAPI($system, $user, 120);
+        $raw = $this->callAPI($system, $user, 150, 0.2);
 
         if (!$raw) {
             return ['score' => 0, 'feedback' => 'AI tidak merespons'];
@@ -93,9 +132,8 @@ class HuggingFaceService
             $json = json_decode($match[0], true);
             if (is_array($json) && isset($json['score'])) {
                 $feedback = trim($json['feedback'] ?? '');
-                // Jika feedback kosong, beri default
                 if (empty($feedback)) {
-                    $feedback = 'Jawaban sudah dinilai';
+                    $feedback = 'Jawaban sudah dinilai dengan skor ' . $json['score'];
                 }
                 return [
                     'score' => min(max((int)$json['score'], 0), $maxScore),
@@ -109,24 +147,39 @@ class HuggingFaceService
 
     public function recommendMaterials(array $studentProfile)
     {
-        $system = 'Kamu asisten rekomendasi materi. Jawab SINGKAT dan PADAT.';
+        $system = "Anda adalah asisten pembelajaran yang memberikan rekomendasi materi personal berdasarkan profil siswa.\n" .
+            "INSTRUKSI:\n" .
+            "1. Analisis profil siswa secara menyeluruh\n" .
+            "2. Prioritaskan materi yang sesuai dengan kebutuhan dan gaya belajar\n" .
+            "3. Untuk siswa dengan nilai rendah, fokus pada penguatan dasar\n" .
+            "4. Untuk siswa berkinerja tinggi, tawarkan materi pengayaan\n" .
+            "5. Berikan 3-4 rekomendasi dengan alasan singkat\n" .
+            "6. Format: Nomor. Judul Materi - Alasan (1 kalimat)\n" .
+            "7. Jawab SINGKAT dan PADAT tanpa penjelasan panjang";
 
         $performanceNote = '';
-        if (isset($studentProfile['avg_score']) && $studentProfile['avg_score'] < 60) {
-            $performanceNote = "PENTING: Nilai rata-rata rendah ({$studentProfile['avg_score']}). Fokus pada materi dasar dan penguatan fundamental.\n";
+        if (isset($studentProfile['avg_score'])) {
+            if ($studentProfile['avg_score'] < 60) {
+                $performanceNote = "PRIORITAS: Nilai rata-rata rendah ({$studentProfile['avg_score']}). Fokus pada materi dasar dan penguatan fundamental.\n";
+            } elseif ($studentProfile['avg_score'] >= 80) {
+                $performanceNote = "PRIORITAS: Siswa berkinerja tinggi ({$studentProfile['avg_score']}). Tawarkan materi pengayaan dan tantangan.\n";
+            }
         }
 
         $user =
+            "PROFIL SISWA:\n" .
             $performanceNote .
             "Mata Pelajaran: {$studentProfile['subject']}\n" .
             "Nilai Terakhir: {$studentProfile['last_scores']}\n" .
-            "Rata-rata: {$studentProfile['avg_score']}\n" .
+            "Rata-rata Nilai: {$studentProfile['avg_score']}/100\n" .
             "Progress: {$studentProfile['progress']}\n" .
-            "Status: {$studentProfile['performance_status']}\n" .
-            "Topik Sulit: {$studentProfile['weak_topics']}\n" .
-            "Gaya Belajar: {$studentProfile['learning_style']}\n" .
-            "Materi Tersedia: {$studentProfile['available_materials']}\n\n" .
-            "Rekomendasikan 3-4 materi. Format: Judul - alasan (1 kalimat). SINGKAT.";
-        return $this->callAPI($system, $user, 300);
+            "Status Performa: {$studentProfile['performance_status']}\n" .
+            "Topik yang Sulit: {$studentProfile['weak_topics']}\n" .
+            "Gaya Belajar: {$studentProfile['learning_style']}\n\n" .
+            "MATERI TERSEDIA:\n" .
+            "{$studentProfile['available_materials']}\n\n" .
+            "Berikan 3-4 rekomendasi materi yang paling sesuai dengan profil siswa ini.";
+        
+        return $this->callAPI($system, $user, 350, 0.4);
     }
 }

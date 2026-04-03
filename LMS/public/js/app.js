@@ -208,17 +208,37 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('aiResponse').classList.add('hidden');
         document.getElementById('askButton').disabled = true;
 
-        fetch(`/guru/ai/analyze/${userId}/${classId}?question=${encodeURIComponent(question)}`)
-            .then(r => r.json())
+        console.log(`Fetching: /guru/ai/analyze/${userId}/${classId}`);
+
+        fetch(`/guru/ai/analyze/${userId}/${classId}`)
+            .then(r => {
+                console.log('Response status:', r.status);
+                return r.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 document.getElementById('aiLoading').classList.add('hidden');
                 document.getElementById('aiResponse').classList.remove('hidden');
-                document.getElementById('aiResponseText').textContent = data.analysis;
+                
+                if (data.success && data.data) {
+                    const analysis = data.data;
+                    let responseText = `👤 ${analysis.student_name || 'Siswa'}\n`;
+                    responseText += `📚 ${analysis.class_name}\n\n`;
+                    responseText += `📊 Completion Rate: ${analysis.metrics.completion_rate}%\n`;
+                    responseText += `⏰ On-Time Rate: ${analysis.metrics.on_time_rate}%\n`;
+                    responseText += `📈 Average Score: ${analysis.metrics.avg_score}\n`;
+                    responseText += `📉 Trend: ${analysis.metrics.trend}\n\n`;
+                    responseText += `💡 Analisis:\n${analysis.analysis}\n`;
+                    document.getElementById('aiResponseText').textContent = responseText;
+                } else {
+                    document.getElementById('aiResponseText').textContent = 'Gagal menganalisis data';
+                }
                 document.getElementById('askButton').disabled = false;
             })
-            .catch(() => {
+            .catch(err => {
+                console.error('Error:', err);
                 document.getElementById('aiLoading').classList.add('hidden');
-                alert('Terjadi kesalahan');
+                alert('Terjadi kesalahan: ' + err.message);
                 document.getElementById('askButton').disabled = false;
             });
     };
@@ -261,6 +281,70 @@ document.addEventListener('DOMContentLoaded', function () {
         overlay.classList.remove('flex');
     };
 
+    /* =====================
+        LINK NAVIGATION HANDLER
+        Show loading overlay on link click
+        DO NOT prevent default navigation
+    ====================== */
+    document.addEventListener('click', function (e) {
+        const link = e.target.closest('a');
+        
+        // Skip if not a link
+        if (!link) return;
+        
+        // Skip if link has no href or href is empty
+        if (!link.href || link.href === '#') return;
+        
+        // Skip if link is external (different domain)
+        if (link.hostname && link.hostname !== window.location.hostname) return;
+        
+        // Skip if link has data-no-loading attribute
+        if (link.hasAttribute('data-no-loading')) return;
+        
+        // Skip if link has onclick handler (let it handle itself)
+        if (link.hasAttribute('onclick')) return;
+        
+        // Skip if link is inside a modal or has special handling
+        if (link.closest('[x-data]')) return;
+        
+        // Show loading overlay
+        showLoading();
+        
+        // DO NOT prevent default - let browser navigate normally
+    });
+
+});
+
+/* =====================================================
+    PAGE LOAD HANDLERS
+    Hide loading overlay when page loads
+===================================================== */
+
+// Hide overlay when page fully loads
+window.addEventListener('load', function () {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    }
+});
+
+// Hide overlay on pageshow (back button, etc)
+window.addEventListener('pageshow', function () {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    }
+});
+
+// Hide overlay on pagehide (navigation away)
+window.addEventListener('pagehide', function () {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    }
 });
 
 /* =====================================================

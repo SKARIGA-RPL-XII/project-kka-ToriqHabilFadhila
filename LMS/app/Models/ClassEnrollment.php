@@ -14,6 +14,7 @@ class ClassEnrollment extends Model
         'id_class',
         'id_user',
         'status',
+        'token_used',
     ];
 
     public function user()

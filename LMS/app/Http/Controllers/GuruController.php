@@ -15,6 +15,8 @@ use App\Models\Material;
 use App\Models\Assignment;
 use App\Models\Question;
 use App\Models\QuestionOption;
+use App\Services\ActivityLogService;
+use App\Services\ProgressService;
 
 class GuruController extends Controller
 {
@@ -38,10 +40,12 @@ class GuruController extends Controller
                 'id_class'   => $kelas->id_class,
                 'token_code' => Str::upper(Str::random(8)),
                 'created_by' => Auth::user()->id_user,
+                'expires_at' => now()->addDays(30),
                 'max_uses'   => 0,
                 'times_used' => 0,
             ]);
             $token = $generatedToken->token_code;
+            ActivityLogService::logCreateClass($kelas->id_class, $kelas->nama_kelas);
         });
         return redirect()->back()
             ->with('success', 'Kelas berhasil dibuat! Token: ' . $token)
@@ -56,6 +60,7 @@ class GuruController extends Controller
             'judul' => 'required|string|max:200',
             'konten' => 'nullable|string',
             'file' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,zip|max:10240',
+            'online_link' => 'nullable|url',
         ]);
 
         $filePath = null;
@@ -74,8 +79,10 @@ class GuruController extends Controller
             'konten' => $request->konten,
             'file_path' => $filePath,
             'file_type' => $fileType,
+            'online_link' => $request->online_link,
             'uploaded_by' => Auth::user()->id_user,
         ]);
+        ActivityLogService::logUploadMaterial($request->id_class, $request->judul);
 
         return redirect()->back()
             ->with('success', 'Materi berhasil diupload!')
@@ -102,6 +109,7 @@ class GuruController extends Controller
             'max_score' => $request->max_score,
             'created_by' => Auth::user()->id_user,
         ]);
+        ActivityLogService::logCreateAssignment($assignment->id_assignment, $request->judul, $request->tipe);
 
         // Notify students about new assignment
         $class = Classes::with('enrollments')->find($request->id_class);
@@ -119,6 +127,7 @@ class GuruController extends Controller
         // Untuk praktik: langsung publish tanpa soal
         if ($request->tipe === 'praktik') {
             $assignment->update(['is_published' => true]);
+            ActivityLogService::logPublishAssignment($assignment->id_assignment, $request->judul);
             return redirect()->route('guru.classes.show', $request->id_class)
                 ->with('success', 'Tugas praktik berhasil dibuat dan dipublikasi! Siswa dapat langsung mengupload file.');
         }
@@ -152,7 +161,7 @@ class GuruController extends Controller
 
         $request->validate([
             'soal' => 'required|string',
-            'kunci_jawaban' => in_array($assignment->tipe, ['essay', 'praktik']) ? 'nullable|string' : 'nullable',
+            'kunci_jawaban' => 'nullable|string',
             'poin' => 'required|integer|min:1',
             'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
             'pilihan.*' => 'required|string',
@@ -160,9 +169,17 @@ class GuruController extends Controller
         ]);
 
         DB::transaction(function () use ($request, $assignment) {
+            // Untuk pilihan ganda, kunci_jawaban adalah huruf jawaban (A, B, C, D)
+            $kunciJawaban = null;
+            if ($assignment->tipe === 'pilihan_ganda' && isset($request->jawaban_benar)) {
+                $kunciJawaban = chr(65 + $request->jawaban_benar); // Convert 0->A, 1->B, 2->C, 3->D
+            } else {
+                $kunciJawaban = $request->kunci_jawaban;
+            }
+
             $question = $assignment->questions()->create([
                 'soal' => $request->soal,
-                'kunci_jawaban' => $request->kunci_jawaban,
+                'kunci_jawaban' => $kunciJawaban,
                 'poin' => $request->poin,
                 'urutan' => $assignment->questions()->count() + 1,
             ]);
@@ -186,17 +203,25 @@ class GuruController extends Controller
         $assignment = $question->assignment;
         $request->validate([
             'soal' => 'required|string',
-            'kunci_jawaban' => in_array($assignment->tipe, ['essay', 'praktik']) ? 'nullable|string' : 'nullable',
+            'kunci_jawaban' => 'nullable|string',
             'poin' => 'required|integer|min:1',
             'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
             'pilihan.*' => 'required|string',
             'jawaban_benar' => $assignment->tipe === 'pilihan_ganda' ? 'required|integer' : 'nullable',
         ]);
         DB::transaction(function () use ($request, $question, $assignment) {
+            // Untuk pilihan ganda, kunci_jawaban adalah huruf jawaban (A, B, C, D)
+            $kunciJawaban = null;
+            if ($assignment->tipe === 'pilihan_ganda' && isset($request->jawaban_benar)) {
+                $kunciJawaban = chr(65 + $request->jawaban_benar); // Convert 0->A, 1->B, 2->C, 3->D
+            } else {
+                $kunciJawaban = $request->kunci_jawaban;
+            }
+
             // update soal utama
             $question->update([
                 'soal' => $request->soal,
-                'kunci_jawaban' => $request->kunci_jawaban,
+                'kunci_jawaban' => $kunciJawaban,
                 'poin' => $request->poin,
             ]);
             // kalau pilihan ganda, update opsinya
@@ -255,9 +280,17 @@ class GuruController extends Controller
             DB::transaction(function () use ($questions, $assignment) {
                 $urutan = $assignment->questions()->count() + 1;
                 foreach ($questions as $questionData) {
+                    // Untuk pilihan ganda, kunci_jawaban adalah huruf jawaban (A, B, C, D)
+                    $kunciJawaban = null;
+                    if ($assignment->tipe === 'pilihan_ganda' && isset($questionData['jawaban_benar'])) {
+                        $kunciJawaban = chr(65 + $questionData['jawaban_benar']); // Convert 0->A, 1->B, 2->C, 3->D
+                    } else {
+                        $kunciJawaban = $questionData['kunci_jawaban'] ?? null;
+                    }
+
                     $question = $assignment->questions()->create([
                         'soal' => $questionData['soal'],
-                        'kunci_jawaban' => $questionData['kunci_jawaban'] ?? null,
+                        'kunci_jawaban' => $kunciJawaban,
                         'poin' => $questionData['poin'] ?? 10,
                         'urutan' => $urutan++,
                     ]);
@@ -271,6 +304,7 @@ class GuruController extends Controller
                     }
                 }
             });
+            ActivityLogService::logGenerateQuestions($assignment->id_assignment, count($questions));
             return redirect()->back()->with('success', count($questions) . ' soal berhasil di-generate oleh AI!');
         } catch (\Exception $e) {
             Log::error('AI Generate Questions Error: ' . $e->getMessage());
@@ -446,31 +480,42 @@ class GuruController extends Controller
         $text = trim($text);
         // Extract poin
         $poin = $this->extractPoints($text);
-        // Extract soal (text before first option A/B/C/D)
-        if (preg_match('/^(.+?)(?=A\.\s)/s', $text, $soalMatch)) {
-            $soal = $this->cleanQuestionText($soalMatch[1]);
+        // Remove poin dari text untuk parsing soal
+        $textWithoutPoin = preg_replace('/\(\s*Poin\s*:\s*\d+\s*\)/i', '', $text);
+        
+        // Extract soal (text before first option A.)
+        if (preg_match('/^(.+?)(?=\s*A\.\s)/s', $textWithoutPoin, $soalMatch)) {
+            $soal = trim($soalMatch[1]);
         } else {
             return null;
         }
-        // Extract options A, B, C, D - improved to stop at Kunci Jawaban
+        
+        // Extract options A, B, C, D
         $pilihan = [];
-        if (preg_match('/A\.\s*(.+?)(?=B\.|$)/s', $text, $match)) {
+        
+        // Match A. option
+        if (preg_match('/A\.\s*(.+?)(?=\s*B\.\s|\s*Jawaban|$)/s', $text, $match)) {
             $pilihan[] = trim($match[1]);
         }
-        if (preg_match('/B\.\s*(.+?)(?=C\.|$)/s', $text, $match)) {
+        
+        // Match B. option
+        if (preg_match('/B\.\s*(.+?)(?=\s*C\.\s|\s*Jawaban|$)/s', $text, $match)) {
             $pilihan[] = trim($match[1]);
         }
-        if (preg_match('/C\.\s*(.+?)(?=D\.|$)/s', $text, $match)) {
+        
+        // Match C. option
+        if (preg_match('/C\.\s*(.+?)(?=\s*D\.\s|\s*Jawaban|$)/s', $text, $match)) {
             $pilihan[] = trim($match[1]);
         }
-        if (preg_match('/D\.\s*(.+?)(?=Kunci|$)/s', $text, $match)) {
-            // Clean up option D - remove "Kunci" and everything after it
-            $optionD = trim($match[1]);
-            $optionD = preg_replace('/\s*Kunci.*$/s', '', $optionD);
-            $pilihan[] = trim($optionD);
+        
+        // Match D. option
+        if (preg_match('/D\.\s*(.+?)(?=\s*Jawaban|$)/s', $text, $match)) {
+            $pilihan[] = trim($match[1]);
         }
+        
         // Extract correct answer
         $jawabanBenar = $this->extractCorrectAnswer($text);
+        
         if (count($pilihan) >= 2 && !empty($soal)) {
             return [
                 'soal' => $soal,
@@ -509,8 +554,12 @@ class GuruController extends Controller
 
     private function extractCorrectAnswer($text)
     {
-        // Match patterns: Kunci Jawaban: B, Jawaban: B, Kunci: B
-        if (preg_match('/(?:Kunci\s*Jawaban|Jawaban|Kunci)\s*:\s*([A-D])/i', $text, $matches)) {
+        // Match patterns: Jawaban: A, Jawaban: B, etc
+        if (preg_match('/Jawaban\s*:\s*([A-D])/i', $text, $matches)) {
+            return ord(strtoupper($matches[1])) - ord('A');
+        }
+        // Fallback untuk pattern lama
+        if (preg_match('/(?:Kunci\s*Jawaban|Kunci)\s*:\s*([A-D])/i', $text, $matches)) {
             return ord(strtoupper($matches[1])) - ord('A');
         }
         return 0;
@@ -553,6 +602,7 @@ class GuruController extends Controller
             // Delete question
             $question->delete();
         });
+        ActivityLogService::logDeleteQuestion($id, $assignmentId);
         return redirect()->back()->with('success', 'Soal berhasil dihapus!');
     }
 
@@ -586,6 +636,7 @@ class GuruController extends Controller
             return redirect()->back()->with('error', 'Tidak bisa mempublikasi tugas tanpa soal!');
         }
         $assignment->update(['is_published' => true]);
+        ActivityLogService::logPublishAssignment($assignment->id_assignment, $assignment->judul);
         return redirect()->route('guru.classes.show', $assignment->id_class)
             ->with('success', 'Tugas berhasil dipublikasi dan sekarang terlihat oleh siswa!');
     }
@@ -602,6 +653,8 @@ class GuruController extends Controller
             'graded_by' => Auth::user()->id_user,
             'graded_at' => now(),
         ]);
+        ActivityLogService::logGradeSubmission($submission->id_submission, $submission->assignment->judul, $request->score);
+        ProgressService::updateProgress($submission->id_user, $submission->assignment->id_class);
         // Notify student about grade
         \App\Models\Notification::create([
             'id_user' => $submission->id_user,
@@ -629,6 +682,40 @@ class GuruController extends Controller
             // Delete assignment
             $assignment->delete();
         });
+        ActivityLogService::logDeleteAssignment($assignment->id_assignment, $assignment->judul);
         return redirect()->back()->with('success', 'Tugas berhasil dihapus!');
+    }
+
+    public function regenerateToken($id)
+    {
+        $kelas = Classes::findOrFail($id);
+        $this->authorize('update', $kelas);
+        
+        $newToken = TokenKelas::create([
+            'id_class' => $kelas->id_class,
+            'token_code' => Str::upper(Str::random(8)),
+            'created_by' => Auth::user()->id_user,
+            'expires_at' => now()->addDays(30),
+            'max_uses' => 0,
+            'times_used' => 0,
+        ]);
+        ActivityLogService::logRegenerateToken($kelas->id_class, $kelas->nama_kelas);
+        
+        return redirect()->back()
+            ->with('success', 'Token baru berhasil dibuat! Token: ' . $newToken->token_code)
+            ->with('token', $newToken->token_code);
+    }
+
+    public function getClassProgress($id)
+    {
+        $kelas = Classes::findOrFail($id);
+        $this->authorize('update', $kelas);
+        
+        $summary = ProgressService::getClassProgress($id);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $summary
+        ]);
     }
 }

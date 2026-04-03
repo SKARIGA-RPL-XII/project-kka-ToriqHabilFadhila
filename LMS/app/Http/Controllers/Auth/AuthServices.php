@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
+use App\Mail\VerifyEmailMail;
 
 class AuthServices extends Controller
 {
@@ -23,15 +26,16 @@ class AuthServices extends Controller
             'password' => 'required'
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        // is_active gatekeeper for all logins
+        $user = User::active()->where('email', $credentials['email'])->first();
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return back()->withErrors([
-                'email' => 'Email atau password yang Anda masukkan salah. Silakan periksa kembali dan coba lagi.'
+                'email' => 'Email atau password salah, atau akun tidak aktif.'
             ]);
         }
 
+        Auth::login($user);
         $request->session()->regenerate();
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
         $user->last_login = now();
         $user->save();
         return redirect()
@@ -48,20 +52,83 @@ class AuthServices extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        User::create([
+        $user = User::create([
             'nama'        => $validated['nama'],
             'email'       => $validated['email'],
             'password'    => Hash::make($validated['password']),
             'role'        => 'siswa',
-            'is_active'   => true,
-            'is_verified' => true,
-            'last_login'  => now(),
+            'is_active'   => false,
+            'is_verified' => false,
+            'last_login'  => null,
         ]);
 
-        // arahkan ke login dengan flash message
+        // Send verification email
+        try {
+            $verifyUrl = URL::temporarySignedRoute(
+                'verification.verify',
+                Carbon::now()->addHours(24),
+                ['id' => $user->id_user, 'hash' => sha1($user->email)]
+            );
+            Mail::to($user->email)->send(new VerifyEmailMail($user, $verifyUrl));
+        } catch (\Exception $e) {
+            Log::error('Verification email failed: ' . $e->getMessage());
+        }
+
         return redirect()->route('login')
-            ->with('success', 'Akun berhasil dibuat! Selamat datang ' . $validated['nama'] . ', silakan login dengan akun baru Anda.')
+            ->with('success', 'Akun dibuat! Silakan cek email untuk verifikasi dan login.')
             ->with('redirect_delay', true);
+    }
+
+    public function verificationNotice()
+    {
+        return view('auth.verify-email-sent');
+    }
+
+    public function resendVerification(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+        }
+
+        if ($user->is_active && $user->is_verified) {
+            return back()->withErrors(['email' => 'Email sudah terverifikasi.']);
+        }
+
+        $verifyUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addHours(24),
+            ['id' => $user->id_user, 'hash' => sha1($user->email)]
+        );
+
+        Mail::to($user->email)->send(new VerifyEmailMail($user, $verifyUrl));
+
+        return back()->with('success', 'Email verifikasi baru dikirim!');
+    }
+
+    public function verifyEmail(Request $request, string $id, string $hash)
+    {
+        $user = User::findOrFail($id);
+
+        if (!hash_equals((string) $hash, sha1($user->email))) {
+            return redirect()->route('login')
+                ->with('error', 'Link verifikasi tidak valid.');
+        }
+
+        $user->email_verified_at = now();
+        $user->is_active = true;
+        $user->is_verified = true;
+        $user->last_login = now();
+        $user->save();
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Email terverifikasi! Selamat datang ' . $user->nama . '!');
     }
 
     /**
@@ -177,3 +244,4 @@ class AuthServices extends Controller
             ->with('redirect_delay', true);
     }
 }
+

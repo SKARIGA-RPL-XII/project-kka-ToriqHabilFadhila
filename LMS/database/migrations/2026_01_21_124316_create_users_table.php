@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('role', ['siswa', 'guru', 'admin'])->default('siswa');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_verified')->default(false);
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->timestamps();
 
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->index('email');
             $table->index('role');
             $table->index('is_active');
+            $table->index('email_verified_at');
         });
     }
 

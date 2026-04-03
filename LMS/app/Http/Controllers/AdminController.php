@@ -33,7 +33,14 @@ class AdminController extends Controller
             ->orderBy('enrollments_count', 'desc')
             ->take(3)
             ->get();
-        return view('dashboard.admin', compact('stats', 'activities', 'progressBySubject', 'topClasses'));
+        $users = User::latest()->get();
+        return view('dashboard.admin', compact(
+            'stats',
+            'activities',
+            'progressBySubject',
+            'topClasses',
+            'users'
+        ));
     }
 
     private function getRecentActivities()
@@ -134,21 +141,27 @@ class AdminController extends Controller
 
     public function storeUser(Request $request)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
-            'role' => 'required|in:guru,siswa',
-        ]);
-        $user = User::create([
-            'nama' => $validated['nama'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
-            'is_active' => true,
-            'is_verified' => true,
-        ]);
-        return response()->json(['success' => true, 'user' => $user]);
+        try {
+            $validated = $request->validate([
+                'nama' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:8',
+                'role' => 'required|in:guru,siswa',
+            ]);
+            
+            User::create([
+                'nama' => $validated['nama'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => $validated['role'],
+                'is_active' => true,
+                'is_verified' => true,
+            ]);
+            
+            return redirect()->route('dashboard')->with('success', 'User berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Gagal menambahkan user: ' . $e->getMessage());
+        }
     }
 
     public function updateUser(Request $request, $id)
@@ -168,9 +181,16 @@ class AdminController extends Controller
 
     public function deleteUser($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json(['success' => true]);
+        try {
+            $user = User::findOrFail($id);
+            if ($user->role === 'admin') {
+                return redirect()->route('dashboard')->with('error', 'Tidak dapat menghapus user admin!');
+            }
+            $user->delete();
+            return redirect()->route('dashboard')->with('success', 'User berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Gagal menghapus user!');
+        }
     }
 
     public function getClasses(Request $request)
@@ -199,9 +219,13 @@ class AdminController extends Controller
 
     public function deleteClass($id)
     {
-        $class = Classes::findOrFail($id);
-        $class->delete();
-        return response()->json(['success' => true]);
+        try {
+            $class = Classes::findOrFail($id);
+            $class->delete();
+            return redirect()->route('dashboard')->with('success', 'Kelas berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Gagal menghapus kelas!');
+        }
     }
 
     public function getMonitoring()

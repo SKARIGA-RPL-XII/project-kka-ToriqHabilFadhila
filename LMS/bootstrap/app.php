@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Tambahkan middleware global untuk semua web routes
         $middleware->web(append: [
             \App\Http\Middleware\CheckSessionExpiry::class,
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
