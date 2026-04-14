@@ -182,4 +182,19 @@ class HuggingFaceService
         
         return $this->callAPI($system, $user, 350, 0.4);
     }
+    
+    public function chat(string $prompt)
+    {
+        $system = "Anda adalah asisten AI yang membantu guru dalam menganalisis performa siswa dan menjawab pertanyaan umum.\n" .
+            "INSTRUKSI:\n" .
+            "1. Jika pertanyaan terkait siswa/pendidikan, gunakan konteks yang diberikan\n" .
+            "2. Jika pertanyaan di luar topik pendidikan, jawab dengan pengetahuan umum Anda\n" .
+            "3. Berikan jawaban yang jelas, singkat, dan informatif\n" .
+            "4. Gunakan bahasa yang profesional namun ramah\n" .
+            "5. Hindari markdown atau format khusus\n" .
+            "6. Jawab dalam 2-4 paragraf";
+        
+        $response = $this->callAPI($system, $prompt, 400, 0.6);
+        return $response ? str_replace(['**', '*', '##', '#'], '', $response) : 'Maaf, saya tidak dapat menjawab pertanyaan tersebut saat ini.';
+    }
 }

@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('images/LMS.png') }}" type="image/png">
-    <title>Detail Jawaban - {{ $submission->assignment->judul }}</title>
+    <title>Learning Management System Berbasis AI - {{ $submission->assignment->judul }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50">
     @include('components.navbar')
 
     <div class="w-full px-4 sm:px-6 md:px-16 py-12">
-        <!-- Header -->
         <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
@@ -29,18 +28,42 @@
                         <span class="font-bold">Nilai: {{ $submission->score }}/{{ $submission->assignment->max_score }}</span>
                     </div>
                 @else
-                    <div class="bg-yellow-500/30 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-yellow-300">
+                    <div class="bg-amber-500/30 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-amber-300">
                         <span class="font-semibold">Status: Menunggu Penilaian</span>
                     </div>
                 @endif
             </div>
         </div>
 
-        <!-- Submission Content -->
         <div class="bg-white rounded-3xl shadow-xl p-8">
             @php
                 $answers = json_decode($submission->jawaban, true);
             @endphp
+
+            @if($submission->assignment->tipe === 'praktik' && $submission->file_path)
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">File yang Dikumpulkan</h3>
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900 mb-1">{{ basename($submission->file_path) }}</p>
+                                <p class="text-sm text-gray-600">Diupload: {{ $submission->submitted_at->format('d M Y, H:i') }}</p>
+                            </div>
+                            <a href="{{ Storage::url($submission->file_path) }}" target="_blank" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition font-semibold shadow-md flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             @if(is_array($answers))
                 @foreach($answers as $questionId => $answer)
@@ -85,9 +108,19 @@
                                                 {{ chr(65 + $optIndex) }}. {{ $option->pilihan }}
                                             </span>
                                             @if($option->id_option == $answer && $option->is_correct)
-                                                <span class="text-green-600 font-bold">✓ Benar</span>
+                                                <span class="text-green-600 font-bold flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Benar
+                                                </span>
                                             @elseif($option->id_option == $answer && !$option->is_correct)
-                                                <span class="text-red-600 font-bold">✗ Salah</span>
+                                                <span class="text-red-600 font-bold flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Salah
+                                                </span>
                                             @elseif($option->is_correct)
                                                 <span class="text-green-600 text-sm">Jawaban Benar</span>
                                             @endif

@@ -9,6 +9,8 @@ use App\Models\ClassEnrollment;
 use App\Models\Assignment;
 use App\Services\ActivityLogService;
 use App\Services\ProgressService;
+use App\Services\ValidationService;
+use App\Services\SecurityService;
 
 class SiswaController extends Controller
 {
@@ -19,9 +21,7 @@ class SiswaController extends Controller
 
     public function join(Request $request)
     {
-        $request->validate([
-            'token' => 'required|string',
-        ]);
+        ValidationService::validateToken($request->all());
         $token = \App\Models\TokenKelas::where('token_code', strtoupper($request->token))->first();
         if (!$token) {
             return redirect()->back()->with('error', 'Token tidak valid!');
@@ -66,27 +66,33 @@ class SiswaController extends Controller
                     ->orderBy('deadline', 'asc')
                     ->with(['submissions' => function($q) {
                         $q->where('id_user', Auth::id());
-                    }]);
+                    }, 'questions.options']);
             },
-            'materials'
+            'materials.uploader'
         ])->findOrFail($id);
+        
+        SecurityService::authorizeClassAccess(Auth::user(), $kelas);
         return view('siswa.class-detail', compact('kelas'));
     }
 
     public function showAssignment($id)
     {
         $assignment = Assignment::with(['class', 'questions.options'])->findOrFail($id);
+        SecurityService::authorizeAssignmentAccess(Auth::user(), $assignment);
         return view('siswa.assignment', compact('assignment'));
     }
 
     public function submitAssignment(Request $request, $id)
     {
         $assignment = Assignment::with('questions.options')->findOrFail($id);
+        SecurityService::authorizeAssignmentAccess(Auth::user(), $assignment);
+        
+        if (SecurityService::isDeadlinePassed($assignment)) {
+            return redirect()->back()->with('error', 'Deadline tugas sudah terlewat!');
+        }
+        
         if ($assignment->tipe === 'praktik') {
-            $request->validate([
-                'file' => 'required|file|max:51200|mimes:pdf,doc,docx,ppt,pptx,zip,rar,7z,tar,gz,jpg,jpeg,png,mp4,avi,mov',
-                'jawaban' => 'nullable|string',
-            ]);
+            ValidationService::validateSubmission($request->all(), 'praktik');
             $filePath = $request->file('file')->store('submissions', 'public');
             
             $submission = \App\Models\Submission::updateOrCreate(
@@ -111,9 +117,7 @@ class SiswaController extends Controller
                 'created_at' => now(),
             ]);
         } else {
-            $request->validate([
-                'answers' => 'required|array',
-            ]);
+            ValidationService::validateSubmission($request->all(), $assignment->tipe);
             $score = 0;
             $status = 'submitted';
             if ($assignment->tipe === 'pilihan_ganda') {
@@ -161,6 +165,7 @@ class SiswaController extends Controller
     public function showSubmission($id)
     {
         $submission = \App\Models\Submission::with(['assignment.class', 'assignment.questions.options'])->findOrFail($id);
+        SecurityService::authorizeSubmissionAccess(Auth::user(), $submission);
         return view('siswa.submission-detail', compact('submission'));
     }
 
@@ -168,7 +173,7 @@ class SiswaController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $classIds = $user->enrollments()->pluck('id_class');
+        $classIds = $user->enrollments()->pluck('id_class')->toArray();
         $materials = \App\Models\Material::whereIn('id_class', $classIds)
             ->with(['class', 'uploader'])
             ->orderBy('id_material', 'desc')
@@ -178,6 +183,11 @@ class SiswaController extends Controller
 
     public function getTokenInfo($token)
     {
+        // Validate token format
+        if (!preg_match('/^[A-Z0-9]{8}$/', strtoupper($token))) {
+            return response()->json(['valid' => false, 'message' => 'Format token tidak valid'], 400);
+        }
+        
         $tokenRecord = \App\Models\TokenKelas::where('token_code', strtoupper($token))->first();
         if (!$tokenRecord) {
             return response()->json(['valid' => false, 'message' => 'Token tidak ditemukan'], 404);
@@ -200,6 +210,10 @@ class SiswaController extends Controller
 
     public function getProgress()
     {
+        if (!SecurityService::isSiswa(Auth::user())) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+        
         $summary = ProgressService::getProgressSummary(Auth::user()->id_user);
         return response()->json([
             'success' => true,

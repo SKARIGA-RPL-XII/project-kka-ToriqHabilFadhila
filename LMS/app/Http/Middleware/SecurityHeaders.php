@@ -31,7 +31,8 @@ class SecurityHeaders
 
         // Content Security Policy
         $viteUrl = app()->environment('local') ? "http://localhost:5173 http://127.0.0.1:5173" : "";
-        $response->header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net unpkg.com {$viteUrl}; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net {$viteUrl}; img-src 'self' data: https:; font-src 'self' cdn.jsdelivr.net http://127.0.0.1:5173; connect-src 'self' https: ws: wss: {$viteUrl};");
+        $response->header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net unpkg.com https://www.gstatic.com {$viteUrl}; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net https://fonts.googleapis.com {$viteUrl}; img-src 'self' data: https:; font-src 'self' cdn.jsdelivr.net https://fonts.gstatic.com http://127.0.0.1:5173; connect-src 'self' https: ws: wss: {$viteUrl};");
+
 
         // Referrer Policy
         $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');

@@ -46,8 +46,8 @@ class AIAnalysisService
         $minScore = $submissions->where('status', 'graded')->min('score') ?? 0;
 
         $late = $submissions->filter(function ($sub) {
-            return $sub->submitted_at && $sub->assignment->deadline && 
-                   $sub->submitted_at->greaterThan($sub->assignment->deadline);
+            return $sub->submitted_at && $sub->assignment->deadline &&
+                $sub->submitted_at->greaterThan($sub->assignment->deadline);
         })->count();
 
         $onTime = $completed - $late;
@@ -126,9 +126,9 @@ class AIAnalysisService
         }
 
         // Analisis Konsistensi
-        $analysis[] = "Performa siswa tergolong {$metrics['consistency']} dengan variance {$metrics['variance']}. " . 
-            ($metrics['consistency'] === 'Sangat Konsisten' ? 
-                "Siswa menunjukkan stabilitas yang baik dalam belajar." : 
+        $analysis[] = "Performa siswa tergolong {$metrics['consistency']} dengan variance {$metrics['variance']}. " .
+            ($metrics['consistency'] === 'Sangat Konsisten' ?
+                "Siswa menunjukkan stabilitas yang baik dalam belajar." :
                 "Performa siswa cukup berfluktuasi, perlu lebih fokus dan konsisten.");
 
         // Analisis Tren
@@ -147,7 +147,7 @@ class AIAnalysisService
         }, ARRAY_FILTER_USE_BOTH));
         if ($bestType) {
             $bestScore = $byType[$bestType]['avg_score'];
-            $analysis[] = "Siswa menunjukkan kekuatan khusus pada tugas tipe " . ucfirst(str_replace('_', ' ', $bestType)) . 
+            $analysis[] = "Siswa menunjukkan kekuatan khusus pada tugas tipe " . ucfirst(str_replace('_', ' ', $bestType)) .
                 " dengan rata-rata nilai {$bestScore}.";
         }
 
@@ -227,8 +227,8 @@ class AIAnalysisService
             return 'stabil';
         }
 
-        $firstHalf = array_slice($scores, 0, (int)(count($scores) / 2));
-        $secondHalf = array_slice($scores, (int)(count($scores) / 2));
+        $firstHalf = array_slice($scores, 0, (int) (count($scores) / 2));
+        $secondHalf = array_slice($scores, (int) (count($scores) / 2));
 
         $avgFirst = array_sum($firstHalf) / count($firstHalf);
         $avgSecond = array_sum($secondHalf) / count($secondHalf);

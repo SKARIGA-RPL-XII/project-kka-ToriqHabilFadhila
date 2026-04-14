@@ -59,7 +59,7 @@ class ProgressService
         // Hitung persentase
         $persentase = ($completedAssignments / $totalAssignments) * 100;
 
-        return min(round($persentase, 1), 100);
+        return min((int) round($persentase), 100);
     }
 
     /**
@@ -90,7 +90,7 @@ class ProgressService
             'total_classes' => $progresses->count(),
             'completed_classes' => $progresses->where('status', 'completed')->count(),
             'in_progress_classes' => $progresses->where('status', 'in_progress')->count(),
-            'avg_progress' => round($progresses->avg('persentase'), 1),
+            'avg_progress' => (int) round($progresses->avg('persentase')),
             'classes' => $progresses->map(function ($p) {
                 return [
                     'class_name' => $p->class->nama_kelas,
@@ -119,7 +119,7 @@ class ProgressService
             'total_students' => $progresses->count(),
             'completed' => $progresses->where('status', 'completed')->count(),
             'in_progress' => $progresses->where('status', 'in_progress')->count(),
-            'avg_progress' => round($progresses->avg('persentase'), 1),
+            'avg_progress' => (int) round($progresses->avg('persentase')),
             'students' => $progresses->map(function ($p) {
                 return [
                     'student_name' => $p->user->nama,

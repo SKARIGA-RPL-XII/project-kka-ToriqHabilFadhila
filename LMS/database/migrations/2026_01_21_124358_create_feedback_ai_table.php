@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('feedback_text');
             $table->text('saran')->nullable();
             $table->text('rekomendasi_materi')->nullable();
+            $table->text('question')->nullable();
+            $table->text('answer')->nullable();
 
             $table->timestamp('created_at')->useCurrent();
         });

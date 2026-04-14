@@ -16,17 +16,22 @@ use App\Models\Assignment;
 use App\Models\Question;
 use App\Models\QuestionOption;
 use App\Services\ActivityLogService;
+use App\Services\CacheService;
+use App\Services\ValidationService;
+use App\Services\SecurityService;
 use App\Services\ProgressService;
+use App\Services\NotificationService;
+use App\Helpers\NotificationHelper;
 
 class GuruController extends Controller
 {
     public function storeClass(Request $request)
     {
-        $request->validate([
-            'nama_kelas' => 'required|string|max:100',
-            'deskripsi'  => 'required|string|max:255',
-            'max_students' => 'required|integer|min:1',
-        ]);
+        if (!SecurityService::isGuru(Auth::user())) {
+            throw new \Illuminate\Auth\Access\AuthorizationException('Hanya guru yang dapat membuat kelas');
+        }
+        
+        ValidationService::validateClassCreation($request->all());
         $token = null;
         DB::transaction(function () use ($request, &$token) {
             $kelas = Classes::create([
@@ -46,22 +51,27 @@ class GuruController extends Controller
             ]);
             $token = $generatedToken->token_code;
             ActivityLogService::logCreateClass($kelas->id_class, $kelas->nama_kelas);
+            
+            // Kirim notifikasi ke SEMUA role
+            NotificationHelper::sendToAllRoles(
+                'class_created',
+                'Kelas Baru: ' . $kelas->nama_kelas,
+                'Kelas baru telah dibuat oleh ' . Auth::user()->nama,
+                $kelas->id_class
+            );
         });
         return redirect()->back()
-            ->with('success', 'Kelas berhasil dibuat! Token: ' . $token)
+            ->with('success', 'Kelas berhasil dibuat! Token: ' . $token . ' - Notifikasi dikirim ke semua user.')
             ->with('token', $token)
             ->with('redirect_delay', false);
     }
 
     public function storeMaterial(Request $request)
     {
-        $request->validate([
-            'id_class' => 'required|exists:classes,id_class',
-            'judul' => 'required|string|max:200',
-            'konten' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,zip|max:10240',
-            'online_link' => 'nullable|url',
-        ]);
+        $kelas = Classes::findOrFail($request->id_class);
+        SecurityService::authorizeClassManagement(Auth::user(), $kelas);
+        
+        ValidationService::validateMaterialUpload($request->all());
 
         $filePath = null;
         $fileType = null;
@@ -83,22 +93,27 @@ class GuruController extends Controller
             'uploaded_by' => Auth::user()->id_user,
         ]);
         ActivityLogService::logUploadMaterial($request->id_class, $request->judul);
+        CacheService::invalidateClassMaterials($request->id_class);
+
+        // Kirim notifikasi ke SEMUA role
+        NotificationHelper::sendToAllRoles(
+            'new_material',
+            'Materi Baru: ' . $request->judul,
+            "Materi baru tersedia di kelas {$kelas->nama_kelas}",
+            $request->id_class
+        );
 
         return redirect()->back()
-            ->with('success', 'Materi berhasil diupload!')
+            ->with('success', 'Materi berhasil diupload! Notifikasi dikirim ke semua user.')
             ->with('redirect_delay', false);
     }
 
     public function storeAssignment(Request $request)
     {
-        $request->validate([
-            'id_class' => 'required|exists:classes,id_class',
-            'judul' => 'required|string|max:200',
-            'deskripsi' => 'nullable|string',
-            'tipe' => 'required|in:pilihan_ganda,essay,praktik',
-            'deadline' => 'required|date|after:now',
-            'max_score' => 'required|integer|min:1|max:100',
-        ]);
+        $kelas = Classes::findOrFail($request->id_class);
+        SecurityService::authorizeClassManagement(Auth::user(), $kelas);
+        
+        ValidationService::validateAssignmentCreation($request->all());
 
         $assignment = Assignment::create([
             'id_class' => $request->id_class,
@@ -111,35 +126,41 @@ class GuruController extends Controller
         ]);
         ActivityLogService::logCreateAssignment($assignment->id_assignment, $request->judul, $request->tipe);
 
-        // Notify students about new assignment
-        $class = Classes::with('enrollments')->find($request->id_class);
-        foreach ($class->enrollments as $enrollment) {
-            \App\Models\Notification::create([
-                'id_user' => $enrollment->id_user,
-                'type' => 'new_assignment',
-                'title' => 'Tugas Baru!',
-                'message' => "Tugas baru '{$request->judul}' telah ditambahkan di kelas {$class->nama_kelas}.",
-                'related_id' => $assignment->id_assignment,
-                'created_at' => now(),
-            ]);
-        }
+        // Kirim notifikasi ke SEMUA role (Admin, Guru, Siswa)
+        NotificationHelper::sendToAllRoles(
+            'new_assignment',
+            'Tugas Baru: ' . $request->judul,
+            "Tugas baru telah ditambahkan di kelas {$kelas->nama_kelas}. Deadline: " . date('d M Y', strtotime($request->deadline)),
+            $assignment->id_assignment,
+            'high'
+        );
 
         // Untuk praktik: langsung publish tanpa soal
         if ($request->tipe === 'praktik') {
             $assignment->update(['is_published' => true]);
             ActivityLogService::logPublishAssignment($assignment->id_assignment, $request->judul);
             return redirect()->route('guru.classes.show', $request->id_class)
-                ->with('success', 'Tugas praktik berhasil dibuat dan dipublikasi! Siswa dapat langsung mengupload file.');
+                ->with('success', 'Tugas praktik berhasil dibuat dan dipublikasi! Notifikasi dikirim ke semua user.');
         }
 
         // Untuk essay/pilihan ganda: ke halaman tambah soal
         return redirect()->route('guru.assignments.questions', $assignment->id_assignment)
-            ->with('success', 'Tugas berhasil dibuat! Sekarang tambahkan soal.');
+            ->with('success', 'Tugas berhasil dibuat! Notifikasi dikirim ke semua user. Sekarang tambahkan soal.');
     }
 
     public function showClass($id)
     {
-        $kelas = Classes::with(['enrollments.user', 'creator', 'activeToken', 'assignments'])->findOrFail($id);
+        $kelas = Classes::with([
+            'enrollments.user',
+            'creator',
+            'activeToken',
+            'assignments' => function($query) {
+                $query->orderBy('deadline', 'asc')
+                    ->with(['submissions', 'questions.options', 'creator']);
+            }
+        ])->findOrFail($id);
+        
+        SecurityService::authorizeClassManagement(Auth::user(), $kelas);
         return view('guru.class-detail', compact('kelas'));
     }
 
@@ -158,15 +179,9 @@ class GuruController extends Controller
     public function storeQuestion(Request $request, $id)
     {
         $assignment = Assignment::findOrFail($id);
-
-        $request->validate([
-            'soal' => 'required|string',
-            'kunci_jawaban' => 'nullable|string',
-            'poin' => 'required|integer|min:1',
-            'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
-            'pilihan.*' => 'required|string',
-            'jawaban_benar' => $assignment->tipe === 'pilihan_ganda' ? 'required|integer' : 'nullable',
-        ]);
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
+        
+        ValidationService::validateQuestionCreation($request->all(), $assignment->tipe);
 
         DB::transaction(function () use ($request, $assignment) {
             // Untuk pilihan ganda, kunci_jawaban adalah huruf jawaban (A, B, C, D)
@@ -201,14 +216,9 @@ class GuruController extends Controller
     {
         $question = Question::with('assignment', 'options')->findOrFail($id);
         $assignment = $question->assignment;
-        $request->validate([
-            'soal' => 'required|string',
-            'kunci_jawaban' => 'nullable|string',
-            'poin' => 'required|integer|min:1',
-            'pilihan' => $assignment->tipe === 'pilihan_ganda' ? 'required|array|min:2' : 'nullable',
-            'pilihan.*' => 'required|string',
-            'jawaban_benar' => $assignment->tipe === 'pilihan_ganda' ? 'required|integer' : 'nullable',
-        ]);
+        
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
+        ValidationService::validateQuestionCreation($request->all(), $assignment->tipe);
         DB::transaction(function () use ($request, $question, $assignment) {
             // Untuk pilihan ganda, kunci_jawaban adalah huruf jawaban (A, B, C, D)
             $kunciJawaban = null;
@@ -239,9 +249,10 @@ class GuruController extends Controller
 
     public function updateAssignmentDeadline(Request $request, $id)
     {
-        $request->validate([
-            'deadline' => 'required|date',
-        ]);
+        $assignment = Assignment::findOrFail($id);
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
+        
+        ValidationService::validateDeadlineUpdate($request->all());
         $assignment = Assignment::findOrFail($id);
         $assignment->update(['deadline' => $request->deadline]);
         return redirect()->back()->with('success', 'Deadline berhasil diperbarui!');
@@ -249,16 +260,22 @@ class GuruController extends Controller
 
     public function showSubmissions($id)
     {
-        $assignment = Assignment::with(['class.enrollments.user', 'submissions.user', 'questions.options'])->findOrFail($id);
+        $assignment = Assignment::with([
+            'class.enrollments.user',
+            'submissions.user',
+            'questions.options'
+        ])->findOrFail($id);
+        
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
         return view('guru.submissions', compact('assignment'));
     }
 
     public function generateQuestions(Request $request, $id)
     {
         $assignment = Assignment::findOrFail($id);
-        $request->validate([
-            'file' => 'required|file|mimes:pdf,doc,docx,txt|max:10240',
-        ]);
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
+        
+        ValidationService::validateFileGeneration($request->all());
         try {
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
@@ -565,15 +582,6 @@ class GuruController extends Controller
         return 0;
     }
 
-    private function extractAnswerKey($text)
-    {
-        // Match patterns: Kunci Jawaban: ..., Jawaban: ...
-        if (preg_match('/(?:Kunci\s*Jawaban|Jawaban|Kunci)\s*:\s*(.+?)$/s', $text, $matches)) {
-            return trim($matches[1]);
-        }
-        return '';
-    }
-
     private function extractPoints($text)
     {
         // Match patterns: (Poin: 10)
@@ -595,19 +603,24 @@ class GuruController extends Controller
     public function deleteQuestion($id)
     {
         $question = Question::findOrFail($id);
-        $assignmentId = $question->id_assignment;
+        $assignment = $question->assignment;
+        
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
         DB::transaction(function () use ($question) {
             // Delete options if exists
             $question->options()->delete();
             // Delete question
             $question->delete();
         });
-        ActivityLogService::logDeleteQuestion($id, $assignmentId);
+        ActivityLogService::logDeleteQuestion($id, $assignment->id_assignment);
         return redirect()->back()->with('success', 'Soal berhasil dihapus!');
     }
 
     public function bulkDeleteQuestions(Request $request, $id)
     {
+        $assignment = Assignment::findOrFail($id);
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
+        
         $request->validate([
             'ids' => 'required|json',
         ]);
@@ -631,22 +644,34 @@ class GuruController extends Controller
     public function publishAssignment($id)
     {
         $assignment = Assignment::with('questions')->findOrFail($id);
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
         // Praktik tidak perlu soal
         if ($assignment->tipe !== 'praktik' && $assignment->questions->count() === 0) {
             return redirect()->back()->with('error', 'Tidak bisa mempublikasi tugas tanpa soal!');
         }
         $assignment->update(['is_published' => true]);
         ActivityLogService::logPublishAssignment($assignment->id_assignment, $assignment->judul);
+        
+        // Kirim notifikasi ke SEMUA role saat publish
+        $kelas = Classes::find($assignment->id_class);
+        NotificationHelper::sendToAllRoles(
+            'new_assignment',
+            'Tugas Dipublikasi: ' . $assignment->judul,
+            "Tugas telah dipublikasi di kelas {$kelas->nama_kelas}. Deadline: " . date('d M Y', strtotime($assignment->deadline)),
+            $assignment->id_assignment,
+            'high'
+        );
+        
         return redirect()->route('guru.classes.show', $assignment->id_class)
-            ->with('success', 'Tugas berhasil dipublikasi dan sekarang terlihat oleh siswa!');
+            ->with('success', 'Tugas berhasil dipublikasi! Notifikasi dikirim ke semua user.');
     }
 
     public function gradeSubmission(Request $request, $id)
     {
-        $request->validate([
-            'score' => 'required|numeric|min:0',
-        ]);
         $submission = \App\Models\Submission::with('assignment')->findOrFail($id);
+        SecurityService::authorizeGrading(Auth::user(), $submission);
+        
+        ValidationService::validateGrading($request->all(), $submission->assignment->max_score);
         $submission->update([
             'score' => $request->score,
             'status' => 'graded',
@@ -655,21 +680,32 @@ class GuruController extends Controller
         ]);
         ActivityLogService::logGradeSubmission($submission->id_submission, $submission->assignment->judul, $request->score);
         ProgressService::updateProgress($submission->id_user, $submission->assignment->id_class);
-        // Notify student about grade
-        \App\Models\Notification::create([
-            'id_user' => $submission->id_user,
-            'type' => 'grade',
-            'title' => 'Tugas Dinilai!',
-            'message' => "Tugas '{$submission->assignment->judul}' telah dinilai. Nilai: {$request->score}/{$submission->assignment->max_score}",
-            'related_id' => $submission->id_submission,
-            'created_at' => now(),
-        ]);
-        return redirect()->back()->with('success', 'Nilai berhasil diberikan!');
+        
+        // Kirim notifikasi ke siswa yang bersangkutan
+        NotificationHelper::sendWithFlash(
+            'grade',
+            'Tugas Dinilai: ' . $submission->assignment->judul,
+            "Tugas Anda telah dinilai. Nilai: {$request->score}/{$submission->assignment->max_score}",
+            $submission->id_submission,
+            'high'
+        );
+        
+        // Kirim juga ke Admin dan Guru
+        NotificationHelper::sendToRoles(
+            ['admin', 'guru'],
+            'grade',
+            'Penilaian Selesai',
+            "Penilaian untuk {$submission->user->nama} telah selesai. Nilai: {$request->score}/{$submission->assignment->max_score}",
+            $submission->id_submission
+        );
+        
+        return redirect()->back()->with('success', 'Nilai berhasil diberikan! Notifikasi dikirim.');
     }
 
     public function deleteAssignment($id)
     {
         $assignment = Assignment::with(['questions.options', 'submissions'])->findOrFail($id);
+        SecurityService::authorizeAssignmentManagement(Auth::user(), $assignment);
         DB::transaction(function () use ($assignment) {
             // Delete submissions
             $assignment->submissions()->delete();
@@ -709,7 +745,7 @@ class GuruController extends Controller
     public function getClassProgress($id)
     {
         $kelas = Classes::findOrFail($id);
-        $this->authorize('update', $kelas);
+        SecurityService::authorizeClassManagement(Auth::user(), $kelas);
         
         $summary = ProgressService::getClassProgress($id);
         

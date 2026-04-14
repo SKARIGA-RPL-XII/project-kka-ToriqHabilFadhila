@@ -58,6 +58,21 @@ document.addEventListener('DOMContentLoaded', function () {
         window[`close${capitalize(name)}Modal`] = () => closeModal(`${name}Modal`);
     });
 
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    /* =====================
+        AI GURU MODAL
+    ====================== */
+    window.openAIGuruModal = function() {
+        openModal('aiGuruModal');
+    };
+
+    window.closeAIGuruModal = function() {
+        closeModal('aiGuruModal');
+    };
+
     /* =====================
         DRAG & DROP FILE
     ===================== */
@@ -107,11 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    
 
-    function capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
 
     /* =====================
         LOGOUT (LARAVEL SAFE)
@@ -219,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Response data:', data);
                 document.getElementById('aiLoading').classList.add('hidden');
                 document.getElementById('aiResponse').classList.remove('hidden');
-                
+
                 if (data.success && data.data) {
                     const analysis = data.data;
                     let responseText = `👤 ${analysis.student_name || 'Siswa'}\n`;
@@ -288,28 +299,28 @@ document.addEventListener('DOMContentLoaded', function () {
     ====================== */
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a');
-        
+
         // Skip if not a link
         if (!link) return;
-        
+
         // Skip if link has no href or href is empty
         if (!link.href || link.href === '#') return;
-        
+
         // Skip if link is external (different domain)
         if (link.hostname && link.hostname !== window.location.hostname) return;
-        
+
         // Skip if link has data-no-loading attribute
         if (link.hasAttribute('data-no-loading')) return;
-        
+
         // Skip if link has onclick handler (let it handle itself)
         if (link.hasAttribute('onclick')) return;
-        
+
         // Skip if link is inside a modal or has special handling
         if (link.closest('[x-data]')) return;
-        
+
         // Show loading overlay
         showLoading();
-        
+
         // DO NOT prevent default - let browser navigate normally
     });
 
@@ -390,20 +401,20 @@ window.showSuccessModal = function (message, redirectUrl = null, delay = 2500) {
     const modal = document.getElementById('success-modal');
     const messageEl = document.getElementById('success-message');
     const progressBar = document.getElementById('success-progress');
-    
+
     if (!modal || !messageEl) return;
-    
+
     messageEl.textContent = message;
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    
+
     if (progressBar) {
         progressBar.style.width = '0%';
         setTimeout(() => {
             progressBar.style.width = '100%';
         }, 50);
     }
-    
+
     if (redirectUrl) {
         setTimeout(() => {
             window.location.href = redirectUrl;
@@ -419,9 +430,9 @@ window.showSuccessModal = function (message, redirectUrl = null, delay = 2500) {
 window.showErrorModal = function (message) {
     const modal = document.getElementById('error-modal');
     const messageEl = document.getElementById('error-message');
-    
+
     if (!modal || !messageEl) return;
-    
+
     if (typeof message === 'object' && message !== null) {
         let errorHtml = '<ul class="list-disc list-inside">';
         for (let key in message) {
@@ -438,7 +449,7 @@ window.showErrorModal = function (message) {
     } else {
         messageEl.textContent = message;
     }
-    
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 };

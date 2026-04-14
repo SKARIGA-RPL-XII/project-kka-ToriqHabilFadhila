@@ -6,42 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('images/LMS.png') }}" type="image/png">
     <title>Learning Management System Berbasis AI</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-fade-in-up {
-            animation: fadeInUp 0.5s ease-out;
-        }
-        .question-card {
-            transition: all 0.3s ease;
-        }
-        .question-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.15);
-        }
-        .option-item {
-            transition: all 0.2s ease;
-        }
-        .option-item:hover {
-            background: linear-gradient(to right, #faf5ff, transparent);
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/css/questions.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
     @include('components.navbar')
+
     <div class="w-full px-4 sm:px-6 md:px-16 py-12">
-        <!-- Header Section -->
-        <div class="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
-            <!-- Decorative Elements -->
+        <div class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 rounded-3xl shadow-2xl p-8 mb-8 text-white animate-fade-in-up overflow-hidden relative">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
             <div class="relative z-10">
@@ -78,7 +49,6 @@
             </div>
         </div>
 
-        <!-- Success Message -->
         @if (session('success'))
             <div class="animate-fade-in-up bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-xl mb-8 shadow-md flex items-start gap-3">
                 <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -91,7 +61,6 @@
             </div>
         @endif
 
-        <!-- AI Generate & Manual Form Toggle -->
         <div class="flex gap-4 mb-8">
             <button onclick="openAIGenerateModal()" class="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 hover:shadow-xl flex items-center justify-center gap-3">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,12 +70,10 @@
             </button>
         </div>
 
-        <!-- Form Tambah Soal -->
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 animate-fade-in-up">
-            <!-- Form Header -->
             <div class="bg-gradient-to-r from-purple-50 to-indigo-50 px-8 py-6 border-b border-purple-100">
                 <div class="flex items-center gap-3">
-                    <div class="p-3 bg-purple-600 rounded-xl">
+                    <div class="p-3 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
@@ -115,11 +82,9 @@
                 </div>
             </div>
 
-            <!-- Form Body -->
             <form method="POST" action="{{ route('guru.questions.store', $assignment->id_assignment) }}" id="questionForm" class="p-8">
                 @csrf
                 <div class="space-y-6">
-                    <!-- Soal Input -->
                     <div>
                         <label class="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                             <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
@@ -133,26 +98,24 @@
                                 Pertanyaan Soal
                             @endif
                         </label>
-                        <textarea name="soal" rows="3" required class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
-                            placeholder="@if($assignment->tipe === 'essay')Contoh: Jelaskan pengertian fotosintesis dan sebutkan faktor-faktor yang mempengaruhinya!@elseif($assignment->tipe === 'praktik')Contoh: Buatlah program sederhana menggunakan Python untuk menghitung luas lingkaran. Upload file .py hasil pekerjaan Anda.@elseTuliskan pertanyaan soal di sini...@endif"></textarea>
+                        <textarea name="soal" rows="3" required class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none" placeholder="@if($assignment->tipe === 'essay')Contoh: Jelaskan pengertian fotosintesis dan sebutkan faktor-faktor yang mempengaruhinya!@elseif($assignment->tipe === 'praktik')Contoh: Buatlah program sederhana menggunakan Python untuk menghitung luas lingkaran. Upload file .py hasil pekerjaan Anda.@elseTuliskan pertanyaan soal di sini...@endif"></textarea>
                         @if($assignment->tipe === 'essay')
-                            <p class="mt-2 text-xs text-gray-500">
-                                <svg class="w-3.5 h-3.5 inline" fill="currentColor" viewBox="0 0 20 20">
+                            <p class="mt-2 text-xs text-gray-500 flex items-start gap-1">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                 </svg>
-                                Tips: Buat pertanyaan yang mendorong siswa untuk menjelaskan, menganalisis, atau memberikan pendapat.
+                                <span>Tips: Buat pertanyaan yang mendorong siswa untuk menjelaskan, menganalisis, atau memberikan pendapat.</span>
                             </p>
                         @elseif($assignment->tipe === 'praktik')
-                            <p class="mt-2 text-xs text-gray-500">
-                                <svg class="w-3.5 h-3.5 inline" fill="currentColor" viewBox="0 0 20 20">
+                            <p class="mt-2 text-xs text-gray-500 flex items-start gap-1">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                 </svg>
-                                Tips: Berikan instruksi yang jelas tentang apa yang harus dikerjakan dan format file yang harus diupload.
+                                <span>Tips: Berikan instruksi yang jelas tentang apa yang harus dikerjakan dan format file yang harus diupload.</span>
                             </p>
                         @endif
                     </div>
 
-                    <!-- Kunci Jawaban (untuk Essay/Praktik) -->
                     @if($assignment->tipe === 'essay' || $assignment->tipe === 'praktik')
                     <div>
                         <label class="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
@@ -161,18 +124,16 @@
                             </svg>
                             Kunci Jawaban (untuk AI Grading)
                         </label>
-                        <textarea name="kunci_jawaban" rows="2" class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
-                            placeholder="@if($assignment->tipe === 'essay')Tuliskan jawaban ideal/kunci jawaban yang diharapkan. AI akan menggunakan ini untuk mengoreksi jawaban siswa.@elseTuliskan kriteria penilaian atau poin-poin penting yang harus ada dalam tugas praktik.@endif"></textarea>
-                        <p class="mt-2 text-xs text-purple-600">
-                            <svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <textarea name="kunci_jawaban" rows="2" class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none" placeholder="@if($assignment->tipe === 'essay')Tuliskan jawaban ideal/kunci jawaban yang diharapkan. AI akan menggunakan ini untuk mengoreksi jawaban siswa.@elseTuliskan kriteria penilaian atau poin-poin penting yang harus ada dalam tugas praktik.@endif"></textarea>
+                        <p class="mt-2 text-xs text-purple-600 flex items-start gap-1">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                             </svg>
-                            Kunci jawaban ini akan digunakan oleh AI untuk mengoreksi jawaban siswa secara otomatis
+                            <span>Kunci jawaban ini akan digunakan oleh AI untuk mengoreksi jawaban siswa secara otomatis</span>
                         </p>
                     </div>
                     @endif
 
-                    <!-- Poin Input -->
                     <div>
                         <label class="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                             <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
@@ -183,7 +144,6 @@
                         <input type="number" name="poin" value="10" min="1" required class="w-full px-3 py-2.5 text-sm border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
                     </div>
 
-                    <!-- Pilihan Jawaban (untuk Pilihan Ganda) -->
                     @if ($assignment->tipe === 'pilihan_ganda')
                         <div id="pilihanContainer">
                             <label class="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
@@ -213,11 +173,9 @@
                         </div>
                     @endif
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 text-sm rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 text-white py-3 text-sm rounded-xl font-semibold hover:from-slate-800 hover:via-blue-800 hover:to-indigo-700 hover:scale-105 transition-all duration-300 shadow-lg shadow-indigo-500/50 hover:shadow-indigo-600/70 flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4v16m8-8H4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Tambah Soal
                     </button>
@@ -225,16 +183,14 @@
             </form>
         </div>
 
-        <!-- Daftar Soal -->
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
-            <!-- Section Header -->
             <div class="bg-gradient-to-r from-indigo-50 to-purple-50 px-8 py-6 border-b border-indigo-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         @if($assignment->questions->count() > 0)
                             <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="w-5 h-5 text-purple-600 focus:ring-purple-500 rounded cursor-pointer">
                         @endif
-                        <div class="p-3 bg-indigo-600 rounded-xl">
+                        <div class="p-3 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 rounded-xl">
                             <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
                             </svg>
@@ -255,7 +211,6 @@
                 </div>
             </div>
 
-            <!-- Questions List -->
             <div class="p-6 space-y-4">
                 @if($assignment->questions->count() > 0)
                     <div class="mb-6 flex justify-end">
@@ -273,14 +228,12 @@
                 <div id="questionsContainer">
                     @forelse($assignment->questions as $question)
                         <div class="question-card border-2 border-gray-200 rounded-2xl p-6 hover:border-purple-300 {{ $loop->index >= 3 ? 'hidden-question' : '' }}" x-data="{ edit: false }" style="{{ $loop->index >= 3 ? 'display: none;' : '' }}">
-                            <!-- VIEW MODE -->
                             <div x-show="!edit">
                                 <div class="flex justify-between items-start gap-4">
                                     <input type="checkbox" class="question-checkbox mt-2 w-5 h-5 text-purple-600 focus:ring-purple-500 rounded cursor-pointer" data-id="{{ $question->id_question }}" onclick="updateDeleteButton()">
                                     <div class="flex-1">
                                         <div class="flex items-start gap-3 mb-3">
-                                            <span
-                                                class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">
+                                            <span class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">
                                                 {{ $loop->iteration }}
                                             </span>
                                         <div class="flex-1">
@@ -290,14 +243,14 @@
                                                     {{ $question->soal }}
                                                 </p>
                                             </div>
-                                            
+
                                             @if(($assignment->tipe === 'essay' || $assignment->tipe === 'praktik') && $question->kunci_jawaban)
                                                 <div class="mb-3 p-3 bg-green-50 border-l-4 border-green-500 rounded-lg">
                                                     <p class="text-sm font-bold text-green-800 mb-1">Kunci Jawaban:</p>
                                                     <p class="text-sm text-green-700 leading-relaxed">{{ $question->kunci_jawaban }}</p>
                                                 </div>
                                             @endif
-                                            
+
                                             <div class="flex items-center gap-2">
                                                 <span class="text-sm font-bold text-gray-700">Poin:</span>
                                                 <span class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold text-purple-700 bg-purple-100 rounded-lg">
@@ -314,12 +267,10 @@
                                         <div class="ml-11 space-y-2 mt-3">
                                             @foreach ($question->options as $opt)
                                                 <div class="flex items-start gap-3 p-3 rounded-lg {{ $opt->is_correct ? 'bg-green-50 border-2 border-green-300' : 'bg-gray-50' }}">
-                                                    <span
-                                                        class="flex-shrink-0 w-7 h-7 rounded-full {{ $opt->is_correct ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-600' }} flex items-center justify-center text-sm font-bold">
+                                                    <span class="flex-shrink-0 w-7 h-7 rounded-full {{ $opt->is_correct ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-600' }} flex items-center justify-center text-sm font-bold">
                                                         {{ chr(65 + $loop->index) }}
                                                     </span>
-                                                    <span
-                                                        class="flex-1 text-sm {{ $opt->is_correct ? 'text-green-800 font-semibold' : 'text-gray-700' }}">
+                                                    <span class="flex-1 text-sm {{ $opt->is_correct ? 'text-green-800 font-semibold' : 'text-gray-700' }}">
                                                         {{ $opt->pilihan }}
                                                     </span>
                                                     @if ($opt->is_correct)
@@ -354,9 +305,7 @@
                             </div>
                         </div>
 
-                        <!-- EDIT MODE -->
-                        <form x-show="edit" method="POST"
-                            action="{{ route('guru.questions.update', $question->id_question) }}" class="space-y-4">
+                        <form x-show="edit" method="POST" action="{{ route('guru.questions.update', $question->id_question) }}" class="space-y-4">
                             @csrf
                             @method('PUT')
                             <div>
@@ -392,7 +341,7 @@
                             @endif
 
                             <div class="flex gap-3 pt-4">
-                                <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm px-4 py-2.5 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md">
+                                <button type="submit" class="flex-1 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 text-white text-sm px-4 py-2.5 rounded-xl font-semibold hover:from-slate-800 hover:via-blue-800 hover:to-indigo-700 hover:scale-105 transition-all duration-300 shadow-lg shadow-indigo-500/50 hover:shadow-indigo-600/70">
                                     Simpan Perubahan
                                 </button>
                                 <button type="button" @click="edit=false" class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-all">
@@ -402,7 +351,6 @@
                         </form>
                     </div>
                 @empty
-                    <!-- Empty State -->
                     <div class="text-center py-16">
                         <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
                             <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -416,10 +364,10 @@
                     </div>
                 @endforelse
                 </div>
-                
+
                 @if($assignment->questions->count() > 3)
                     <div class="text-center mt-6">
-                        <button id="showAllBtn" onclick="toggleShowAll()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md">
+                        <button id="showAllBtn" onclick="toggleShowAll()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-800 text-white rounded-xl hover:from-slate-900 hover:via-blue-900 hover:to-indigo-800 transition font-semibold shadow-md">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
@@ -430,9 +378,9 @@
         </div>
     </div>
 
-    <!-- AI Generate Modal -->
-    <div id="aiGenerateModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm">
-        <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div id="aiGenerateModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm animate-backdrop">
+        <div class="flex items-end sm:items-center justify-center min-h-screen w-full">
+        <div class="w-full sm:max-w-2xl bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeAIGenerateModal()" class="absolute right-4 top-4 z-10 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -440,7 +388,7 @@
             </button>
 
             <div class="px-8 pt-8 text-center">
-                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 shadow-lg">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                     </svg>
@@ -462,11 +410,11 @@
                         <p class="text-sm text-blue-600">atau klik untuk memilih file</p>
                         <p id="aiFileName" class="mt-3 text-sm text-gray-700 font-medium hidden"></p>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">
-                        <svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <p class="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                         </svg>
-                        Format: PDF, DOC, DOCX, TXT (Max 10MB)
+                        <span>Format: PDF, DOC, DOCX, TXT (Max 10MB)</span>
                     </p>
                 </div>
 
@@ -476,11 +424,11 @@
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                         </svg>
                         <div class="text-sm text-blue-800">
-                            <p class="font-semibold mb-1">
-                                <svg class="w-3.5 h-3.5 inline" fill="currentColor" viewBox="0 0 20 20">
+                            <p class="font-semibold mb-1 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                 </svg>
-                                Tips untuk hasil terbaik:
+                                <span>Tips untuk hasil terbaik:</span>
                             </p>
                             <ul class="list-disc list-inside space-y-1 text-xs">
                                 <li>Pastikan format soal jelas dan terstruktur</li>
@@ -507,7 +455,7 @@
                     <button type="button" onclick="closeAIGenerateModal()" class="flex-1 rounded-xl border-2 border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50 transition font-semibold">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-bold text-white hover:from-blue-700 hover:to-cyan-700 transition shadow-lg flex items-center justify-center gap-2">
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 px-6 py-3 font-bold text-white hover:from-slate-800 hover:via-blue-800 hover:to-indigo-700 hover:scale-105 transition-all duration-300 shadow-lg shadow-indigo-500/50 hover:shadow-indigo-600/70 flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
@@ -554,7 +502,7 @@
             const fileNameDisplay = document.getElementById('aiFileName');
             if (input.files && input.files[0]) {
                 fileNameDisplay.textContent = input.files[0].name;
-                fileNameDisplay.innerHTML = '<svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg> ' + input.files[0].name;
+                fileNameDisplay.innerHTML = '<svg class="w-3.5 h-3.5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>' + input.files[0].name;
                 fileNameDisplay.classList.remove('hidden');
             }
         }
@@ -575,7 +523,7 @@
             const deleteBtn = document.getElementById('deleteSelectedBtn');
             const selectedCount = document.getElementById('selectedCount');
             const selectAll = document.getElementById('selectAll');
-            
+
             if (checkboxes.length > 0) {
                 deleteBtn.classList.remove('hidden');
                 deleteBtn.classList.add('flex');
@@ -594,32 +542,32 @@
         function deleteSelected() {
             const checkboxes = document.querySelectorAll('.question-checkbox:checked');
             if (checkboxes.length === 0) return;
-            
+
             if (!confirm(`Yakin ingin menghapus ${checkboxes.length} soal yang dipilih?`)) return;
-            
+
             const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '{{ route('guru.questions.bulkDelete', $assignment->id_assignment) }}';
-            
+
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
             csrfInput.name = '_token';
             csrfInput.value = '{{ csrf_token() }}';
             form.appendChild(csrfInput);
-            
+
             const methodInput = document.createElement('input');
             methodInput.type = 'hidden';
             methodInput.name = '_method';
             methodInput.value = 'DELETE';
             form.appendChild(methodInput);
-            
+
             const idsInput = document.createElement('input');
             idsInput.type = 'hidden';
             idsInput.name = 'ids';
             idsInput.value = JSON.stringify(ids);
             form.appendChild(idsInput);
-            
+
             document.body.appendChild(form);
             form.submit();
         }
@@ -630,13 +578,13 @@
             const btn = document.getElementById('showAllBtn');
             const btnText = document.getElementById('showAllText');
             const btnIcon = btn.querySelector('svg');
-            
+
             showingAll = !showingAll;
-            
+
             hiddenQuestions.forEach(q => {
                 q.style.display = showingAll ? 'block' : 'none';
             });
-            
+
             if (showingAll) {
                 btnText.textContent = 'Lihat Lebih Sedikit';
                 btnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>';

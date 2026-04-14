@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\FCMTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,14 @@ use App\Http\Controllers\ProfileController;
 */
 
 Route::get('/', fn() => view('landing-page'));
+
+// Firebase Service Worker - served dynamically to inject env config
+Route::get('/firebase-messaging-sw.js', function () {
+    return response(view('firebase-sw'), 200, [
+        'Content-Type' => 'application/javascript',
+        'Service-Worker-Allowed' => '/',
+    ]);
+});
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::get('/forgot-password', [PageController::class, 'forgot'])->name('password.request');
@@ -89,6 +98,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/browser', [NotificationController::class, 'sendBrowserNotification'])->name('notifications.browser');
+    
+    // FCM Token
+    Route::post('/api/fcm-token', [FCMTokenController::class, 'store'])->name('fcm.token.store');
+    Route::delete('/api/fcm-token', [FCMTokenController::class, 'destroy'])->name('fcm.token.destroy');
 });
 
 /*

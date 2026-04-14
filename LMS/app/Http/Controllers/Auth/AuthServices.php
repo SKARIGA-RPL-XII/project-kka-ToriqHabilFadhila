@@ -62,6 +62,9 @@ class AuthServices extends Controller
             'last_login'  => null,
         ]);
 
+        // Notify admin about new user registration
+        \App\Services\AdminNotificationService::notifyUserRegistered($user);
+
         // Send verification email
         try {
             $verifyUrl = URL::temporarySignedRoute(

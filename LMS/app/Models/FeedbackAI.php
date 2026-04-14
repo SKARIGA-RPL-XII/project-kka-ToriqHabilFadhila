@@ -14,7 +14,8 @@ class FeedbackAI extends Model
         'id_submission',
         'feedback_text',
         'saran',
-        'rekomendasi_materi',
+        'question',
+        'answer',
         'created_at',
     ];
 

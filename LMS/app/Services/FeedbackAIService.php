@@ -4,117 +4,213 @@ namespace App\Services;
 
 use App\Models\FeedbackAI;
 use App\Models\Submission;
+use App\Services\CacheService;
+use App\Services\HuggingFaceService;
+use App\Services\AIAnalysisService;
 use Illuminate\Support\Facades\Log;
 
 class FeedbackAIService
 {
+    protected $analysisService;
     protected $materialRecommendationService;
+    protected $huggingFaceService;
 
-    public function __construct(MaterialRecommendationService $materialRecommendationService)
-    {
+    public function __construct(MaterialRecommendationService $materialRecommendationService,?HuggingFaceService $huggingFaceService = null) {
         $this->materialRecommendationService = $materialRecommendationService;
+        $this->huggingFaceService = $huggingFaceService ?? new HuggingFaceService();
+        $this->analysisService = new AIAnalysisService();
     }
 
-    public function generateAndSaveFeedback($userId, $classId)
+    public function generateAndSaveFeedback(int $userId, int $classId): array
     {
         try {
-            // Check if feedback already exists for this user and class
-            $existingFeedback = FeedbackAI::whereHas('submission', function ($q) use ($userId, $classId) {
-                $q->where('id_user', $userId)
-                  ->whereHas('assignment', function ($subQ) use ($classId) {
-                      $subQ->where('id_class', $classId);
-                  });
-            })->first();
-            
-            if ($existingFeedback) {
-                Log::info('Feedback already exists, skipping generation', [
-                    'user_id' => $userId,
-                    'class_id' => $classId
-                ]);
-                return [
-                    'success' => true,
-                    'message' => 'Feedback sudah ada, menggunakan data yang tersimpan',
-                    'total_submissions' => 0,
-                    'saved_count' => 0,
+            if ($this->hasExistingFeedback($userId, $classId)) {
+                return $this->responseExists();
+            }
+
+            $analysis = $this->analyze($userId, $classId);
+            $submissions = $this->getSubmissions($userId, $classId);
+
+            $savedCount = $this->processSubmissions($submissions, $analysis, $userId);
+
+            return $this->successResponse($savedCount, $submissions->count());
+
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    private function analyze(int $userId, int $classId): array
+    {
+        return $this->analysisService->analyzeStudentPerformance($userId, $classId);
+    }
+
+    private function hasExistingFeedback(int $userId, int $classId): bool
+    {
+        return FeedbackAI::whereHas('submission', function ($q) use ($userId, $classId) {
+            $q->where('id_user', $userId)
+            ->whereHas('assignment', fn($subQ) => $subQ->where('id_class', $classId));
+        })->exists();
+    }
+
+    private function getSubmissions(int $userId, int $classId)
+    {
+        return Submission::where('id_user', $userId)
+            ->whereHas('assignment', fn($q) => $q->where('id_class', $classId))
+            ->where(function ($query) {
+                $query->where('status', 'graded')
+                    ->orWhere(fn($q) =>
+                        $q->where('status', 'submitted')
+                        ->whereHas('assignment', fn($subQ) => $subQ->where('tipe', 'pilihan_ganda'))
+                    );
+            })
+            ->with('assignment.class')
+            ->latest('submitted_at')
+            ->limit(5)
+            ->get();
+    }
+
+    private function processSubmissions($submissions, array $analysis, int $userId): int
+    {
+        $existingIds = FeedbackAI::whereIn('id_submission', $submissions->pluck('id_submission'))
+            ->pluck('id_submission')
+            ->toArray();
+
+        $profile = $this->buildStudentProfile($submissions, null, $analysis);
+        $aiRaw = $this->huggingFaceService->recommendMaterials($profile);
+        $recommendations = $this->parseAIRecommendations($aiRaw);
+
+        $savedCount = 0;
+
+        foreach ($submissions as $submission) {
+            if (in_array($submission->id_submission, $existingIds)) {
+                continue;
+            }
+
+            $this->saveFeedback($submission, $analysis, $recommendations);
+            $savedCount++;
+        }
+
+        CacheService::invalidateUserRecommendations($userId);
+
+        return $savedCount;
+    }
+
+    private function saveFeedback($submission, array $analysis, array $recommendations): void
+    {
+        $metrics = $analysis['metrics'];
+        
+        // Format analysis dengan paragraf yang rapi
+        $analysisText = implode("\n\n", $analysis['analysis']);
+        
+        FeedbackAI::create([
+            'id_submission' => $submission->id_submission,
+            'feedback_text' => $this->formatStudentProfile($analysis),
+            'saran' => $analysisText,
+            'rekomendasi_materi' => $this->formatRecommendations($recommendations),
+            'created_at' => now(),
+        ]);
+    }
+
+    private function successResponse(int $saved, int $total): array
+    {
+        return [
+            'success' => true,
+            'message' => "Feedback AI berhasil dibuat untuk {$saved} submission",
+            'total_submissions' => $total,
+            'saved_count' => $saved,
+        ];
+    }
+
+    private function responseExists(): array
+    {
+        return [
+            'success' => true,
+            'message' => 'Feedback sudah ada',
+            'total_submissions' => 0,
+            'saved_count' => 0,
+        ];
+    }
+
+    private function errorResponse(\Throwable $e): array
+    {
+        Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+        return [
+            'success' => false,
+            'message' => 'Error generating feedback',
+        ];
+    }
+
+    private function buildStudentProfile($submissions, $classId, $analysis)
+    {
+        $avgScore = $submissions->avg('score') ?? 0;
+        $totalSubmissions = $submissions->count();
+        $completedCount = $submissions->where('status', 'graded')->count();
+        $className = $analysis['class_name'] ?? 'Umum';
+
+        return [
+            'subject' => $className,
+            'last_scores' => $submissions->pluck('score')->filter()->implode(', ') ?: 'Belum ada',
+            'avg_score' => round($avgScore, 1),
+            'progress' => "{$completedCount} dari {$totalSubmissions} tugas",
+            'performance_status' => $this->getPerformanceStatus($avgScore),
+            'weak_topics' => $submissions->filter(fn($sub) => $sub->score < 70)->pluck('assignment.judul')->take(3)->implode(', ') ?: 'Tidak ada',
+            'learning_style' => $avgScore >= 80 ? 'Visual & Praktik' : 'Perlu Penguatan Dasar',
+            'available_materials' => $this->getAvailableMaterials($classId)
+        ];
+    }
+
+    private function getPerformanceStatus($avgScore)
+    {
+        if ($avgScore < 60)
+            return 'Perlu Perhatian Khusus';
+        if ($avgScore >= 80)
+            return 'Baik';
+        return 'Cukup';
+    }
+
+    private function getAvailableMaterials($classId)
+    {
+        $materials = \App\Models\Material::where('id_class', $classId)
+            ->get()
+            ->pluck('judul')
+            ->implode(', ');
+
+        return $materials ?: 'Belum ada materi';
+    }
+
+    private function parseAIRecommendations($aiText)
+    {
+        $recommendations = [];
+
+        // Parse numbered recommendations from AI text
+        if (preg_match_all('/\d+\.\s*\*\*(.+?)\*\*\s*-\s*(.+?)(?=\n\d+\.|$)/s', $aiText, $matches)) {
+            foreach ($matches[1] as $index => $title) {
+                $recommendations[] = [
+                    'title' => trim($title),
+                    'description' => trim($matches[2][$index]),
+                    'resources' => 'Tutorial | Video | Dokumentasi'
                 ];
             }
-            
-            $analysisService = new AIAnalysisService();
-            $analysis = $analysisService->analyzeStudentPerformance($userId, $classId);
-            $metrics = $analysis['metrics'];
+        }
 
-            $submissions = Submission::where('id_user', $userId)
-                ->whereHas('assignment', function ($q) use ($classId) {
-                    $q->where('id_class', $classId);
-                })
-                ->where(function ($query) {
-                    $query->where('status', 'graded')
-                        ->orWhere(function ($q) {
-                            $q->where('status', 'submitted')
-                              ->whereHas('assignment', function ($subQ) {
-                                  $subQ->where('tipe', 'pilihan_ganda');
-                              });
-                        });
-                })
-                ->orderBy('submitted_at', 'desc')
-                ->limit(5)
-                ->get();
-
-            Log::info('Submissions found for feedback', [
-                'user_id' => $userId,
-                'class_id' => $classId,
-                'count' => $submissions->count()
-            ]);
-
-            $savedCount = 0;
-            foreach ($submissions as $submission) {
-                $existingFeedback = FeedbackAI::where('id_submission', $submission->id_submission)->first();
-                if ($existingFeedback) {
-                    Log::info('Feedback already exists', ['submission_id' => $submission->id_submission]);
-                    continue;
-                }
-
-                $materialRecommendations = $this->materialRecommendationService->generateMaterialRecommendations($metrics);
-                
-                $feedbackText = $this->formatStudentProfile($analysis);
-                $recommendationText = $this->formatRecommendations($materialRecommendations);
-
-                FeedbackAI::create([
-                    'id_submission' => $submission->id_submission,
-                    'feedback_text' => $feedbackText,
-                    'saran' => $this->generateSuggestions($submission, $metrics),
-                    'rekomendasi_materi' => $recommendationText,
-                    'created_at' => now(),
-                ]);
-                $savedCount++;
-
-                Log::info('Feedback saved', [
-                    'submission_id' => $submission->id_submission,
-                    'user_id' => $userId
-                ]);
-            }
-
-            return [
-                'success' => true,
-                'message' => "Feedback AI berhasil dibuat untuk {$savedCount} submission",
-                'total_submissions' => $submissions->count(),
-                'saved_count' => $savedCount,
-            ];
-        } catch (\Exception $e) {
-            Log::error('FeedbackAIService Error: ' . $e->getMessage());
-            Log::error('Stack: ' . $e->getTraceAsString());
-            
-            return [
-                'success' => false,
-                'message' => 'Error generating feedback: ' . $e->getMessage(),
+        // If no structured recommendations found, create a generic one
+        if (empty($recommendations)) {
+            $recommendations[] = [
+                'title' => 'Materi Pembelajaran Umum',
+                'description' => $aiText,
+                'resources' => 'Tutorial | Video | Dokumentasi'
             ];
         }
+
+        return $recommendations;
     }
 
     private function formatStudentProfile($analysis)
     {
         $metrics = $analysis['metrics'];
-        
+
         $text = "Profil & Progress Belajar\n";
         $text .= "========================\n\n";
         $text .= "Mata Pelajaran: {$analysis['class_name']}\n";
@@ -125,7 +221,7 @@ class FeedbackAIService
         $text .= "On-Time Rate: {$metrics['on_time_rate']}%\n";
         $text .= "Trend: {$metrics['trend']}\n";
         $text .= "Consistency: {$metrics['consistency']}\n";
-        
+
         return $text;
     }
 

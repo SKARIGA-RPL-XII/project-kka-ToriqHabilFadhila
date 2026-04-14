@@ -33,13 +33,10 @@
     @include('components.navbar')
 
     <div class="w-full px-4 sm:px-6 md:px-16 py-12">
-        <!-- Header Section -->
         <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8 text-white overflow-hidden relative">
-            <!-- Decorative Elements -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
             <div class="relative z-10">
-                <!-- Title -->
                 <div class="flex items-start gap-4 mb-6">
                     <div class="flex-1">
                         <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
@@ -54,7 +51,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Stats -->
                 <div class="flex flex-wrap gap-3">
                     <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-white/30 transition-all">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -73,9 +69,7 @@
             </div>
         </div>
 
-        <!-- Quick Action Card -->
         <div class="mb-8">
-            <!-- Lihat Materi Card -->
             <a href="{{ route('siswa.materials') }}" class="group relative p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-indigo-500 hover:shadow-2xl transition-all duration-300 overflow-hidden block">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative flex items-center gap-4">
@@ -101,9 +95,7 @@
             </a>
         </div>
 
-        <!-- Assignments Section -->
         <div id="tugas-quiz" class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
-            <!-- Section Header -->
             <div class="bg-gradient-to-r from-indigo-50 to-pink-50 px-8 py-6 border-b border-indigo-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
@@ -119,7 +111,6 @@
                     </span>
                 </div>
             </div>
-            <!-- Assignments List -->
             <div class="divide-y divide-gray-100">
                 @forelse($kelas->assignments as $index => $assignment)
                     @php
@@ -128,7 +119,6 @@
                     @endphp
                     <a href="{{ $isCompleted ? route('siswa.submissions.show', $submission->id_submission) : route('siswa.assignments.show', $assignment->id_assignment) }}" class="assignment-card block p-6 hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-transparent transition-all" style="animation-delay: {{ $index * 0.1 }}s">
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                            <!-- Assignment Info -->
                             <div class="flex-1">
                                 <div class="flex items-start gap-3 mb-3">
                                     @php
@@ -162,7 +152,6 @@
                                         </p>
                                     </div>
                                 </div>
-                                <!-- Deadline Info -->
                                 <div class="flex items-center gap-2 mt-3 text-sm flex-wrap">
                                     <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
@@ -204,7 +193,7 @@
                                         @php
                                             $deadlineBadgeClass = match(true) {
                                                 $daysLeft <= 1 => 'bg-red-100 text-red-700',
-                                                $daysLeft <= 3 => 'bg-yellow-100 text-yellow-700',
+                                                $daysLeft <= 3 => 'bg-amber-100 text-amber-700',
                                                 default => 'bg-blue-100 text-blue-700'
                                             };
                                         @endphp
@@ -214,7 +203,6 @@
                                     @endif
                                 </div>
                             </div>
-                            <!-- Status Badge -->
                             <div class="flex-shrink-0">
                                 @php
                                     if ($isCompleted) {
@@ -237,7 +225,6 @@
                         </div>
                     </a>
                 @empty
-                    <!-- Empty State -->
                     <div class="text-center py-16 px-4">
                         <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
                             <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('images/LMS.png') }}" type="image/png">
-    <title>Verifikasi Email - LMS</title>
+    <title>Learning Management System Berbasis AI</title>
     <style>
         * {
             margin: 0;

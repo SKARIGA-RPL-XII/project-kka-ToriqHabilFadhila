@@ -29,6 +29,7 @@ class User extends Authenticatable
         'last_login',
         'profile_picture',
         'email_verified_at',
+        'fcm_token',
     ];
 
     /**
@@ -118,5 +119,13 @@ class User extends Authenticatable
                 return null;
             }
         );
+    }
+
+    /**
+     * Route notification for FCM
+     */
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }
