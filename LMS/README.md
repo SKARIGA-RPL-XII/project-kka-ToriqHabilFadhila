@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ToriqHabilFadhila/Learning-Management-System/master/public/images/LMS.png" width="400" alt="LMS Logo"></p>
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -7,60 +7,231 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Learning Management System (LMS)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> **Platform pembelajaran online yang komprehensif dengan teknologi AI untuk pengalaman belajar yang optimal.**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🎯 Latar Belakang
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sistem Learning Management System (LMS) ini dikembangkan untuk memfasilitasi proses pembelajaran online yang efektif dan efisien. Dengan meningkatnya kebutuhan akan pendidikan digital, LMS ini hadir sebagai solusi komprehensif untuk mengelola kursus, siswa, dan materi pembelajaran dalam satu platform terpadu.
 
-## Learning Laravel
+## 📖 Deskripsi Proyek
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+LMS ini adalah platform pembelajaran online yang memungkinkan institusi pendidikan, perusahaan, atau individu untuk membuat, mengelola, dan menyampaikan konten pembelajaran secara digital. Sistem ini dirancang dengan antarmuka yang user-friendly dan fitur-fitur canggih untuk mendukung pengalaman belajar yang optimal.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 👥 Role Pengguna
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<table>
+<tr>
+<td width="33%">
 
-## Laravel Sponsors
+### 🔧 Administrator
+- Mengelola seluruh sistem
+- Mengatur pengguna dan hak akses
+- Monitoring aktivitas platform
+- Konfigurasi sistem
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+</td>
+<td width="33%">
 
-### Premium Partners
+### 👨‍🏫 Instruktur/Guru
+- Membuat dan mengelola kursus
+- Upload materi pembelajaran
+- Membuat quiz dan tugas
+- Menilai dan memberikan feedback
+- Monitoring progress siswa
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+</td>
+<td width="33%">
 
-## Contributing
+### 🎓 Siswa/Peserta
+- Mengakses kursus yang tersedia
+- Mengerjakan tugas dan quiz
+- Melihat progress pembelajaran
+- Berinteraksi dengan instruktur dan sesama siswa
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+</td>
+</tr>
+</table>
 
-## Code of Conduct
+## ✨ Fitur Utama
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<div align="center">
 
-## Security Vulnerabilities
+| 📚 **Manajemen Kursus** | 👥 **Manajemen Pengguna** | 📝 **Sistem Penilaian** |
+|:---:|:---:|:---:|
+| Pembuatan kursus dengan struktur modul | Sistem registrasi dan autentikasi | Quiz interaktif dengan berbagai tipe soal |
+| Upload berbagai format materi | Profil pengguna yang dapat disesuaikan | Tugas dengan upload file |
+| Pengaturan jadwal dan deadline | Manajemen role dan permission | Sistem grading otomatis dan manual |
+| Kategorisasi kursus | Sistem notifikasi | Laporan progress dan nilai |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| 💬 **Komunikasi & Kolaborasi** | 📊 **Analytics & Reporting** |
+|:---:|:---:|
+| Forum diskusi per kursus | Dashboard analytics untuk instruktur |
+| Chat real-time | Laporan progress siswa |
+| Sistem komentar pada materi | Statistik engagement |
+| Pengumuman dan notifikasi | Export data dalam berbagai format |
 
-## License
+</div>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🛠️ Teknologi yang Digunakan
+
+<table>
+<tr>
+<td width="33%">
+
+### 🔧 Backend
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+
+- **Laravel 10** - PHP Framework
+- **PostgreSQL** - Database Management System
+- **Redis** - Caching dan Session Storage
+- **Laravel Sanctum** - API Authentication
+
+</td>
+<td width="33%">
+
+### 🎨 Frontend
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+
+- **Blade Templates** - Server-side Rendering
+- **Bootstrap 5** - CSS Framework
+- **jQuery** - JavaScript Library
+- **Chart.js** - Data Visualization
+
+</td>
+<td width="33%">
+
+### ⚙️ Tools & Services
+![Composer](https://img.shields.io/badge/Composer-885630?style=for-the-badge&logo=composer&logoColor=white)
+![NPM](https://img.shields.io/badge/NPM-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+
+- **Composer** - PHP Dependency Manager
+- **NPM** - Node Package Manager
+- **Laravel Mix** - Asset Compilation
+- **Pusher** - Real-time Communication
+
+</td>
+</tr>
+</table>
+
+## 🤖 Fitur AI (Artificial Intelligence)
+
+> **Powered by Advanced Machine Learning & Natural Language Processing**
+
+<div align="center">
+
+### 🧠 AI-Powered Features
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+
+#### 🎯 **Rekomendasi Pembelajaran**
+- Algoritma machine learning untuk merekomendasikan kursus
+- Personalisasi jalur pembelajaran berdasarkan progress
+- Analisis pola belajar siswa
+
+#### 📝 **Auto-Grading Cerdas**
+- Penilaian otomatis untuk essay dan jawaban terbuka
+- Natural Language Processing untuk analisis teks
+- Deteksi plagiarisme menggunakan AI
+
+#### 💬 **Chatbot Pembelajaran**
+- AI Assistant untuk membantu siswa
+- Jawaban otomatis untuk pertanyaan umum
+- Panduan navigasi platform
+
+</td>
+<td width="50%">
+
+#### 📊 **Analisis Prediktif**
+- Prediksi risiko dropout siswa
+- Identifikasi siswa yang membutuhkan bantuan tambahan
+- Optimasi konten berdasarkan engagement
+
+#### ✨ **Content Generation**
+- AI untuk membuat soal quiz otomatis
+- Ringkasan materi pembelajaran
+- Subtitle otomatis untuk video
+
+<br>
+
+> 🚀 **Coming Soon**: Voice Recognition, Adaptive Learning Paths, Smart Content Curation
+
+</td>
+</tr>
+</table>
+
+## 🚀 Instalasi
+
+### Persyaratan Sistem
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- PostgreSQL >= 12
+
+### Quick Start
+
+```bash
+# 1. Clone repository
+git clone [repository-url]
+cd LMS
+
+# 2. Install dependencies
+composer install
+npm install
+
+# 3. Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# 4. Database setup
+php artisan migrate
+php artisan db:seed
+
+# 5. Compile assets
+npm run dev
+
+# 6. Start server
+php artisan serve
+```
+
+### 🔧 Konfigurasi Tambahan
+
+```bash
+# Setup Redis (Optional)
+sudo apt-get install redis-server
+
+# Setup Pusher untuk real-time features
+# Tambahkan kredensial Pusher di .env
+
+# Setup AI Features (Optional)
+# Konfigurasi API keys untuk OpenAI/Google AI
+```
+
+## 📞 Kontak & Support
+
+<div align="center">
+
+**Tim Development**
+
+📧 Email: toriqqhabilfadhila21@gmail.com
+
+</div>
+
+---
+
+<div align="center">
+
+**Made with ❤️ by LMS Development**
+
+⭐ Jika project ini membantu, jangan lupa berikan star!
+
+</div>

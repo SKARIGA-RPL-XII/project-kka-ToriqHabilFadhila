@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,6 +130,7 @@
         }
 
         @media only screen and (max-width: 600px) {
+
             .email-content,
             .email-footer {
                 padding: 30px 20px;
@@ -145,6 +147,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="email-wrapper">
         <!-- Header -->
@@ -158,7 +161,8 @@
         <div class="email-content">
             <p class="greeting">Halo, Kepada <strong>{{ $email }}</strong></p>
             <p class="message">
-                Kami menerima permintaan untuk mereset password akun Anda di <strong>Learning Management System</strong>.
+                Kami menerima permintaan untuk mereset password akun Anda di <strong>Learning Management
+                    System</strong>.
                 Klik tombol di bawah ini untuk membuat password baru.
             </p>
             <!-- Button -->
@@ -171,7 +175,8 @@
             </div>
         </div>
         <!-- Footer -->
-        <div class="email-footer" style=" background:#f9fafb; padding:28px 40px; text-align:center; border-top:1px solid #e5e7eb;">
+        <div class="email-footer"
+            style=" background:#f9fafb; padding:28px 40px; text-align:center; border-top:1px solid #e5e7eb;">
             <p style=" margin:0; font-size:16px; font-weight:700; color:#111827;">
                 Learning Management System
             </p>
@@ -185,4 +190,5 @@
         </div>
     </div>
 </body>
+
 </html>

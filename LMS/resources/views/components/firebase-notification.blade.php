@@ -1,18 +1,24 @@
 <!-- Firebase Push Notification -->
 <x-firebase-meta />
 <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-    import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js';
+    import {
+        initializeApp
+    } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+    import {
+        getMessaging,
+        getToken,
+        onMessage
+    } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js';
 
     const getMeta = (name) => document.querySelector(`meta[name="${name}"]`)?.content;
 
     const firebaseConfig = {
-        apiKey:            getMeta('firebase-api-key'),
-        authDomain:        getMeta('firebase-auth-domain'),
-        projectId:         getMeta('firebase-project-id'),
-        storageBucket:     getMeta('firebase-storage-bucket'),
+        apiKey: getMeta('firebase-api-key'),
+        authDomain: getMeta('firebase-auth-domain'),
+        projectId: getMeta('firebase-project-id'),
+        storageBucket: getMeta('firebase-storage-bucket'),
         messagingSenderId: getMeta('firebase-messaging-sender-id'),
-        appId:             getMeta('firebase-app-id'),
+        appId: getMeta('firebase-app-id'),
     };
 
     const vapidKey = getMeta('firebase-vapid-key');
@@ -23,7 +29,10 @@
     async function registerFCMToken() {
         try {
             const registration = await navigator.serviceWorker.ready;
-            const token = await getToken(messaging, { vapidKey, serviceWorkerRegistration: registration });
+            const token = await getToken(messaging, {
+                vapidKey,
+                serviceWorkerRegistration: registration
+            });
             if (token) {
                 await fetch('/api/fcm-token', {
                     method: 'POST',
@@ -31,7 +40,9 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
-                    body: JSON.stringify({ fcm_token: token })
+                    body: JSON.stringify({
+                        fcm_token: token
+                    })
                 });
             }
         } catch (error) {
