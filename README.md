@@ -223,7 +223,7 @@ sudo apt-get install redis-server
 
 <div align="center">
 
-**Made with ❤️ by LMS Development**
+**Crafted by Toriq Habil Fadhila**
 
 ⭐ Jika project ini membantu, jangan lupa berikan star!
 
