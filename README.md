@@ -60,10 +60,8 @@ LMS ini adalah platform pembelajaran online yang memungkinkan institusi pendidik
 
 | 💬 **Komunikasi & Kolaborasi** | 📊 **Analytics & Reporting** |
 |:---:|:---:|
-|  | Dashboard analytics untuk instruktur |
+| Pengumuman dan notifikasi | Dashboard analytics untuk instruktur |
 |  | Laporan progress siswa |
-|  |  |
-| Pengumuman dan notifikasi |  |
 
 </div>
 
