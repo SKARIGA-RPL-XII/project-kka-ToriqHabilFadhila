@@ -60,10 +60,10 @@ LMS ini adalah platform pembelajaran online yang memungkinkan institusi pendidik
 
 | 💬 **Komunikasi & Kolaborasi** | 📊 **Analytics & Reporting** |
 |:---:|:---:|
-| Forum diskusi per kursus | Dashboard analytics untuk instruktur |
-| Chat real-time | Laporan progress siswa |
-| Sistem komentar pada materi | Statistik engagement |
-| Pengumuman dan notifikasi | Export data dalam berbagai format |
+|  | Dashboard analytics untuk instruktur |
+|  | Laporan progress siswa |
+|  |  |
+| Pengumuman dan notifikasi |  |
 
 </div>
 
@@ -147,11 +147,8 @@ LMS ini adalah platform pembelajaran online yang memungkinkan institusi pendidik
 #### ✨ **Content Generation**
 - AI untuk membuat soal quiz otomatis
 - Ringkasan materi pembelajaran
-- Subtitle otomatis untuk video
 
 <br>
-
-> 🚀 **Coming Soon**: Voice Recognition, Adaptive Learning Paths, Smart Content Curation
 
 </td>
 </tr>
