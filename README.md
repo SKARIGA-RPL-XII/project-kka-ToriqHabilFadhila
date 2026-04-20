@@ -1,12 +1,5 @@
 <p align="center"><img src="https://raw.githubusercontent.com/ToriqHabilFadhila/Learning-Management-System/master/public/images/LMS.png" width="400" alt="LMS Logo"></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
 # Learning Management System (LMS)
 
 > **Platform pembelajaran online yang komprehensif dengan teknologi AI untuk pengalaman belajar yang optimal.**
@@ -220,7 +213,7 @@ sudo apt-get install redis-server
 
 <div align="center">
 
-**Tim Development**
+**Development**
 
 📧 Email: toriqqhabilfadhila21@gmail.com
 
