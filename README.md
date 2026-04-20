@@ -144,11 +144,6 @@ LMS ini adalah platform pembelajaran online yang memungkinkan institusi pendidik
 </td>
 <td width="50%">
 
-#### 📊 **Analisis Prediktif**
-- Prediksi risiko dropout siswa
-- Identifikasi siswa yang membutuhkan bantuan tambahan
-- Optimasi konten berdasarkan engagement
-
 #### ✨ **Content Generation**
 - AI untuk membuat soal quiz otomatis
 - Ringkasan materi pembelajaran
